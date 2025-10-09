@@ -1,6 +1,6 @@
-import React, { useState, CSSProperties } from 'react';
-import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 
+import React, { useState, CSSProperties, FormEvent } from 'react';
+import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 interface Expense {
   id: number;
   description: string;
@@ -11,7 +11,7 @@ interface Expense {
 
 interface FormData {
   description: string;
-  amount: string;
+  amount: string; 
   category: string;
   date: string;
 }
@@ -24,6 +24,7 @@ interface ModalProps {
 
 type HoveredButton = string | null;
 type HoveredExpense = number | null;
+
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -294,15 +295,11 @@ const styles: Record<string, CSSProperties> = {
     backgroundColor: '#f9fafb'
   }
 };
-
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
-
   return (
     <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        {children}
-      </div>
+      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>{children}</div>
     </div>
   );
 };
@@ -338,8 +335,6 @@ const ExpenseTracker: React.FC = () => {
     });
   };
 
-
-
   const handleEdit = (expense: Expense): void => {
     setFormData({
       description: expense.description,
@@ -352,6 +347,52 @@ const ExpenseTracker: React.FC = () => {
   };
 
 
+  const handleAddClick = (): void => {
+   
+    setFormData({
+      description: '',
+      amount: '',
+      category: categories[0] || '',
+      date: new Date().toISOString().split('T')[0]
+    });
+    setEditingId(null);
+    setIsModalOpen(true);
+  };
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: FormEvent): void => {
+    e.preventDefault();
+    const amountValue = parseFloat(formData.amount);
+
+    if (!formData.description || isNaN(amountValue) || amountValue <= 0 || !formData.category || !formData.date) {
+      alert("Please fill in all fields correctly.");
+      return;
+    }
+
+    const newExpense: Omit<Expense, 'id'> = {
+      description: formData.description,
+      amount: amountValue,
+      category: formData.category,
+      date: formData.date
+    };
+    if (editingId) { 
+      setExpenses(prevExpenses =>
+        prevExpenses.map(exp => (exp.id === editingId ? { ...newExpense, id: editingId } : exp))
+      );
+      alert(`Expense updated successfully!`);
+    } else {
+     
+      const expenseToAdd: Expense = { ...newExpense, id: Date.now() };
+      setExpenses(prevExpenses => [...prevExpenses, expenseToAdd]);
+      alert(`Expense added successfully!`);
+    }
+    closeModal();
+  };
+
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
@@ -361,38 +402,38 @@ const ExpenseTracker: React.FC = () => {
           <div style={styles.header}>
             <div style={styles.titleWrapper}>
               <h1 style={styles.title}>
-                <DollarSign color="#6366f1" size={32} />
+                <DollarSign size={30} />
                 Expense Tracker
               </h1>
-              <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
+              <p style={styles.subtitle}>Track your spending easily.</p>
             </div>
             <button
+              onClick={handleAddClick}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
+              title="Add New Expense"
             >
               <Plus size={20} />
               Add Expense
             </button>
           </div>
-
           <div style={styles.totalCard}>
-            <p style={styles.totalLabel}>Total Expenses</p>
-            <p style={styles.totalAmount}>${totalExpense.toFixed(2)}</p>
+            <p style={styles.totalLabel}>Total Spent</p>
+            <p style={styles.totalAmount}>₹{totalExpense.toFixed(2)}</p>
           </div>
         </div>
 
         <div style={styles.card}>
-          <h2 style={styles.sectionTitle}>Recent Expenses</h2>
-          
+          <h2 style={styles.sectionTitle}>Expense History</h2>
           {expenses.length === 0 ? (
-            <p style={styles.emptyState}>No expenses yet. Add your first expense above!</p>
+            <p style={styles.emptyState}>No expenses recorded yet. Add one!</p>
           ) : (
             <div style={styles.expenseList}>
-              {expenses.map((expense: Expense) => (
+              {expenses.map((expense) => (
                 <div
                   key={expense.id}
                   style={{
@@ -404,49 +445,29 @@ const ExpenseTracker: React.FC = () => {
                 >
                   <div style={styles.expenseContent}>
                     <div style={styles.expenseTitleRow}>
-                      <h3 style={styles.expenseTitle}>{expense.description}</h3>
-                      <span style={styles.categoryBadge}>
-                        <Tag size={12} />
-                        {expense.category}
-                      </span>
+                      <span style={styles.expenseTitle}>{expense.description}</span>
+                      <span style={styles.categoryBadge}><Tag size={12} /> {expense.category}</span>
                     </div>
                     <div style={styles.expenseDate}>
                       <Calendar size={14} />
-                      {new Date(expense.date).toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric', 
-                        year: 'numeric' 
-                      })}
+                      {expense.date}
                     </div>
                   </div>
-
                   <div style={styles.expenseRight}>
-                    <span style={styles.expenseAmount}>
-                      ${expense.amount.toFixed(2)}
-                    </span>
+                    <span style={styles.expenseAmount}>₹{expense.amount.toFixed(2)}</span>
                     <div style={styles.actionButtons}>
                       <button
                         onClick={() => handleEdit(expense)}
-                        style={{
-                          ...styles.editButton,
-                          ...(hoveredButton === `edit-${expense.id}` ? styles.editButtonHover : {})
-                        }}
-                        onMouseEnter={() => setHoveredButton(`edit-${expense.id}`)}
-                        onMouseLeave={() => setHoveredButton(null)}
+                        style={styles.editButton}
                         title="Edit"
                       >
-                        <Edit2 size={18} />
+                        <Edit2 size={16} />
                       </button>
                       <button
-                        style={{
-                          ...styles.deleteButton,
-                          ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
-                        }}
-                        onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
-                        onMouseLeave={() => setHoveredButton(null)}
+                        style={styles.deleteButton}
                         title="Delete"
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
@@ -456,95 +477,72 @@ const ExpenseTracker: React.FC = () => {
           )}
         </div>
       </div>
-
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <div style={styles.modalHeader}>
-          <h2 style={styles.modalTitle}>
-            {editingId ? 'Edit Expense' : 'Add New Expense'}
-          </h2>
-          <button
-            onClick={closeModal}
-            style={{
-              ...styles.closeButton,
-              ...(hoveredButton === 'close' ? styles.closeButtonHover : {})
-            }}
-            onMouseEnter={() => setHoveredButton('close')}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            <X size={24} />
+          <h3 style={styles.modalTitle}>{editingId ? 'Edit Expense' : 'Add New Expense'}</h3>
+          <button onClick={closeModal} style={styles.closeButton}>
+            <X size={20} />
           </button>
         </div>
-
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Description</label>
-          <input
-            type="text"
-            value={formData.description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
-            style={styles.input}
-            placeholder="Enter description"
-          />
-        </div>
-
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Amount</label>
-          <input
-            type="number"
-            step="0.01"
-            value={formData.amount}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
-            style={styles.input}
-            placeholder="0.00"
-          />
-        </div>
-
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Category</label>
-          <select
-            value={formData.category}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
-            style={styles.input}
-          >
-            <option value="">Select category</option>
-            {categories.map((cat: string) => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-        </div>
-
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Date</label>
-          <input
-            type="date"
-            value={formData.date}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
-            style={styles.input}
-          />
-        </div>
-
-        <div style={styles.buttonGroup}>
-          <button
-            style={{
-              ...styles.primaryButton,
-              ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
-            }}
-            onMouseEnter={() => setHoveredButton('submit')}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            {editingId ? 'Update Expense' : 'Add Expense'}
-          </button>
-          <button
-            onClick={closeModal}
-            style={{
-              ...styles.secondaryButton,
-              ...(hoveredButton === 'cancel' ? styles.secondaryButtonHover : {})
-            }}
-            onMouseEnter={() => setHoveredButton('cancel')}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            Cancel
-          </button>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Description</label>
+            <input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="Add Description"
+              required
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Amount (₹)</label>
+            <input
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              style={styles.input}
+              step="0.01"
+              min="0.01"
+              required
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            >
+              <option value="">Select Category</option>
+              {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+            </select>
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Date</label>
+            <input
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            />
+          </div>
+          <div style={styles.buttonGroup}>
+            <button type="submit" style={styles.primaryButton}>
+              {editingId ? 'Save Changes' : 'Add Expense'}
+            </button>
+            <button type="button" onClick={closeModal} style={styles.secondaryButton}>
+              Cancel
+            </button>
+          </div>
+        </form>
       </Modal>
     </div>
   );
