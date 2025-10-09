@@ -1,5 +1,6 @@
 import React, { useState, CSSProperties } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
+import { JSX } from 'react/jsx-runtime';
 
 interface Expense {
   id: number;
@@ -11,9 +12,10 @@ interface Expense {
 
 interface FormData {
   description: string;
-  amount: string;
+  amount: number;
   category: string;
   date: string;
+  id:number;
 }
 
 interface ModalProps {
@@ -315,8 +317,9 @@ const ExpenseTracker: React.FC = () => {
   
   const [formData, setFormData] = useState<FormData>({
     description: '',
-    amount: '',
+    amount:0 ,
     category: '',
+    id:0,
     date: new Date().toISOString().split('T')[0]
   });
   
@@ -332,10 +335,23 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(null);
     setFormData({
       description: '',
-      amount: '',
+      amount: 0,
       category: '',
+      id:0,
       date: new Date().toISOString().split('T')[0]
     });
+  };
+  const openModal = (): void => {
+    setIsModalOpen(true);
+    setEditingId(null);
+    setFormData({
+      description: '',
+      amount: 0,
+      category: '',
+      id:0,
+      date: new Date().toISOString().split('T')[0]
+    });
+ 
   };
 
 
@@ -343,16 +359,45 @@ const ExpenseTracker: React.FC = () => {
   const handleEdit = (expense: Expense): void => {
     setFormData({
       description: expense.description,
-      amount: expense.amount.toString(),
+      amount: expense.amount,
       category: expense.category,
-      date: expense.date
+      date: expense.date,
+      id:expense.id
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
 
+  
+   const handledeleteItem=(description: string)=>{
+    console.log('chaitanya')
+    alert("Are you sure you want to delete this expense? ")
+    setExpenses((prev) => prev.filter((item) => item.description!== description));
+   }
+
+
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+
+
+
+ const handleAddExpense=(formData: FormData):any=> {
+  if (editingId) {
+    setExpenses((prevExpenses) =>
+      prevExpenses.map((expense) =>
+        expense.id === editingId ? { ...formData, id: editingId } : expense
+      )
+    );
+    alert('Expense updated successfully');
+  }
+    else{
+    setExpenses([ ...expenses,{...formData}])
+    alert('Add Expense  successfull')
+    }
+    closeModal();
+
+}
 
   return (
     <div style={styles.container}>
@@ -366,18 +411,22 @@ const ExpenseTracker: React.FC = () => {
               </h1>
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
-            <button
+            
+            <button 
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
-            >
+              onClick={openModal}
+             >
               <Plus size={20} />
               Add Expense
             </button>
+
           </div>
+         
 
           <div style={styles.totalCard}>
             <p style={styles.totalLabel}>Total Expenses</p>
@@ -437,7 +486,7 @@ const ExpenseTracker: React.FC = () => {
                       >
                         <Edit2 size={18} />
                       </button>
-                      <button
+                      <button onClick={()=>handledeleteItem(expense.description)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
@@ -492,7 +541,7 @@ const ExpenseTracker: React.FC = () => {
             type="number"
             step="0.01"
             value={formData.amount}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: Number(e.target.value )})}
             style={styles.input}
             placeholder="0.00"
           />
@@ -523,14 +572,14 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button
+          <button onClick={() => handleAddExpense(formData)}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
-          >
+           >
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
