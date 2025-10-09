@@ -60,14 +60,21 @@ const ExpenseTracker: React.FC = () => {
       category: e.target.value,
       date: new Date().toISOString().split('T')[0]
     });
-
+    if (formData.amount<0){
+      alert("Amount should be greater than 0")
+      return
+    }
+    if (!formData.description || !formData.amount || !formData.category || !formData.date ){
+      alert("Please fill all fields")
+    }else{
     setExpenses(prevExpenses =>
       prevExpenses.map(expense =>
         expense.id === formData.id ? formData : expense
       )
     );
     alert("Expense updated successfully.");
-    setIsModalOpen(false)
+    setIsModalOpen(false)}
+    
   }
 
 
@@ -95,7 +102,7 @@ const ExpenseTracker: React.FC = () => {
       category: e.target.value,
       date: new Date().toISOString().split('T')[0]
     });
-    if (formData.amount<0){
+    if (formData.amount<=0 ){
       alert("Amount should be greater than 0")
       return
     }
