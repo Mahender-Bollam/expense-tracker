@@ -117,8 +117,14 @@ const ExpenseTracker: React.FC = () => {
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   const removeExpense = (id: number) => {
+    // eslint-disable-next-line no-restricted-globals
+    let confirmOption = confirm("Are you sure , do you want remove this expense");
+    if (confirmOption) {
     setExpenses(prevExpenses => prevExpenses.filter(item => item.id !== id));
     alert("Expense removed succesfully")
+  } else {
+    alert("Expense is not removed")
+  }
   }
 
   return (
