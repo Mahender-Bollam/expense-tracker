@@ -1,16 +1,5 @@
 import { Expense } from "../interface/Expense";
-import { FormData } from "../interface/FormData";
-
-interface ExpenseOperationsProps{
-    expenses:Expense[],
-    formData:FormData,
-    editingId:number|null
-    setIsModalOpen:Function,
-    setEditingId:Function,
-    setFormData:Function,
-    setExpenses:Function,
-
-}
+import { ExpenseOperationsProps } from "../interface/ExpenseOperationsProps";
 const useExpenseOperations=({expenses,formData,editingId,setIsModalOpen,setEditingId,setFormData,setExpenses}:ExpenseOperationsProps)=>{
 let localId:number=expenses.length;
   const closeModal = (): void => {
