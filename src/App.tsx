@@ -575,10 +575,13 @@ const ExpenseTracker: React.FC = () => {
                 category: formData.category,
                 date: formData.date
               };
+               if (editingId !== null) {
+                  setExpenses(expenses.map(exp => exp.id === editingId ? expense : exp));
+                } else {
                   setExpenses([...expenses, expense]);
+                }
                 closeModal();
               }}
-            
           >
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
