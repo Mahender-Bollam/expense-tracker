@@ -384,6 +384,11 @@ const ExpenseTracker: React.FC = () => {
     }else{
       setIsModalOpen(true);
     }
+  };
+
+  const deleteExpense = (expenseToDelete:Expense)=>{
+    alert(`The expense with description ${expenseToDelete.description} will be deleted`);
+    setExpenses(expenses.filter(item=>item.description !== expenseToDelete.description));
   }
 
 
@@ -474,6 +479,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                        onClick={()=>deleteExpense(expense)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
