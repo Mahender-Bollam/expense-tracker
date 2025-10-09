@@ -345,7 +345,8 @@ const ExpenseTracker: React.FC = () => {
       category: '',
       date: new Date().toISOString().split('T')[0]
     });
-    
+    setEditingId(null);
+    setIsModalOpen(true);
   }
 
 
