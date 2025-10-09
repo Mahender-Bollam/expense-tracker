@@ -383,8 +383,18 @@ const ExpenseTracker: React.FC = () => {
 
 
  const handleAddExpense=(formData: FormData):any=> {
+  if (editingId) {
+    setExpenses((prevExpenses) =>
+      prevExpenses.map((expense) =>
+        expense.id === editingId ? { ...formData, id: editingId } : expense
+      )
+    );
+    alert('Expense updated successfully');
+  }
+    else{
     setExpenses([ ...expenses,{...formData}])
     alert('Add Expense  successfull')
+    }
     closeModal();
 
 }
