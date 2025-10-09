@@ -355,7 +355,17 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(null);
     setIsModalOpen(true);
   }
-  
+  const handleSubmit =()=>{
+    setFormData({
+      description: formData.description,
+      amount: formData.description,
+      category: formData.description,
+      date:  formData.description,
+      id: expenses.length+1
+      })
+      console.log(formData.id)
+    setExpenses([...expenses,{...formData, amount: Number(formData.amount)}])
+  }
 
 
   const handleEdit = (expense: Expense): void => {
@@ -545,7 +555,7 @@ const ExpenseTracker: React.FC = () => {
 
         <div style={styles.buttonGroup}>
           <button
-          
+          onClick={handleSubmit}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover :{})
