@@ -339,7 +339,13 @@ const ExpenseTracker: React.FC = () => {
   };
 
   const navigateModel = (): void => {
-     setIsModalOpen(true);
+     setFormData({
+      description: "",
+      amount: "",
+      category: "",
+      date: "",
+    });
+    setIsModalOpen(true);
   }
   const handleExpense = () : void => {
     const expense: Expense ={
@@ -349,6 +355,11 @@ const ExpenseTracker: React.FC = () => {
       category : formData.category,
       date : formData.date
     }
+    if(!expense.description || !expense.amount || !expense.category || !expense.date){
+      alert("Fill all details");
+      return;
+    }
+   
     setExpenses([...expenses , expense])
     setIsModalOpen(false);
   } 
