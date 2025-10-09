@@ -353,6 +353,8 @@ const ExpenseTracker: React.FC = () => {
       date: formData.date,} :exp)
 
       );
+      alert("Updated Sucessfully")
+      closeModal()
   }
   
 
