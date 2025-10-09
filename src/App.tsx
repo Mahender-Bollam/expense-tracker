@@ -1,6 +1,5 @@
 import React, { useState, CSSProperties } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-import exp from 'constants';
 
 interface Expense {
   id: number;
@@ -340,12 +339,17 @@ const ExpenseTracker: React.FC = () => {
   };
 
   const handleExpense = (): void => {
-    
      setIsModalOpen(true);
   }
-
-
-  const handleEdit = (expense: Expense): void => {
+  
+  
+  const handleDelete = (id:number) => {
+    const exit = expenses.filter(current => current.id !== id);
+    setExpenses(exit);
+  }
+  
+   
+  const handleEdit = (expense:Expense): void => {
     setFormData({
       description: expense.description,
       amount: expense.amount.toString(),
@@ -353,7 +357,6 @@ const ExpenseTracker: React.FC = () => {
       date: expense.date
     });
     setEditingId(expense.id);
-  
     setIsModalOpen(true);
   };
 
@@ -370,9 +373,11 @@ const ExpenseTracker: React.FC = () => {
                 <DollarSign color="#6366f1" size={32} />
                 Expense Tracker
               </h1>
+              
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
-            <button onClick={() =>handleExpense()} 
+            <button 
+              onClick={() =>handleExpense()}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
@@ -444,6 +449,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                     
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
@@ -489,6 +495,7 @@ const ExpenseTracker: React.FC = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
             style={styles.input}
             placeholder="Enter description"
+            required
           />
         </div>
 
@@ -501,6 +508,7 @@ const ExpenseTracker: React.FC = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
             style={styles.input}
             placeholder="0.00"
+            required
           />
         </div>
 
@@ -510,6 +518,7 @@ const ExpenseTracker: React.FC = () => {
             value={formData.category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
             style={styles.input}
+            required
           >
             <option value="">Select category</option>
             {categories.map((cat: string) => (
@@ -525,11 +534,13 @@ const ExpenseTracker: React.FC = () => {
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
             style={styles.input}
+            required
           />
         </div>
 
         <div style={styles.buttonGroup}>
-          <button onClick={}
+          <button 
+            
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
