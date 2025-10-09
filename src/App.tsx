@@ -4,14 +4,15 @@ import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react'
 interface Expense {
   id: number;
   description: string;
-  amount: number;
+  amount: number ;
   category: string;
   date: string;
 }
 
 interface FormData {
+  id: number;
   description: string;
-  amount: string;
+  amount: number;
   category: string;
   date: string;
 }
@@ -314,8 +315,9 @@ const ExpenseTracker: React.FC = () => {
   ]);
   
   const [formData, setFormData] = useState<FormData>({
+    id:0,
     description: '',
-    amount: '',
+    amount: 0,
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
@@ -331,8 +333,9 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(false);
     setEditingId(null);
     setFormData({
+      id:expenses.length + 1,
       description: '',
-      amount: '',
+      amount: 0,
       category: '',
       date: new Date().toISOString().split('T')[0]
     });
@@ -342,8 +345,9 @@ const ExpenseTracker: React.FC = () => {
 
   const handleEdit = (expense: Expense): void => {
     setFormData({
+      id:expenses.length+1,
       description: expense.description,
-      amount: expense.amount.toString(),
+      amount: Number(expense.amount.toString()),
       category: expense.category,
       date: expense.date
     });
@@ -351,8 +355,26 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const handleAddExpense = ()=>{
+    setIsModalOpen(true);
+  }
+
+  const addexpense = (e:any)=>{
+   setFormData({
+      id:expenses.length+1,
+      description: e.target.value ,
+      amount: e.target.value,
+      category: e.target.value,
+      date: new Date().toISOString().split('T')[0]
+    });
+    setExpenses([...expenses , {...formData}])
+  }
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+ const removeExpense = (id:number)=>{
+    setExpenses(prevExpenses => prevExpenses.filter(item => item.id !== id));
+    alert("Expense removed successfully")
+  }
 
   return (
     <div style={styles.container}>
@@ -373,6 +395,7 @@ const ExpenseTracker: React.FC = () => {
               }}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
+              onClick={handleAddExpense}
             >
               <Plus size={20} />
               Add Expense
@@ -445,6 +468,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
+                        onClick={()=>removeExpense(expense.id)}
                       >
                         <Trash2 size={18} />
                       </button>
@@ -492,7 +516,7 @@ const ExpenseTracker: React.FC = () => {
             type="number"
             step="0.01"
             value={formData.amount}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: Number(e.target.value) })}
             style={styles.input}
             placeholder="0.00"
           />
@@ -530,6 +554,7 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
+            onClick={addexpense}
           >
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
