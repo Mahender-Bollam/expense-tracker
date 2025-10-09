@@ -312,14 +312,14 @@ const ExpenseTracker: React.FC = () => {
     { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
     { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
   ]);
-  
+
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
-  
+
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
@@ -350,6 +350,21 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
+
+  const onSubmit = () => {
+    const updateExpences = expenses.map((item) => {
+      if (item.id == editingId) {
+        return {
+          ...item,
+          ...formData,
+          amount: Number(formData.amount)
+        }
+      }
+      return item
+    })
+    setExpenses(updateExpences)
+    closeModal();
+  }
 
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -387,7 +402,7 @@ const ExpenseTracker: React.FC = () => {
 
         <div style={styles.card}>
           <h2 style={styles.sectionTitle}>Recent Expenses</h2>
-          
+
           {expenses.length === 0 ? (
             <p style={styles.emptyState}>No expenses yet. Add your first expense above!</p>
           ) : (
@@ -412,10 +427,10 @@ const ExpenseTracker: React.FC = () => {
                     </div>
                     <div style={styles.expenseDate}>
                       <Calendar size={14} />
-                      {new Date(expense.date).toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric', 
-                        year: 'numeric' 
+                      {new Date(expense.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
                       })}
                     </div>
                   </div>
@@ -476,7 +491,7 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Description</label>
+         `` <label style={styles.label}>Description</label>
           <input
             type="text"
             value={formData.description}
@@ -528,6 +543,7 @@ const ExpenseTracker: React.FC = () => {
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
             }}
+            onClick={onSubmit}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
           >
