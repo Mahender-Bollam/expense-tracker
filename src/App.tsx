@@ -327,13 +327,18 @@ const ExpenseTracker: React.FC = () => {
     const newExpense: Expense = {
     id: expenses.length + 1,
     description: formData.description,
-    amount: parseFloat(formData.amount),
+    amount:parseInt(formData.amount),
     category: formData.category,
     date: formData.date
   };
    setExpenses([...expenses, newExpense]);
 
   closeModal();
+};
+
+const handleDeleteExpense = (id: number): void => {
+  const updatedExpenses = expenses.filter(expense => expense.id !== id);
+  setExpenses(updatedExpenses);
 };
 
   
@@ -458,10 +463,12 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                       onClick={(e) => handleDeleteExpense(expense.id)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
                         }}
+                       
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
