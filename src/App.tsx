@@ -390,7 +390,14 @@ const ExpenseTracker: React.FC = () => {
    
    
   }
- 
+  
+  const handleRemove = (expenseId: number) => {
+    setExpenses((removeExpense: Expense[]) =>
+      removeExpense.filter((card) => card.id !== expenseId)
+    );
+    console.log("removed expense")
+    alert("Are you delete the expense")
+  };
 
 
   return (
@@ -477,7 +484,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
-                        
+                        onClick = {() => handleRemove(expense.id)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
