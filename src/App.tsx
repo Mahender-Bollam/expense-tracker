@@ -337,6 +337,21 @@ const ExpenseTracker: React.FC = () => {
       date: new Date().toISOString().split('T')[0]
     });
   };
+ const handleAdd = () => {
+
+         setIsModalOpen(!isModalOpen);
+         console.log(formData)
+         
+
+    };
+
+ const handleDelete=(id:number)=>{
+   let expense:Expense[]= expenses.filter(e => {
+      return e.id !== id;
+    });
+    setExpenses(expense );
+    console.log(expenses)
+ }   
 
 
 
@@ -347,9 +362,18 @@ const ExpenseTracker: React.FC = () => {
       category: expense.category,
       date: expense.date
     });
+
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
+  const handleSubmit=(event:any)=>{
+      event.preventDefault();
+      const  ex:Expense={...formData,id:1,amount:Number(formData.amount)}
+      setExpenses({...expenses,})
+      console.log(expenses)
+  }
+  
+
 
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -371,6 +395,7 @@ const ExpenseTracker: React.FC = () => {
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
+              onClick={handleAdd}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
             >
@@ -445,6 +470,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
+                        onClick={()=>handleDelete(expense.id)}
                       >
                         <Trash2 size={18} />
                       </button>
@@ -474,7 +500,7 @@ const ExpenseTracker: React.FC = () => {
             <X size={24} />
           </button>
         </div>
-
+       
         <div style={styles.formGroup}>
           <label style={styles.label}>Description</label>
           <input
@@ -483,10 +509,11 @@ const ExpenseTracker: React.FC = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
             style={styles.input}
             placeholder="Enter description"
+            name="Description"
           />
         </div>
 
-        <div style={styles.formGroup}>
+         <div style={styles.formGroup}>
           <label style={styles.label}>Amount</label>
           <input
             type="number"
@@ -495,6 +522,7 @@ const ExpenseTracker: React.FC = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
             style={styles.input}
             placeholder="0.00"
+            name="amount"
           />
         </div>
 
@@ -504,6 +532,7 @@ const ExpenseTracker: React.FC = () => {
             value={formData.category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
             style={styles.input}
+            name="cat"
           >
             <option value="">Select category</option>
             {categories.map((cat: string) => (
@@ -519,6 +548,7 @@ const ExpenseTracker: React.FC = () => {
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
             style={styles.input}
+            name="date"
           />
         </div>
 
@@ -530,7 +560,9 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
-          >
+            onClick={() => editingId ? console.log() : console.log(formData)}>
+
+          
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
