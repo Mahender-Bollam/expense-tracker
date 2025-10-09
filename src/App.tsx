@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 import { styles } from './components/Styles';
+import { HoveredButton, HoveredExpense } from './types/Button';
+import { Modal } from './components/Model';
+
 interface Expense {
   id: number;
   description: string;
@@ -8,7 +11,6 @@ interface Expense {
   category: string;
   date: string;
 }
-
 interface FormData {
   id: number;
   description: string;
@@ -16,27 +18,6 @@ interface FormData {
   category: string;
   date: string;
 }
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
-
-type HoveredButton = string | null;
-type HoveredExpense = number | null;
-
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        {children}
-      </div>
-    </div>
-  );
-};
 
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
@@ -90,7 +71,7 @@ const ExpenseTracker: React.FC = () => {
   }
 
 
-  const handleEdit = (expense: Expense, e: any): void => {
+  const handleEdit = (expense: Expense): void => {
     setFormData({
       id: expense.id,
       description: expense.description,
@@ -199,7 +180,7 @@ const ExpenseTracker: React.FC = () => {
                     </span>
                     <div style={styles.actionButtons}>
                       <button
-                        onClick={(e) => handleEdit(expense, e)}
+                        onClick={() => handleEdit(expense)}
                         style={{
                           ...styles.editButton,
                           ...(hoveredButton === `edit-${expense.id}` ? styles.editButtonHover : {})
@@ -230,7 +211,6 @@ const ExpenseTracker: React.FC = () => {
           )}
         </div>
       </div>
-
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <div style={styles.modalHeader}>
           <h2 style={styles.modalTitle}>
