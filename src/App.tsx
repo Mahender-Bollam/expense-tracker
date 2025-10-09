@@ -356,11 +356,34 @@ const ExpenseTracker: React.FC = () => {
       amount: expense.amount.toString(),
       category: expense.category,
       date: expense.date
+      
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
-  
+
+  const handleEditSubmit = (expense:FormData,e:any): void =>{
+    setFormData({
+      id: expense.id,
+      description: e.target.value,
+      amount: Number( e.target.value),
+      category: e.target.value,
+      date: new Date().toISOString().split('T')[0]
+    });
+    const UpdateData = {
+      id: expenses.length+1,
+      description: formData.description,
+      amount: Number(formData.amount.toString()),
+      category: formData.category,
+      date: formData.date,
+    }
+    setExpenses(prevExpense =>{
+      return prevExpense.map((item)=> item.id === editingId ? UpdateData:item)
+    })
+    setIsModalOpen(false)
+
+  }
+
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   const handleAdd = ()=>{
@@ -372,6 +395,7 @@ const ExpenseTracker: React.FC = () => {
       date: new Date().toISOString().split('T')[0]
     });
      setIsModalOpen(true)
+     setEditingId(null)
     
    
   }
@@ -387,18 +411,17 @@ const ExpenseTracker: React.FC = () => {
     setExpenses([...expenses,{ ...formData, amount:Number(formData.amount) }])
     console.log(`form details ${formData}`)
     setIsModalOpen(false)
-   
-   
+    
   }
   
   const handleRemove = (expenseId: number) => {
+     alert("Are you delete the expense")
     setExpenses((removeExpense: Expense[]) =>
       removeExpense.filter((card) => card.id !== expenseId)
     );
     console.log("removed expense")
-    alert("Are you delete the expense")
+   
   };
-
 
   return (
     <div style={styles.container}>
@@ -571,7 +594,7 @@ const ExpenseTracker: React.FC = () => {
 
         <div style={styles.buttonGroup}>
           <button
-          onClick={handleSubmit}
+          onClick={editingId ? (e:any)=>handleEditSubmit(formData,e): handleSubmit}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
