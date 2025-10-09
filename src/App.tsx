@@ -365,7 +365,16 @@ const ExpenseTracker: React.FC = () => {
   const handleDelete = (id: number): void => {
     setExpenses(expenses.filter(expense => expense.id !== id));
   };
-
+ 
+  const expense: Expense = {
+        id: addId !== null ? addId : Date.now(),
+        description: formData.description,
+        amount: parseFloat(formData.amount),
+        category: formData.category,
+        date: formData.date
+  };
+    
+  
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
@@ -660,13 +669,10 @@ const ExpenseTracker: React.FC = () => {
         </div>
       </Modal>
     </div>
-//  delete expense
-
   );
 };
 
 export default ExpenseTracker;
-
 
 
 
