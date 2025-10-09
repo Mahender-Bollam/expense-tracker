@@ -24,6 +24,7 @@ interface ModalProps {
 
 type HoveredButton = string | null;
 type HoveredExpense = number | null;
+type HoveredAddButton = string | null;
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -324,6 +325,8 @@ const ExpenseTracker: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
+  const [addData, setAddData] = useState<HoveredAddButton>(null)
+  
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
@@ -350,9 +353,19 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
-
+  
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+
+  // const handleAdd = (data:Expense): any =>{
+  //   setAddData({
+  //     description: data.description,
+  //     amount: data.amount.toString(),
+  //     category: data.category,
+  //     date: data.date
+  //   })
+  // }
 
   return (
     <div style={styles.container}>
