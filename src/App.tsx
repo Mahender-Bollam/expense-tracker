@@ -340,7 +340,8 @@ const ExpenseTracker: React.FC = () => {
 
 
 
-  const handleEdit = (expense: Expense): void => {
+  const handleEdit = (expense: Expense): boolean => {
+
     setFormData({
       description: expense.description,
       amount: expense.amount.toString(),
@@ -349,8 +350,15 @@ const ExpenseTracker: React.FC = () => {
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
+    return true;
   };
-  
+  const validateExpenses = ()=>{
+    if(formData.category.trim().length ===0 || formData.description.trim().length ===0 || Number(formData.amount) <= 0 ){
+      alert(`Please provide the valid details`);
+      return false;
+    }
+    return true;  
+  }
   const addExpense = ()=>{
     const newExpense:Expense = {
       id: Number(expenses.at(-1)?.id)+1,
@@ -359,16 +367,19 @@ const ExpenseTracker: React.FC = () => {
       amount: Number(formData.amount),
       date: formData.date 
     }
-      
+    if(validateExpenses()){
     setExpenses([...expenses,newExpense]);
-    setFormData({
-    description: '',
-    amount: '',
-    category: '',
-    date: new Date().toISOString().split('T')[0]
-  });
-
-    return setIsModalOpen(false);
+        setFormData({
+        description: '',
+        amount: '',
+        category: '',
+        date: new Date().toISOString().split('T')[0]
+      });
+        setEditingId(null)
+        setIsModalOpen(false);
+    }else{
+      setIsModalOpen(true);
+    }
   }
 
 
