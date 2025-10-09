@@ -1,5 +1,6 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState, CSSProperties, useEffect } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
+import { error } from 'console';
 
 interface Expense {
   id: number;
@@ -292,6 +293,9 @@ const styles: Record<string, CSSProperties> = {
   },
   secondaryButtonHover: {
     backgroundColor: '#f9fafb'
+  },
+  error: {
+    color: 'red'
   }
 };
 
@@ -319,6 +323,7 @@ const ExpenseTracker: React.FC = () => {
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
+  const [errors, setErrors] = useState<Partial<FormData>>({})
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -336,6 +341,7 @@ const ExpenseTracker: React.FC = () => {
       category: '',
       date: new Date().toISOString().split('T')[0]
     });
+    setErrors({})
   };
 
 
@@ -351,7 +357,36 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  useEffect(() => {
+    const hasData = Object.keys(formData).some((key) => key != 'date' && formData[key as keyof FormData]);
+    if (hasData) {
+      validateForm()
+    }
+  }, [formData])
+
+
+  const validateForm = () => {
+    const errors: Partial<FormData> = {};
+    if (!formData.description) {
+      errors.description = 'Please enter description';
+    }
+    if (!formData.amount || Number(formData.amount) <= 0) {
+      errors.amount = 'Please enter positive amount';
+    }
+    if (!formData.category) {
+      errors.category = 'Please select category';
+    }
+    const hasErrors = Object.keys(errors).some((key) => errors[key as keyof FormData]);
+    setErrors(errors);
+    return hasErrors;
+  }
+
   const onSubmit = () => {
+    const hasErrors = validateForm()
+    if (hasErrors) {
+      return;
+    }
+
     if (!editingId) {
       const newId = expenses.length ? expenses[expenses.length - 1].id + 1 : 1
       setExpenses([...expenses, { id: newId, ...formData, amount: Number(formData.amount) }])
@@ -510,7 +545,7 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.formGroup}>
-          `` <label style={styles.label}>Description</label>
+          <label style={styles.label}>Description</label>
           <input
             type="text"
             value={formData.description}
@@ -518,6 +553,7 @@ const ExpenseTracker: React.FC = () => {
             style={styles.input}
             placeholder="Enter description"
           />
+          <span style={styles.error}>{errors.description}</span>
         </div>
 
         <div style={styles.formGroup}>
@@ -529,7 +565,9 @@ const ExpenseTracker: React.FC = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
             style={styles.input}
             placeholder="0.00"
+            min={0}
           />
+          <span style={styles.error}>{errors.amount}</span>
         </div>
 
         <div style={styles.formGroup}>
@@ -544,6 +582,7 @@ const ExpenseTracker: React.FC = () => {
               <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
+          <span style={styles.error}>{errors.category}</span>
         </div>
 
         <div style={styles.formGroup}>
