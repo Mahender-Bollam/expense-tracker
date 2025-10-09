@@ -352,9 +352,13 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
     return true;
   };
-  const validateExpenses = ()=>{
+  const validateExpenses = (newExpense:Expense)=>{
     if(formData.category.trim().length ===0 || formData.description.trim().length ===0 || Number(formData.amount) <= 0 ){
       alert(`Please provide the valid details`);
+      return false;
+    }
+    if(expenses.some(item=>item.description === newExpense.description)){
+      alert(`The entered expense ${newExpense.description} alredy exists`);
       return false;
     }
     return true;  
@@ -367,7 +371,7 @@ const ExpenseTracker: React.FC = () => {
       amount: Number(formData.amount),
       date: formData.date 
     }
-    if(validateExpenses()){
+    if(validateExpenses(newExpense)){
     setExpenses([...expenses,newExpense]);
         setFormData({
         description: '',
