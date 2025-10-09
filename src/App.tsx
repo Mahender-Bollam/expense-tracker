@@ -1,30 +1,6 @@
 import React, { useState, CSSProperties, useEffect } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-import { error } from 'console';
-
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-
-interface FormData {
-  description: string;
-  amount: string;
-  category: string;
-  date: string;
-}
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
-
-type HoveredButton = string | null;
-type HoveredExpense = number | null;
+import { Expense,FormData ,ModalProps,HoveredButton,HoveredExpense} from './types/types';
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -462,6 +438,7 @@ const ExpenseTracker: React.FC = () => {
             <div style={styles.expenseList}>
               {expenses.map((expense: Expense) => (
                 <div
+                  data-testid="expense-row"
                   key={expense.id}
                   style={{
                     ...styles.expenseItem,
@@ -502,6 +479,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`edit-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Edit"
+                        data-testid="expense-edit"
                       >
                         <Edit2 size={18} />
                       </button>
@@ -514,6 +492,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
+                        data-testid="expense-delete"
                       >
                         <Trash2 size={18} />
                       </button>
@@ -576,6 +555,7 @@ const ExpenseTracker: React.FC = () => {
             value={formData.category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
             style={styles.input}
+            data-testid="cateegoryid"
           >
             <option value="">Select category</option>
             {categories.map((cat: string) => (
@@ -592,6 +572,7 @@ const ExpenseTracker: React.FC = () => {
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
             style={styles.input}
+            placeholder='Enter date'
           />
         </div>
 
