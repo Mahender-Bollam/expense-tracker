@@ -69,7 +69,8 @@ const ExpenseTracker = () => {
           ) : (
             <div style={styles.expenseList}>
               {expenses.map((expense: Expense) => (
-                <div
+                <div 
+                  data-testid="expense-card"
                   key={expense.id}
                   style={{
                     ...styles.expenseItem,
@@ -102,6 +103,7 @@ const ExpenseTracker = () => {
                     </span>
                     <div style={styles.actionButtons}>
                       <button
+                        data-testid="edit-button"
                         onClick={() => handleEdit(expense)}
                         style={{
                           ...styles.editButton,
@@ -114,6 +116,7 @@ const ExpenseTracker = () => {
                         <Edit2 size={18} />
                       </button>
                       <button 
+                      data-testid="delete-button"
                       onClick={()=>handleDelete(expense)}
                         style={{
                           ...styles.deleteButton,
