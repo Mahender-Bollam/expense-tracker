@@ -341,7 +341,17 @@ const ExpenseTracker: React.FC = () => {
   const navigateModel = (): void => {
      setIsModalOpen(true);
   }
-  
+  const handleExpense = () : void => {
+    const expense: Expense ={
+      id :expenses.length+1,
+      description : formData.description,
+      amount : Number(formData.amount),
+      category : formData.category,
+      date : formData.date
+    }
+    setExpenses([...expenses , expense])
+    setIsModalOpen(false);
+  } 
   
   const handleDelete = (id:number) => {
     const exit = expenses.filter(current => current.id !== id);
@@ -540,7 +550,7 @@ const ExpenseTracker: React.FC = () => {
 
         <div style={styles.buttonGroup}>
           <button 
-            
+            onClick={() =>handleExpense()}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
