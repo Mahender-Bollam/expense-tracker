@@ -1,3 +1,6 @@
+# About
+This project is a simple expense tracker application which allow a user to add expenses, edit the expenses and delete the expenses.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
