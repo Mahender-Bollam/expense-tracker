@@ -358,14 +358,14 @@ const ExpenseTracker: React.FC = () => {
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
 
-  // const handleAdd = (data:Expense): any =>{
-  //   setAddData({
-  //     description: data.description,
-  //     amount: data.amount.toString(),
-  //     category: data.category,
-  //     date: data.date
-  //   })
-  // }
+  const handleAdd = (data:Expense): any =>{
+    setAddData({
+      description: data.description,
+      amount: data.amount.toString(),
+      category: data.category,
+      date: data.date
+    })
+  }
 
   return (
     <div style={styles.container}>
