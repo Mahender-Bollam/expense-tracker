@@ -1,26 +1,8 @@
 import React, { useState, CSSProperties } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-
-interface FormData {
-  description: string;
-  amount: string;
-  category: string;
-  date: string;
-}
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
+import { ModalProps } from './interface/ModelProps';
+import { FormData } from './interface/FormData';
+import { Expense } from './interface/Expense';
 
 type HoveredButton = string | null;
 type HoveredExpense = number | null;
@@ -349,6 +331,7 @@ const ExpenseTracker: React.FC = () => {
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
+    setExpenses([...expenses,expense])
   };
 
   const handleAdd = (): void => {
@@ -362,9 +345,14 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   };
 
-const handleDelete=(expense:Expense)=>{
-  
+const handleDelete=(expense:Expense)=>{  
   setExpenses(addeedExpense=>{return expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
+}
+
+const handleAddData=(expense:Expense)=>{}
+const handleUpdate=(expense:Expense)=>{}
+const handleClick=(expense:Expense)=>{
+  editingId?handleUpdate(expense):handleAddData(expense)
 }
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -541,6 +529,7 @@ const handleDelete=(expense:Expense)=>{
 
         <div style={styles.buttonGroup}>
           <button
+          onClick={()=>handleClick}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
