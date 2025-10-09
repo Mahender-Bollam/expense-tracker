@@ -352,6 +352,12 @@ const ExpenseTracker: React.FC = () => {
   };
 
   const onSubmit = () => {
+    if (!editingId) {
+      const newId = expenses.length ? expenses[expenses.length - 1].id + 1 : 1
+      setExpenses([...expenses, { id: newId, ...formData, amount: Number(formData.amount) }])
+      closeModal()
+      return;
+    }
     const updateExpences = expenses.map((item) => {
       if (item.id == editingId) {
         return {
@@ -370,6 +376,11 @@ const ExpenseTracker: React.FC = () => {
       return item.id != hoveredExpense
     })
     setExpenses(updatedExpenses)
+
+  }
+
+  const handleAdd = () => {
+    setIsModalOpen(true);
   }
 
 
@@ -388,6 +399,7 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
+              onClick={handleAdd}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
