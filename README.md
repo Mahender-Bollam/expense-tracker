@@ -44,3 +44,10 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Feature : Add Expense and Edit Feature
+
+- Implement Add Expense Feature with all details .
+- Handled submit button with alerts.
+- Implement broken Edit option feature successfully.
+- Handled edit feature button.
