@@ -338,9 +338,10 @@ const ExpenseTracker: React.FC = () => {
     });
   
   };
+
   const handleDelete = (expenseId :number):void =>{
+    alert("Are you sure to delete");
     setExpenses(updateDelete => updateDelete.filter(expense => expense.id !== expenseId))
-    
    
   }
 
