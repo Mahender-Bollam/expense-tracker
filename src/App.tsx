@@ -12,9 +12,10 @@ interface Expense {
 
 interface FormData {
   description: string;
-  amount: string;
+  amount: number;
   category: string;
   date: string;
+  id:number;
 }
 
 interface ModalProps {
@@ -316,8 +317,9 @@ const ExpenseTracker: React.FC = () => {
   
   const [formData, setFormData] = useState<FormData>({
     description: '',
-    amount: '',
+    amount:0 ,
     category: '',
+    id:0,
     date: new Date().toISOString().split('T')[0]
   });
   
@@ -333,8 +335,9 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(null);
     setFormData({
       description: '',
-      amount: '',
+      amount: 0,
       category: '',
+      id:0,
       date: new Date().toISOString().split('T')[0]
     });
   };
@@ -343,8 +346,9 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(null);
     setFormData({
       description: '',
-      amount: '',
+      amount: 0,
       category: '',
+      id:0,
       date: new Date().toISOString().split('T')[0]
     });
  
@@ -355,9 +359,10 @@ const ExpenseTracker: React.FC = () => {
   const handleEdit = (expense: Expense): void => {
     setFormData({
       description: expense.description,
-      amount: expense.amount.toString(),
+      amount: expense.amount,
       category: expense.category,
-      date: expense.date
+      date: expense.date,
+      id:expense.id
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
@@ -376,6 +381,13 @@ const ExpenseTracker: React.FC = () => {
 
 
 
+
+ const handleAddExpense=(formData: FormData):any=> {
+    setExpenses([ ...expenses,{...formData}])
+    alert('Add Expense  successfull')
+    closeModal();
+
+}
 
   return (
     <div style={styles.container}>
@@ -519,7 +531,7 @@ const ExpenseTracker: React.FC = () => {
             type="number"
             step="0.01"
             value={formData.amount}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: Number(e.target.value )})}
             style={styles.input}
             placeholder="0.00"
           />
@@ -550,7 +562,7 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button 
+          <button onClick={() => handleAddExpense(formData)}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
