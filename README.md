@@ -1,12 +1,18 @@
-# Getting Started with Create React App
+## Basic ToDo App Using React 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This app tells about the basic items remove, add items based on user clicks and actions . 
 
-## Available Scripts
+### Features : 
 
-In the project directory, you can run:
+- Add a add expense functionality
+- Remove the item 
+
+### SetUp and Cloning 
+
+- To clone the app, run this command in your terminal :
 
 ### `npm start`
+
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
