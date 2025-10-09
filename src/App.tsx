@@ -4,44 +4,7 @@ import { Expense, FormData,ModalProps,HoveredButton,HoveredExpense } from './typ
  import './App.css'
 
 const styles: Record<string, CSSProperties> = {
-  container: {
-    minHeight: '100vh',
-    background: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
-    padding: '24px'
-  },
-  maxWidth: {
-    maxWidth: '896px',
-    margin: '0 auto'
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: '16px',
-    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-    padding: '32px',
-    marginBottom: '24px'
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '24px'
-  },
-  titleWrapper: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  title: {
-    fontSize: '30px',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px'
-  },
-  subtitle: {
-    color: '#6b7280'
-  },
+
   addButton: {
     backgroundColor: '#6366f1',
     color: 'white',
@@ -58,37 +21,6 @@ const styles: Record<string, CSSProperties> = {
   },
   addButtonHover: {
     backgroundColor: '#4f46e5'
-  },
-  totalCard: {
-    background: 'linear-gradient(to right, #6366f1, #9333ea)',
-    borderRadius: '12px',
-    padding: '24px',
-    color: 'white'
-  },
-  totalLabel: {
-    fontSize: '14px',
-    opacity: 0.9,
-    marginBottom: '4px'
-  },
-  totalAmount: {
-    fontSize: '36px',
-    fontWeight: 'bold'
-  },
-  sectionTitle: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: '16px'
-  },
-  emptyState: {
-    color: '#6b7280',
-    textAlign: 'center',
-    padding: '32px 0'
-  },
-  expenseList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px'
   },
   expenseItem: {
     display: 'flex',
@@ -115,34 +47,7 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: '600',
     color: '#1f2937'
   },
-  categoryBadge: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    padding: '4px 8px',
-    backgroundColor: '#e0e7ff',
-    color: '#4338ca',
-    borderRadius: '4px',
-    fontSize: '12px',
-    fontWeight: '500'
-  },
-  expenseDate: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontSize: '14px',
-    color: '#6b7280'
-  },
-  expenseRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px'
-  },
-  expenseAmount: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    color: '#1f2937'
-  },
+ 
   actionButtons: {
     display: 'flex',
     gap: '8px'
