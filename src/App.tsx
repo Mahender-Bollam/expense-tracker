@@ -347,7 +347,7 @@ const ExpenseTracker: React.FC = () => {
       category: '',
       date: new Date().toISOString().split('T')[0]
     });
-    console.log("chaitanya")
+ 
   };
 
 
@@ -363,9 +363,17 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  
+   const handledeleteItem=(description: string)=>{
+    console.log('chaitanya')
+    alert("Are you sure you want to delete this expense? ")
+    setExpenses((prev) => prev.filter((item) => item.description!== description));
+   }
+
 
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
 
 
 
@@ -456,7 +464,7 @@ const ExpenseTracker: React.FC = () => {
                       >
                         <Edit2 size={18} />
                       </button>
-                      <button
+                      <button onClick={()=>handledeleteItem(expense.description)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
@@ -542,14 +550,14 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button
+          <button 
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
-         onClick={closeModal} >
+           >
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
