@@ -1,20 +1,7 @@
 import React, { useState, CSSProperties, useContext, Children } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-
-interface FormData {
-  description: string;
-  amount: string;
-  category: string;
-  date: string;
-}
+import { Expense } from './interface/expense';
+import { FormData } from './interface/formData';
 
 interface ModalProps {
   isOpen: boolean;
@@ -475,15 +462,17 @@ const ExpenseTracker: React.FC = () => {
           </button>
         </div>
 
-        <div style={styles.formGroup}>
+        <div style={styles.formGroup} >
           <label style={styles.label}>Description</label>
           <input
             type="text"
             value={formData.description}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
+            
             style={styles.input}
             placeholder="Enter description"
           />
+          
         </div>
 
         <div style={styles.formGroup}>
@@ -523,7 +512,7 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button
+          <button onSubmit={()=>setFormData}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
@@ -533,7 +522,7 @@ const ExpenseTracker: React.FC = () => {
           >
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
-          <button
+          <button 
             onClick={closeModal}
             style={{
               ...styles.secondaryButton,
