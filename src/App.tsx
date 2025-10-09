@@ -1,5 +1,5 @@
-import React, { useState, CSSProperties, useContext, Children } from 'react';
-import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X, Target } from 'lucide-react';
+import React, { useState } from 'react';
+import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 import { Expense } from './interface/expense';
 import { FormData } from './interface/formData';
 import { HoveredButton } from './types/types';
@@ -23,16 +23,28 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 const ExpenseTracker: React.FC = () => {
 
   const handleModalData = ()=>{
-    const data = {
+    if(editingId !== null){
+      setExpenses((preExpenses)=>preExpenses.map((task)=> task.id === editingId ? {
+        ...task,
+        ...(formData.description !== task.description && {description : formData.description}),
+        ...(parseFloat(formData.amount) !== task.amount && {amount : parseFloat(formData.amount)}),
+        ...(formData.category !== task.category && {category : formData.category}),
+        ...(formData.date !== task.date && {date : formData.date})
+      }:task
+    ))
+    closeModal();
+    }else{
+      const newdata = {
       id : Date.now(),
       description: formData.description ,
       amount: parseFloat(formData.amount), 
       category:formData.category , 
       date:formData.date
     }
-    console.log(data)
-    setExpenses([...expenses , data])
+    setExpenses([...expenses , newdata])
+    alert("Expense Added")
     closeModal();
+    }
   }
   
   const [expenses, setExpenses] = useState<Expense[]>([
