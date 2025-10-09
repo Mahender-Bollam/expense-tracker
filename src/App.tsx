@@ -362,6 +362,10 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   };
 
+const handleDelete=(expense:Expense)=>{
+  
+  setExpenses(addeedExpense=>{return expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
+}
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
@@ -449,7 +453,8 @@ const ExpenseTracker: React.FC = () => {
                       >
                         <Edit2 size={18} />
                       </button>
-                      <button
+                      <button 
+                      onClick={()=>handleDelete(expense)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
