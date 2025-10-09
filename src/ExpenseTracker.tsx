@@ -2,7 +2,10 @@
 import React, { useState, FormEvent} from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 import  {styles} from './ExpenseTracker.styles';
-import {Expense,FormData,ModalProps,HoveredButton,HoveredExpense} from './models/ExpenseTracker.types';
+import {Expense} from './models/expense';
+import {FormData} from './models/formData';
+import {ModalProps} from './models/modalProps';
+import {HoveredButton, HoveredExpense} from './models/hoveredButton';
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
   return (
