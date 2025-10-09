@@ -338,7 +338,7 @@ const ExpenseTracker: React.FC = () => {
     });
   };
 
-  const handleExpense = (): void => {
+  const navigateModel = (): void => {
      setIsModalOpen(true);
   }
   
@@ -377,7 +377,7 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button 
-              onClick={() =>handleExpense()}
+              onClick={() =>navigateModel()}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
