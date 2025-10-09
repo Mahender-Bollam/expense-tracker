@@ -351,6 +351,17 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const handleAdd = (): void => {
+    setFormData({
+      description: "",
+      amount: "",
+      category: "",
+      date: ""
+    });
+    setEditingId(null);
+    setIsModalOpen(true);
+  };
+
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
@@ -367,6 +378,7 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
+            onClick={()=>handleAdd()}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
