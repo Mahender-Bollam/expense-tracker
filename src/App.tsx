@@ -324,6 +324,7 @@ const ExpenseTracker: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
+  const [expense, setExpense] = useState<boolean>();
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
@@ -350,9 +351,13 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
-
+const removeExpense = (expense: Expense): void =>{
+ 
+}
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+  
 
   return (
     <div style={styles.container}>
@@ -367,12 +372,16 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
+
+            onClick={() => handleEdit(expense)}
               style={{
+                
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
+             
             >
               <Plus size={20} />
               Add Expense
@@ -438,6 +447,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                      onClick={() => removeExpense(expense)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
