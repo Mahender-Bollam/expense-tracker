@@ -2,15 +2,9 @@ import React, { useState, CSSProperties, useContext, Children } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X, Target } from 'lucide-react';
 import { Expense } from './interface/expense';
 import { FormData } from './interface/formData';
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
-
-type HoveredButton = string | null;
-type HoveredExpense = number | null;
+import { HoveredButton } from './types/types';
+import { HoveredExpense } from './types/types';
+import { ModalProps } from './interface/modelProps';
 
 const styles: Record<string, CSSProperties> = {
   container: {
