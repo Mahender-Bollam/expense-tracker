@@ -1,5 +1,5 @@
 import React, { useState, CSSProperties, useContext, Children } from 'react';
-import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
+import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X, Target } from 'lucide-react';
 import { Expense } from './interface/expense';
 import { FormData } from './interface/formData';
 
@@ -295,18 +295,33 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 };
 
 const ExpenseTracker: React.FC = () => {
+
+  const handleModalData = ()=>{
+    const data = {
+      id : Date.now(),
+      description: formData.description ,
+      amount: parseFloat(formData.amount), 
+      category:formData.category , 
+      date:formData.date
+    }
+    console.log(data)
+    setExpenses([...expenses , data])
+    closeModal();
+  }
+  
   const [expenses, setExpenses] = useState<Expense[]>([
     { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
     { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
   ]);
-  
+
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
-  
+   
+
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
@@ -424,7 +439,9 @@ const ExpenseTracker: React.FC = () => {
                       >
                         <Edit2 size={18} />
                       </button>
-                      <button
+
+                      <button 
+
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
@@ -462,12 +479,13 @@ const ExpenseTracker: React.FC = () => {
           </button>
         </div>
 
-        <div style={styles.formGroup} >
+        <div style={styles.formGroup} onSubmit={(e) => { e.preventDefault(); }}>
           <label style={styles.label}>Description</label>
           <input
             type="text"
             value={formData.description}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
+            
             
             style={styles.input}
             placeholder="Enter description"
@@ -512,7 +530,7 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button onSubmit={()=>setFormData}
+          <button onClick={handleModalData}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
