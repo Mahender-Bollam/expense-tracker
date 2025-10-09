@@ -373,6 +373,7 @@ const ExpenseTracker: React.FC = () => {
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
  const removeExpense = (id:number)=>{
     setExpenses(prevExpenses => prevExpenses.filter(item => item.id !== id));
+    alert("Expense removed successfully")
   }
 
   return (
