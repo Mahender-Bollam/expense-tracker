@@ -338,6 +338,15 @@ const ExpenseTracker: React.FC = () => {
     });
   };
 
+  const handleAdd = ():void =>{
+    setFormData({
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0]
+    });
+    
+  }
 
 
   const handleEdit = (expense: Expense): void => {
@@ -347,7 +356,7 @@ const ExpenseTracker: React.FC = () => {
       category: expense.category,
       date: expense.date
     });
-    setEditingId(expense.id);
+  setEditingId(expense.id);
     setIsModalOpen(true);
   };
 
@@ -367,8 +376,9 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
+            onClick={() => handleAdd()}
               style={{
-                ...styles.addButton,
+                ...styles.addButton,...styles.actionButtons,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
               onMouseEnter={() => setHoveredButton('add')}
@@ -526,7 +536,7 @@ const ExpenseTracker: React.FC = () => {
           <button
             style={{
               ...styles.primaryButton,
-              ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
+              ...(hoveredButton === 'submit' ? styles.primaryButtonHover :{})
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
