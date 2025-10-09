@@ -364,9 +364,11 @@ const ExpenseTracker: React.FC = () => {
   
 
   const handleDelete = (id: number): void => {
+    const confirmed = window.confirm("You want to delete this expense?");
+  if (confirmed) {
     setExpenses(expenses.filter(expense => expense.id !== id));
   };
-
+};
   
   const expense: Expense = {
         id: addId !== null ? addId : Date.now(),
