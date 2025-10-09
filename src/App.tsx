@@ -365,6 +365,7 @@ const ExpenseTracker: React.FC = () => {
       })
       console.log(formData.id)
     setExpenses([...expenses,{...formData, amount: Number(formData.amount)}])
+    setIsModalOpen(false)
   }
 
 
