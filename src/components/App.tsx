@@ -340,25 +340,39 @@ const ExpenseTracker: React.FC = () => {
  const handleAdd = () => {
 
          setIsModalOpen(!isModalOpen);
-         console.log(formData)
+        // console.log(formData)
          
 
     };
+  const handleUpdate=()=>{
+      //e.preventDefault();
+      setExpenses((prevExpenses)=>
+         prevExpenses.map(( exp) => exp.id === editingId ?{...exp,description: formData.description,
+         amount: parseInt(formData.amount),
+         category: formData.category,
+         date: formData.date,} :exp)
 
+      );
+      closeModal();
 
+  }
+  
 
   const handleEdit = (expense: Expense): void => {
+
+    
     setFormData({
       description: expense.description,
       amount: expense.amount.toString(),
       category: expense.category,
       date: expense.date
     });
+    
 
     setEditingId(expense.id);
     setIsModalOpen(true);
-  };
-  const handleSubmit=():void =>{
+  }
+  const handleAddExpense=():void =>{
 
       //event.preventDefault();
        const ex:Expense={
@@ -370,7 +384,9 @@ const ExpenseTracker: React.FC = () => {
         date: formData.date }
         setExpenses([...expenses, ex])
          console.log("vani")
+
          closeModal();
+         alert("Added successfully")
 
       }
      
@@ -558,9 +574,9 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
-            onClick= {handleSubmit}>
+            onClick= {handleAddExpense}>
 
-          
+            
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
