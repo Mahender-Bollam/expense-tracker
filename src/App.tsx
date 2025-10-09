@@ -10,11 +10,13 @@ interface Expense {
 }
 
 interface FormData {
+  id: number;
   description: string;
-  amount: string;
+  amount: string |number;
   category: string;
-  date: string;
+  date: string ;
 }
+
 
 interface ModalProps {
   isOpen: boolean;
@@ -22,9 +24,10 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
+
 type HoveredButton = string | null;
 type HoveredExpense = number | null;
-type HoveredAddButton = string | null;
+
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -298,7 +301,6 @@ const styles: Record<string, CSSProperties> = {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
-
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -315,24 +317,20 @@ const ExpenseTracker: React.FC = () => {
   ]);
   
   const [formData, setFormData] = useState<FormData>({
+    id: expenses.length+1,
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
+  console.log(formData)
     
-  const[data,setData] = useState<FormData>({
-    description: '',
-    amount: '',
-    category: '',
-    date: new Date().toISOString().split('T')[0]
-  })
-  
+
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
-  const [addData, setAddData] = useState<HoveredAddButton>(null)
+  
   
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
@@ -341,6 +339,7 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(false);
     setEditingId(null);
     setFormData({
+      id: expenses.length+1,
       description: '',
       amount: '',
       category: '',
@@ -352,6 +351,7 @@ const ExpenseTracker: React.FC = () => {
 
   const handleEdit = (expense: Expense): void => {
     setFormData({
+      id: expense.id+1 ,
       description: expense.description,
       amount: expense.amount.toString(),
       category: expense.category,
@@ -361,21 +361,37 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   };
   
-
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
-
-  const handleAdd = (data:Expense): any =>{
-    setData({
-      description: data.description,
-      amount: data.amount.toString(),
-      category: data.category,
-      date: data.date
+  const handleAdd = ()=>{
+    setFormData({
+      id:expenses.length + 1,
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0]
     });
-    setAddData(expenses.id)
-  
-
+     setIsModalOpen(true)
+    
+   
   }
+  const handleSubmit = () =>{
+    setFormData({
+      id:expenses.length+1,
+      description: formData.description,
+      amount: formData.amount,
+      category: formData.category,
+      date: formData.date
+
+    })
+    setExpenses([...expenses,{ ...formData, amount:Number(formData.amount) }])
+    console.log(`form details ${formData}`)
+    setIsModalOpen(false)
+   
+   
+  }
+ 
+
 
   return (
     <div style={styles.container}>
@@ -390,7 +406,7 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
-              onClick={() => handleEdit(data)}
+             onClick={handleAdd}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
@@ -402,7 +418,6 @@ const ExpenseTracker: React.FC = () => {
               Add Expense
             </button>
           </div>
-
           <div style={styles.totalCard}>
             <p style={styles.totalLabel}>Total Expenses</p>
             <p style={styles.totalAmount}>${totalExpense.toFixed(2)}</p>
@@ -462,6 +477,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                        
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
@@ -548,6 +564,7 @@ const ExpenseTracker: React.FC = () => {
 
         <div style={styles.buttonGroup}>
           <button
+          onClick={handleSubmit}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
@@ -575,3 +592,5 @@ const ExpenseTracker: React.FC = () => {
 };
 
 export default ExpenseTracker;
+
+
