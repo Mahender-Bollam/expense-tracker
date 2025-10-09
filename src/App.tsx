@@ -358,6 +358,12 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
+  const handleSubmit=(event:any)=>{
+      event.preventDefault();
+      
+      console.log(formData)
+      setExpenses[...expenses,]
+  }
   
 
 
@@ -541,7 +547,9 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
-          >
+            onClick={() => editingId ? console.log() : console.log(formData)}>
+
+          
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
