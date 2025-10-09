@@ -320,6 +320,13 @@ const ExpenseTracker: React.FC = () => {
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
+    
+  const[data,setData] = useState<FormData>({
+    description: '',
+    amount: '',
+    category: '',
+    date: new Date().toISOString().split('T')[0]
+  })
   
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -359,12 +366,15 @@ const ExpenseTracker: React.FC = () => {
 
 
   const handleAdd = (data:Expense): any =>{
-    setAddData({
+    setData({
       description: data.description,
       amount: data.amount.toString(),
       category: data.category,
       date: data.date
-    })
+    });
+    setAddData(expenses.id)
+  
+
   }
 
   return (
@@ -380,6 +390,7 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
+              onClick={() => handleEdit(data)}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
