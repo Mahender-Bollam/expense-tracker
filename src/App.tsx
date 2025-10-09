@@ -340,8 +340,6 @@ const ExpenseTracker: React.FC = () => {
     });
   };
 
-
-
   const handleEdit = (expense: Expense): void => {
     setFormData({
       description: expense.description,
@@ -353,7 +351,20 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const handleAdd = (expense: Expense): void => {
+    setFormData({
+      description: expense.description,
+      amount: expense.amount.toString(),
+      category: expense.category,
+      date: expense.date
+    });
+    setAddId(expense.id);
+    setIsModalOpen(true);
+  };
 
+  const handleDelete = (id: number): void => {
+    setExpenses(expenses.filter(expense => expense.id !== id));
+  };
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
@@ -369,7 +380,10 @@ const ExpenseTracker: React.FC = () => {
               </h1>
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
+                    
+            <div style={styles.actionButtons}>
             <button
+              onClick={() => handleAdd(expense)}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
@@ -380,6 +394,7 @@ const ExpenseTracker: React.FC = () => {
               <Plus size={20} />
               Add Expense
             </button>
+            </div>
 
 
           </div>
@@ -443,6 +458,8 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                          onClick={() => handleDelete(expense.id)}
+
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
@@ -643,9 +660,16 @@ const ExpenseTracker: React.FC = () => {
         </div>
       </Modal>
     </div>
+//  delete expense
 
-    
   );
 };
 
 export default ExpenseTracker;
+
+
+
+
+
+
+
