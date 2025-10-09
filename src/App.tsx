@@ -561,7 +561,8 @@ const handleDeleteExpense = (id: number): void => {
             onMouseLeave={() => setHoveredButton(null)}
            
           >
-            {editingId ? 'Update Expense': 'Add Expense'}
+            {
+            editingId ? 'Update Expense': 'Add Expense'}
           </button>
           <button
             onClick={closeModal}
