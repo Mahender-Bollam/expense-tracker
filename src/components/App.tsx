@@ -350,7 +350,8 @@ const ExpenseTracker: React.FC = () => {
       return e.id !== id;
     });
     setExpenses(expense );
-    console.log(expenses)
+    //console.log(expenses)
+    alert("Deleted Successfully")
  }   
 
 
