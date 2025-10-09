@@ -319,7 +319,23 @@ const ExpenseTracker: React.FC = () => {
     date: new Date().toISOString().split('T')[0]
   });
 
- 
+ const handleAddExpense = (): void => {
+  if (!formData.description || !formData.amount || !formData.category) {
+    alert('Missed it, so fill in all fields');
+    return;
+  }
+    const newExpense: Expense = {
+    id: expenses.length + 1,
+    description: formData.description,
+    amount: parseFloat(formData.amount),
+    category: formData.category,
+    date: formData.date
+  };
+   setExpenses([...expenses, newExpense]);
+
+  closeModal();
+};
+
   
   const [editingId, setEditingId] = useState<number|null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -372,6 +388,7 @@ const ExpenseTracker: React.FC = () => {
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
+              onClick={() => setIsModalOpen(true)}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
             >
@@ -400,6 +417,7 @@ const ExpenseTracker: React.FC = () => {
                     ...styles.expenseItem,
                     ...(hoveredExpense === expense.id ? styles.expenseItemHover : {})
                   }}
+                  
                   onMouseEnter={() => setHoveredExpense(expense.id)}
                   onMouseLeave={() => setHoveredExpense(null)}
                 >
@@ -432,6 +450,7 @@ const ExpenseTracker: React.FC = () => {
                           ...styles.editButton,
                           ...(hoveredButton === `edit-${expense.id}` ? styles.editButtonHover : {})
                         }}
+                     
                         onMouseEnter={() => setHoveredButton(`edit-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Edit"
@@ -469,6 +488,7 @@ const ExpenseTracker: React.FC = () => {
               ...styles.closeButton,
               ...(hoveredButton === 'close' ? styles.closeButtonHover : {})
             }}
+           
             onMouseEnter={() => setHoveredButton('close')}
             onMouseLeave={() => setHoveredButton(null)}
           >
@@ -522,13 +542,14 @@ const ExpenseTracker: React.FC = () => {
             style={styles.input}
           />
         </div>
-
+       <button  onClick={() => setIsModalOpen(true)}> </button>
         <div style={styles.buttonGroup}>
           <button
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
             }}
+            onClick={handleAddExpense}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
            
@@ -553,3 +574,5 @@ const ExpenseTracker: React.FC = () => {
 };
 
 export default ExpenseTracker;
+ 
+
