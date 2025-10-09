@@ -1,6 +1,7 @@
 import React, { useState, CSSProperties } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 
+
 interface Expense {
   id: number;
   description: string;
@@ -338,6 +339,34 @@ const ExpenseTracker: React.FC = () => {
     });
   };
 
+  const handleAdd = () : void => {
+    
+    setFormData({
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0]
+    });
+    setIsModalOpen(true);
+    
+  
+  }
+
+  const addExpense = () :void => {
+      const newExpense : Expense = {
+        id : (expenses[expenses.length-1].id)+1,
+        description : formData.description,
+        amount : parseFloat(formData.amount),
+        category : formData.category,
+        date : formData.date
+      };
+      expenses.push(newExpense);
+      setExpenses(expenses);
+      setIsModalOpen(false);
+      
+         
+  }
+
 
 
   const handleEdit = (expense: Expense): void => {
@@ -349,7 +378,25 @@ const ExpenseTracker: React.FC = () => {
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
+    
+      const findIndex : number = expenses.findIndex((task)=>task.id === expense.id);
+      expenses[findIndex].amount = parseFloat(formData.amount);
+      expenses[findIndex].category = formData.category;
+      expenses[findIndex].date = formData.date;
+      expenses[findIndex].description = formData.description;
+
+    
+   
+    
   };
+
+
+  const handleDelete = (expense : Expense): void => {
+    
+    const newExpenses : Expense[] = expenses.filter((task)=>task.id !== expense.id);
+    setExpenses(newExpenses);
+
+  }
 
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -367,6 +414,7 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
+              onClick={()=> handleAdd()}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
@@ -438,6 +486,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                        onClick={()=> handleDelete(expense)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
@@ -524,6 +573,7 @@ const ExpenseTracker: React.FC = () => {
 
         <div style={styles.buttonGroup}>
           <button
+            onClick={addExpense}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
