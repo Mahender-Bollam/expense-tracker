@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 import { ModalProps } from './interface/ModelProps';
 import { FormData } from './interface/FormData';
@@ -26,13 +26,14 @@ const ExpenseTracker: React.FC = () => {
     { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
     { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
   ]);
-  const id=expenses.length
   const [formData, setFormData] = useState<FormData>({
+    id:0,
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
+  let localId:number=expenses.length;
   
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -40,11 +41,11 @@ const ExpenseTracker: React.FC = () => {
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
-
   const closeModal = (): void => {
     setIsModalOpen(false);
     setEditingId(null);
     setFormData({
+      id:0,
       description: '',
       amount: '',
       category: '',
@@ -54,6 +55,7 @@ const ExpenseTracker: React.FC = () => {
 
   const handleEdit = (expense: Expense): void => {
     setFormData({
+      id:expense.id,
       description: expense.description,
       amount: expense.amount.toString(),
       category: expense.category,
@@ -61,7 +63,6 @@ const ExpenseTracker: React.FC = () => {
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
-   
   };
 
   const handleAdd = (): void => {
@@ -70,35 +71,52 @@ const ExpenseTracker: React.FC = () => {
 
 const handleDelete=(expense:Expense)=>{  
   alert("Are you sure to delete expense?")
-  setExpenses(addeedExpense=>{return expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
+  setExpenses(()=>{return expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
 }
 
 const handleAddData=(e:any)=>{
   setIsModalOpen(false);
   setEditingId(null);
   setFormData({
+    id:localId+1,
     description:e.target.value,
     amount:e.target.value,
     category:e.target.value,
     date:e.target.value
     });
-    console.log(formData)
   const {description,amount,category,date}=formData
-  const addedExpense:Expense={
-    id:id+1,
+  setExpenses(()=>{return [...expenses,
+    {id:localId+1,
     description,
     amount:parseInt(amount),
     category,
-    date
+    date}]})
+  console.log(expenses)
+}
+const handleUpdate=(e:any)=>{
+  setFormData({
+    id:localId,
+    description:e.target.value,
+    amount:e.target.value,
+    category:e.target.value,
+    date:e.target.value
+    })
+  const existing=expenses.find(existingExpense=>existingExpense.id===formData.id)
+  if(existing){
+    const {description,amount,category,date}=formData
+    const updatedExpense={
+      id:localId+1,
+      description,
+      amount:parseInt(amount),
+      category,
+      date
+    }
+   setExpenses((expenses:Expense[])=>expenses.map(expense=>expense.id===formData.id?updatedExpense:expense))
   }
-  setExpenses(()=>{return [...expenses,addedExpense]})
+  setIsModalOpen(false)
 }
-const handleUpdate=(expense:Expense,e:any)=>{
-  const existing=expenses.find(addedExpense=>addedExpense.id===expense.id);
-  
-}
-const handleClick=(e:any,expense:Expense)=>{
-  editingId?handleUpdate(expense,e):handleAddData(e)
+const handleClick=(e:any)=>{
+  editingId?handleUpdate(e):handleAddData(e)
 }
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -275,7 +293,7 @@ const handleClick=(e:any,expense:Expense)=>{
 
         <div style={styles.buttonGroup}>
           <button
-          onClick={()=>handleClick}
+          onClick={handleClick}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
