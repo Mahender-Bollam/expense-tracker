@@ -1,5 +1,6 @@
 import React, { useState, CSSProperties } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
+import { JSX } from 'react/jsx-runtime';
 
 interface Expense {
   id: number;
@@ -337,6 +338,17 @@ const ExpenseTracker: React.FC = () => {
       date: new Date().toISOString().split('T')[0]
     });
   };
+  const openModal = (): void => {
+    setIsModalOpen(true);
+    setEditingId(null);
+    setFormData({
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0]
+    });
+    console.log("chaitanya")
+  };
 
 
 
@@ -352,7 +364,10 @@ const ExpenseTracker: React.FC = () => {
   };
 
 
+
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+
 
   return (
     <div style={styles.container}>
@@ -366,18 +381,22 @@ const ExpenseTracker: React.FC = () => {
               </h1>
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
-            <button
+            
+            <button 
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
-            >
+              onClick={openModal}
+             >
               <Plus size={20} />
               Add Expense
             </button>
+
           </div>
+         
 
           <div style={styles.totalCard}>
             <p style={styles.totalLabel}>Total Expenses</p>
@@ -530,7 +549,7 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
-          >
+         onClick={closeModal} >
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
