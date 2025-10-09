@@ -38,6 +38,15 @@ const handleDelete=(expense:Expense)=>{
 const handleAddData=(e:any)=>{
   setIsModalOpen(false);
   setEditingId(null);
+  if(formData.amount===""|| formData.category===""||formData.date===""||formData.description===""){
+    alert("Please fill all the fields.")
+    return setIsModalOpen(true)
+  }
+  else if(parseInt(formData.amount)<=0){
+    alert("Amount must be greater than zero.")
+    return setIsModalOpen(true)
+  }
+  else{
   setFormData({
     id:localId+1,
     description:e.target.value,
@@ -53,6 +62,7 @@ const handleAddData=(e:any)=>{
     category,
     date}]})
   console.log(expenses)
+    }
 }
 const handleUpdate=(e:any)=>{
   setFormData({
