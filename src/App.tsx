@@ -361,6 +361,12 @@ const ExpenseTracker: React.FC = () => {
     }
       
     setExpenses([...expenses,newExpense]);
+    setFormData({
+    description: '',
+    amount: '',
+    category: '',
+    date: new Date().toISOString().split('T')[0]
+  });
 
     return setIsModalOpen(false);
   }
