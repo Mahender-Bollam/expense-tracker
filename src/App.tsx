@@ -208,6 +208,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`edit-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Edit"
+                        role='edit' 
                       >
                         <Edit2 size={18} />
                       </button>
@@ -219,6 +220,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
+                        role='Remove' 
                         onClick={() => removeExpense(expense.id)}
                       >
                         <Trash2 size={18} />
