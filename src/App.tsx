@@ -365,6 +365,12 @@ const ExpenseTracker: React.FC = () => {
     setExpenses(updateExpences)
     closeModal();
   }
+  const handleDelete = () => {
+    const updatedExpenses = expenses.filter((item) => {
+      return item.id != hoveredExpense
+    })
+    setExpenses(updatedExpenses)
+  }
 
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -453,6 +459,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                        onClick={handleDelete}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
@@ -491,7 +498,7 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.formGroup}>
-         `` <label style={styles.label}>Description</label>
+          `` <label style={styles.label}>Description</label>
           <input
             type="text"
             value={formData.description}
