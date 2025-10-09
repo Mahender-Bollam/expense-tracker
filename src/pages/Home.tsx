@@ -1,18 +1,18 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
-import EditExpenseModal from "../components/EditExpenseModal";
 import { Expense } from "../types";
 import { sampleExpenses } from "../data/sampleExpenses";
 
-const STORAGE_KEY = "expense-tracker:expenses";
+const store = "expense:expenses";
 
 const Home: FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw) as Expense[];
-    } catch {}
+      const data = localStorage.getItem(store);
+      if (data) return JSON.parse(data) as Expense[];
+    } 
+    catch {}
     return sampleExpenses;
   });
 
@@ -20,8 +20,9 @@ const Home: FC = () => {
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
-    } catch {}
+      localStorage.setItem(store, JSON.stringify(expenses));
+    } 
+    catch {}
   }, [expenses]);
 
   const nextId = useMemo(() => {
