@@ -1,5 +1,6 @@
 import React, { useState, CSSProperties } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
+import exp from 'constants';
 
 interface Expense {
   id: number;
@@ -338,6 +339,10 @@ const ExpenseTracker: React.FC = () => {
     });
   };
 
+  const handleExpense = (): void => {
+    
+     setIsModalOpen(true);
+  }
 
 
   const handleEdit = (expense: Expense): void => {
@@ -348,6 +353,7 @@ const ExpenseTracker: React.FC = () => {
       date: expense.date
     });
     setEditingId(expense.id);
+  
     setIsModalOpen(true);
   };
 
@@ -366,7 +372,7 @@ const ExpenseTracker: React.FC = () => {
               </h1>
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
-            <button
+            <button onClick={() =>handleExpense()} 
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
@@ -523,7 +529,7 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button
+          <button onClick={}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
