@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState, CSSProperties, useContext, Children } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 
 interface Expense {
@@ -366,7 +366,7 @@ const ExpenseTracker: React.FC = () => {
               </h1>
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
-            <button
+            <button onClick={()=>setIsModalOpen(true)}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
