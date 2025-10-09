@@ -391,6 +391,23 @@ const ExpenseTracker: React.FC = () => {
     setExpenses(expenses.filter(item=>item.description !== expenseToDelete.description));
   }
 
+  const editExpense = (expenseId:number)=>{
+    const newExpense:Expense = {
+      id: expenseId,
+      description: formData.description,
+      category:formData.category,
+      amount: Number(formData.amount),
+      date: formData.date 
+    }
+    const findExpense = expenses.findIndex(item=>item.id === expenseId);
+    if(findExpense !== -1){
+      expenses[findExpense]=newExpense;
+      setExpenses(expenses)
+    }
+    setIsModalOpen(false)
+    setEditingId(null)
+  }
+
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
@@ -566,7 +583,7 @@ const ExpenseTracker: React.FC = () => {
 
         <div style={styles.buttonGroup}>
           <button
-            onClick={addExpense}
+            onClick={()=>editingId? editExpense(editingId) :addExpense()}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
