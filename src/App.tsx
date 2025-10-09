@@ -350,6 +350,20 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
+  
+  const addExpense = ()=>{
+    const newExpense:Expense = {
+      id: Number(expenses.at(-1)?.id)+1,
+      description: formData.description,
+      category:formData.category,
+      amount: Number(formData.amount),
+      date: formData.date 
+    }
+      
+    setExpenses([...expenses,newExpense]);
+
+    return setIsModalOpen(false);
+  }
 
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -525,6 +539,7 @@ const ExpenseTracker: React.FC = () => {
 
         <div style={styles.buttonGroup}>
           <button
+            onClick={addExpense}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
