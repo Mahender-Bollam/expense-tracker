@@ -368,8 +368,10 @@ const ExpenseTracker: React.FC = () => {
       date: new Date().toISOString().split('T')[0]
     });
     setExpenses([...expenses , {...formData}])
+    setIsModalOpen(false);
   }
 
+ 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
@@ -464,6 +466,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
+                        // onClick={removeExpense(`${expense.id}`)}
                       >
                         <Trash2 size={18} />
                       </button>
