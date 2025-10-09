@@ -113,7 +113,7 @@ const ExpenseTracker: React.FC = () => {
       amount: Number(formData.amount),
       date: formData.date 
     }
-    
+    if(!validateExpenses(newExpense)){return setIsModalOpen(true)}
     const findExpense = expenses.findIndex(item=>item.id === expenseId);
     if(findExpense !== -1){
       expenses[findExpense]=newExpense;
