@@ -321,6 +321,7 @@ const ExpenseTracker: React.FC = () => {
   });
   
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [addId, setAddId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
@@ -330,6 +331,7 @@ const ExpenseTracker: React.FC = () => {
   const closeModal = (): void => {
     setIsModalOpen(false);
     setEditingId(null);
+    setAddId(null);
     setFormData({
       description: '',
       amount: '',
@@ -350,6 +352,7 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
+
 
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -377,6 +380,8 @@ const ExpenseTracker: React.FC = () => {
               <Plus size={20} />
               Add Expense
             </button>
+
+
           </div>
 
           <div style={styles.totalCard}>
@@ -446,6 +451,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
                       >
+
                         <Trash2 size={18} />
                       </button>
                     </div>
@@ -456,7 +462,7 @@ const ExpenseTracker: React.FC = () => {
           )}
         </div>
       </div>
-
+{/* edit expense */}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <div style={styles.modalHeader}>
           <h2 style={styles.modalTitle}>
@@ -546,7 +552,99 @@ const ExpenseTracker: React.FC = () => {
           </button>
         </div>
       </Modal>
+ {/* Add Expense */}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div style={styles.modalHeader}>
+          <h2 style={styles.modalTitle}>
+            {addId ? 'Add Expense' : 'Edit Expense'}
+          </h2>
+          <button
+            onClick={closeModal}
+            style={{
+              ...styles.closeButton,
+              ...(hoveredButton === 'close' ? styles.closeButtonHover : {})
+            }}
+            onMouseEnter={() => setHoveredButton('close')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Description</label>
+          <input
+            type="text"
+            value={formData.description}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
+            style={styles.input}
+            placeholder="Enter description"
+          />
+        </div>
+
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Amount</label>
+          <input
+            type="number"
+            step="0.01"
+            value={formData.amount}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
+            style={styles.input}
+            placeholder="0.00"
+          />
+        </div>
+
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Category</label>
+          <select
+            value={formData.category}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
+            style={styles.input}
+          >
+            <option value="">Select category</option>
+            {categories.map((cat: string) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Date</label>
+          <input
+            type="date"
+            value={formData.date}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
+            style={styles.input}
+          />
+        </div>
+
+        <div style={styles.buttonGroup}>
+          <button
+            style={{
+              ...styles.primaryButton,
+              ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
+            }}
+            onMouseEnter={() => setHoveredButton('submit')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            {addId ? 'Add Expense' : 'Update Expense'}
+          </button>
+          <button
+            onClick={closeModal}
+            style={{
+              ...styles.secondaryButton,
+              ...(hoveredButton === 'cancel' ? styles.secondaryButtonHover : {})
+            }}
+            onMouseEnter={() => setHoveredButton('cancel')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
     </div>
+
+    
   );
 };
 
