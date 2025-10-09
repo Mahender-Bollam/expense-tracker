@@ -336,8 +336,13 @@ const ExpenseTracker: React.FC = () => {
       category: '',
       date: new Date().toISOString().split('T')[0]
     });
+  
   };
-
+  const handleDelete = (expenseId :number):void =>{
+    setExpenses(updateDelete => updateDelete.filter(expense => expense.id !== expenseId))
+    
+   
+  }
 
 
   const handleEdit = (expense: Expense): void => {
@@ -349,6 +354,7 @@ const ExpenseTracker: React.FC = () => {
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
+    
   };
 
 
@@ -359,7 +365,7 @@ const ExpenseTracker: React.FC = () => {
       <div style={styles.maxWidth}>
         <div style={styles.card}>
           <div style={styles.header}>
-            <div style={styles.titleWrapper}>
+            <div style={styles.titleWrapper}> 
               <h1 style={styles.title}>
                 <DollarSign color="#6366f1" size={32} />
                 Expense Tracker
@@ -438,6 +444,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                      onClick={() => handleDelete(expense.id)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
