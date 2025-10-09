@@ -65,6 +65,19 @@ const handleAddData=(e:any)=>{
     }
 }
 const handleUpdate=(e:any)=>{
+  const existing=expenses.find(existingExpense=>existingExpense.id===formData.id)
+  if(formData.amount===""|| formData.category===""||formData.date===""||formData.description===""){
+    alert("Please fill all the fields.")
+    return setIsModalOpen(true)
+  }
+  else if(parseInt(formData.amount)<=0){
+    alert("Amount must be greater than zero.")
+    return setIsModalOpen(true)
+  }
+  else if(!existing){
+   return alert("Expense is not found")
+  }
+  else{
   setFormData({
     id:localId,
     description:e.target.value,
@@ -72,8 +85,6 @@ const handleUpdate=(e:any)=>{
     category:e.target.value,
     date:e.target.value
     })
-  const existing=expenses.find(existingExpense=>existingExpense.id===formData.id)
-  if(existing){
     const {description,amount,category,date}=formData
     const updatedExpense={
       id:localId+1,
@@ -83,8 +94,9 @@ const handleUpdate=(e:any)=>{
       date
     }
    setExpenses((expenses:Expense[])=>expenses.map(expense=>expense.id===formData.id?updatedExpense:expense))
-  }
+  
   setIsModalOpen(false)
+}
 }
 const handleClick=(e:any)=>{
   editingId?handleUpdate(e):handleAddData(e)
