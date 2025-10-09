@@ -337,6 +337,13 @@ const ExpenseTracker: React.FC = () => {
       date: new Date().toISOString().split('T')[0]
     });
   };
+ const handleAdd = () => {
+
+         setIsModalOpen(!isModalOpen);
+         console.log(formData)
+         
+
+    };
 
 
 
@@ -347,9 +354,12 @@ const ExpenseTracker: React.FC = () => {
       category: expense.category,
       date: expense.date
     });
+
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
+  
+
 
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -371,6 +381,7 @@ const ExpenseTracker: React.FC = () => {
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
+              onClick={handleAdd}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
             >
@@ -474,7 +485,7 @@ const ExpenseTracker: React.FC = () => {
             <X size={24} />
           </button>
         </div>
-
+       
         <div style={styles.formGroup}>
           <label style={styles.label}>Description</label>
           <input
@@ -486,7 +497,7 @@ const ExpenseTracker: React.FC = () => {
           />
         </div>
 
-        <div style={styles.formGroup}>
+         <div style={styles.formGroup}>
           <label style={styles.label}>Amount</label>
           <input
             type="number"
