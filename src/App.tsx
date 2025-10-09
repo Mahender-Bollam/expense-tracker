@@ -369,10 +369,10 @@ const ExpenseTracker: React.FC = () => {
   };
 
   
-   const handledeleteItem=(description: string)=>{
+   const handledeleteItem=(id:number)=>{
     console.log('chaitanya')
     alert("Are you sure you want to delete this expense? ")
-    setExpenses((prev) => prev.filter((item) => item.description!== description));
+    setExpenses((prev) => prev.filter((item) => item.id!== id));
    }
 
 
@@ -383,11 +383,21 @@ const ExpenseTracker: React.FC = () => {
 
 
  const handleAddExpense=(formData: FormData):any=> {
-    setExpenses([ ...expenses,{...formData}])
+  if (editingId) {
+    setExpenses((prevExpenses) =>
+      prevExpenses.map((expense) =>
+        expense.id === editingId ? { ...formData, id: editingId } : expense
+      )
+    );
+    alert('Expense updated successfully');
+  }
+    else{
+    setExpenses([ ...expenses,{...formData,id:Date.now()}])
     alert('Add Expense  successfull')
     closeModal();
 
 }
+ }
 
   return (
     <div style={styles.container}>
@@ -476,7 +486,7 @@ const ExpenseTracker: React.FC = () => {
                       >
                         <Edit2 size={18} />
                       </button>
-                      <button onClick={()=>handledeleteItem(expense.description)}
+                      <button onClick={()=>handledeleteItem(expense.id)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
