@@ -369,6 +369,7 @@ const ExpenseTracker: React.FC = () => {
     });
     setExpenses([...expenses , {...formData}])
     setIsModalOpen(false);
+    alert("Hey , you succesfully added an expense.")
   }
 
  
