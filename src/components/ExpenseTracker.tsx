@@ -4,13 +4,12 @@ import { Expense } from '../interface/Expense';
 import { FormData } from '../interface/FormData';
 import { styles } from '../styles/ExpenseTracker';
 import ModalCard from './ModalCard';
-
+import useExpenseOperations from './useExpenseOperations';
 
 type HoveredButton = string | null;
 type HoveredExpense = number | null;
 
-
-const ExpenseTracker: React.FC = () => {
+const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
     { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
     { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
@@ -22,91 +21,12 @@ const ExpenseTracker: React.FC = () => {
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
-  let localId:number=expenses.length;
-  
+
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
-
-  const closeModal = (): void => {
-    setIsModalOpen(false);
-    setEditingId(null);
-    setFormData({
-      id:0,
-      description: '',
-      amount: '',
-      category: '',
-      date: new Date().toISOString().split('T')[0]
-    });
-  };
-
-  const handleEdit = (expense: Expense): void => {
-    setFormData({
-      id:expense.id,
-      description: expense.description,
-      amount: expense.amount.toString(),
-      category: expense.category,
-      date: expense.date
-    });
-    setEditingId(expense.id);
-    setIsModalOpen(true);
-  };
-
-  const handleAdd = (): void => {
-    setIsModalOpen(true);
-  };
-
-const handleDelete=(expense:Expense)=>{  
-  alert("Are you sure to delete expense?")
-  setExpenses(()=>{return expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
-}
-
-const handleAddData=(e:any)=>{
-  setIsModalOpen(false);
-  setEditingId(null);
-  setFormData({
-    id:localId+1,
-    description:e.target.value,
-    amount:e.target.value,
-    category:e.target.value,
-    date:e.target.value
-    });
-  const {description,amount,category,date}=formData
-  setExpenses(()=>{return [...expenses,
-    {id:localId+1,
-    description,
-    amount:parseInt(amount),
-    category,
-    date}]})
-  console.log(expenses)
-}
-const handleUpdate=(e:any)=>{
-  setFormData({
-    id:localId,
-    description:e.target.value,
-    amount:e.target.value,
-    category:e.target.value,
-    date:e.target.value
-    })
-  const existing=expenses.find(existingExpense=>existingExpense.id===formData.id)
-  if(existing){
-    const {description,amount,category,date}=formData
-    const updatedExpense={
-      id:localId+1,
-      description,
-      amount:parseInt(amount),
-      category,
-      date
-    }
-   setExpenses((expenses:Expense[])=>expenses.map(expense=>expense.id===formData.id?updatedExpense:expense))
-  }
-  setIsModalOpen(false)
-}
-const handleClick=(e:any)=>{
-  editingId?handleUpdate(e):handleAddData(e)
-}
-
+  const {closeModal,handleAdd,handleClick,handleDelete,handleEdit}=useExpenseOperations({expenses,formData,editingId,setIsModalOpen,setEditingId,setFormData,setExpenses})
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
