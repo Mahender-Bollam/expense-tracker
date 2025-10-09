@@ -343,14 +343,21 @@ const ExpenseTracker: React.FC = () => {
     });
     setEditingId(null);
     setIsModalOpen(true);
+   
   };
 
 const handleDelete=(expense:Expense)=>{  
   setExpenses(addeedExpense=>{return expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
 }
 
-const handleAddData=(expense:Expense)=>{}
-const handleUpdate=(expense:Expense)=>{}
+const handleAddData=(expense:Expense)=>{
+  setExpenses([...expenses,expense])
+   setIsModalOpen(false);
+}
+const handleUpdate=(expense:Expense)=>{
+  setExpenses([...expenses,expense])
+  setIsModalOpen(false);
+}
 const handleClick=(expense:Expense)=>{
   editingId?handleUpdate(expense):handleAddData(expense)
 }
