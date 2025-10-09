@@ -358,12 +358,23 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
-  const handleSubmit=(event:any)=>{
-      event.preventDefault();
-      
-      console.log(formData)
-      setExpenses[...expenses,]
-  }
+  const handleSubmit=():void =>{
+
+      //event.preventDefault();
+       const ex:Expense={
+        
+        id:expenses.length +1, 
+        description: formData.description,
+        amount: parseInt(formData.amount),
+        category: formData.category,
+        date: formData.date }
+        setExpenses([...expenses, ex])
+         console.log("vani")
+         closeModal();
+
+      }
+     
+  
   
 
 
@@ -547,7 +558,7 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
-            onClick={() => editingId ? console.log() : console.log(formData)}>
+            onClick= {handleSubmit}>
 
           
             {editingId ? 'Update Expense' : 'Add Expense'}
