@@ -324,7 +324,7 @@ const ExpenseTracker: React.FC = () => {
     alert('Missed it, so fill in all fields');
     return;
   }
-    const newExpense: Expense = {
+  const newExpense: Expense = {
     id: expenses.length + 1,
     description: formData.description,
     amount:parseInt(formData.amount),
