@@ -440,7 +440,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
 
-                      <button 
+                      <button onClick={() => {setExpenses(expenses => expenses.filter(task => task.id !== expense.id));}}
 
                         style={{
                           ...styles.deleteButton,
