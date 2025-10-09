@@ -299,7 +299,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
   return (
     <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>{children}</div>
+     <div style={styles.modal} onClick={(e) => e.stopPropagation()}>{children}</div>
     </div>
   );
 };
@@ -345,6 +345,13 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
+  const handleDelete = (id: number): void => {
+  const confirmDelete = window.confirm("Are you sure want to delete this expense?");
+  if (confirmDelete) {
+    setExpenses(prevExpenses => prevExpenses.filter(exp => exp.id !== id));
+    alert("Expense deleted successfully!");
+  }
+};
 
 
   const handleAddClick = (): void => {
@@ -384,12 +391,7 @@ const ExpenseTracker: React.FC = () => {
         prevExpenses.map(exp => (exp.id === editingId ? { ...newExpense, id: editingId } : exp))
       );
       alert(`Expense updated successfully!`);
-    } else {
-     
-      const expenseToAdd: Expense = { ...newExpense, id: Date.now() };
-      setExpenses(prevExpenses => [...prevExpenses, expenseToAdd]);
-      alert(`Expense added successfully!`);
-    }
+    } 
     closeModal();
   };
 
@@ -464,6 +466,7 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={16} />
                       </button>
                       <button
+                        onClick={() => handleDelete(expense.id)}
                         style={styles.deleteButton}
                         title="Delete"
                       >
