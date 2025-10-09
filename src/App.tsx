@@ -1,6 +1,5 @@
 import React, { useState, CSSProperties } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-
 interface Expense {
   id: number;
   description: string;
@@ -319,11 +318,13 @@ const ExpenseTracker: React.FC = () => {
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
+
+ 
   
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<number|null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
-  const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
+  const [hoveredButton, setHoveredButton] = useState<HoveredButton|null>(null);
+  const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense|null>(null);
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
@@ -530,8 +531,9 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
+           
           >
-            {editingId ? 'Update Expense' : 'Add Expense'}
+            {editingId ? 'Update Expense': 'Add Expense'}
           </button>
           <button
             onClick={closeModal}
@@ -541,7 +543,7 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('cancel')}
             onMouseLeave={() => setHoveredButton(null)}
-          >
+            >
             Cancel
           </button>
         </div>
