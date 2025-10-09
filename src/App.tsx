@@ -1,28 +1,7 @@
 import React, { useState, CSSProperties } from 'react';
-import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-
-interface FormData {
-  description: string;
-  amount: string;
-  category: string;
-  date: string;
-}
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
-
-type HoveredButton = string | null;
-type HoveredExpense = number | null;
+import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X, ImageOff } from 'lucide-react';
+import { Expense, FormData,ModalProps,HoveredButton,HoveredExpense } from './types/expenseData'; 
+ import './App.css'
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -324,6 +303,7 @@ const ExpenseTracker: React.FC = () => {
     alert('Missed it, so fill in all fields');
     return;
   }
+    
   const newExpense: Expense = {
     id: expenses.length + 1,
     description: formData.description,
@@ -332,15 +312,16 @@ const ExpenseTracker: React.FC = () => {
     date: formData.date
   };
    setExpenses([...expenses, newExpense]);
-
-  closeModal();
-};
+   closeModal();
+}
 
 const handleDeleteExpense = (id: number): void => {
   const updatedExpenses = expenses.filter(expense => expense.id !== id);
   setExpenses(updatedExpenses);
 };
 
+
+   
   
   const [editingId, setEditingId] = useState<number|null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -348,6 +329,7 @@ const handleDeleteExpense = (id: number): void => {
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense|null>(null);
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
+
 
   const closeModal = (): void => {
     setIsModalOpen(false);
@@ -377,16 +359,16 @@ const handleDeleteExpense = (id: number): void => {
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
-    <div style={styles.container}>
-      <div style={styles.maxWidth}>
-        <div style={styles.card}>
-          <div style={styles.header}>
-            <div style={styles.titleWrapper}>
-              <h1 style={styles.title}>
+    <div className='container'>
+      <div className='maxWidth'>
+        <div className='card'>
+          <div className='header'>
+            <div className='titleWrapper'>
+              <h1 className='tile'>
                 <DollarSign color="#6366f1" size={32} />
                 Expense Tracker
               </h1>
-              <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
+              <p className='subtitile'>Manage your daily expenses efficiently</p>
             </div>
             <button
               style={{
@@ -402,19 +384,19 @@ const handleDeleteExpense = (id: number): void => {
             </button>
           </div>
 
-          <div style={styles.totalCard}>
-            <p style={styles.totalLabel}>Total Expenses</p>
-            <p style={styles.totalAmount}>${totalExpense.toFixed(2)}</p>
+          <div className='totalCard'>
+            <p className='totalLabel'>Total Expenses</p>
+            <p className='totalAmount'>${totalExpense.toFixed(2)}</p>
           </div>
         </div>
 
-        <div style={styles.card}>
-          <h2 style={styles.sectionTitle}>Recent Expenses</h2>
+        <div className='card'>
+          <h2 className='sectionTitle'>Recent Expenses</h2>
           
           {expenses.length === 0 ? (
-            <p style={styles.emptyState}>No expenses yet. Add your first expense above!</p>
+            <p className='emptyState'>No expenses yet. Add your first expense above!</p>
           ) : (
-            <div style={styles.expenseList}>
+            <div className='expenseList'>
               {expenses.map((expense: Expense) => (
                 <div
                   key={expense.id}
@@ -426,15 +408,15 @@ const handleDeleteExpense = (id: number): void => {
                   onMouseEnter={() => setHoveredExpense(expense.id)}
                   onMouseLeave={() => setHoveredExpense(null)}
                 >
-                  <div style={styles.expenseContent}>
-                    <div style={styles.expenseTitleRow}>
-                      <h3 style={styles.expenseTitle}>{expense.description}</h3>
-                      <span style={styles.categoryBadge}>
+                  <div className='expenseContent'>
+                    <div className='expenseTitleRow'>
+                      <h3 className='expenseTitle'>{expense.description}</h3>
+                      <span className='categoryBadge'>
                         <Tag size={12} />
                         {expense.category}
                       </span>
                     </div>
-                    <div style={styles.expenseDate}>
+                    <div className='expenseDate'>
                       <Calendar size={14} />
                       {new Date(expense.date).toLocaleDateString('en-US', { 
                         month: 'short', 
@@ -444,8 +426,8 @@ const handleDeleteExpense = (id: number): void => {
                     </div>
                   </div>
 
-                  <div style={styles.expenseRight}>
-                    <span style={styles.expenseAmount}>
+                  <div className='expenseRight'>
+                    <span className='expenseAmount'>
                       ${expense.amount.toFixed(2)}
                     </span>
                     <div style={styles.actionButtons}>
@@ -485,8 +467,8 @@ const handleDeleteExpense = (id: number): void => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <div style={styles.modalHeader}>
-          <h2 style={styles.modalTitle}>
+        <div className='modalHeader'>
+          <h2 className='modalTitle'>
             {editingId ? 'Edit Expense' : 'Add New Expense'}
           </h2>
           <button
