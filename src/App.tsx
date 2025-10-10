@@ -1,35 +1,11 @@
 import { styles } from './styles';
 import React, { useState} from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-
-interface FormData {
-  id: number;
-  description: string;
-  amount: string |number;
-  category: string;
-  date: string ;
-}
-
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
+import { Expense,ModalProps,FormData } from './types/ExpenseDetails';
 
 
 type HoveredButton = string | null;
 type HoveredExpense = number | null;
-
-
 
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
