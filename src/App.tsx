@@ -47,7 +47,7 @@ const ExpenseTracker: React.FC = () => {
     });
   };
 
-  const handleEdit = (expense: Expense): boolean => {
+  const handleEdit = (expense: Expense):void=> {
     setFormData({
       description: expense.description,
       amount: expense.amount.toString(),
@@ -56,15 +56,14 @@ const ExpenseTracker: React.FC = () => {
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
-    return true;
   };
 
-  const validateExpenses = (newExpense:Expense)=>{
+  const validateExpenses = (newExpense:FormData)=>{
     if(formData.category.trim().length ===0 || formData.description.trim().length ===0 || Number(formData.amount) <= 0 ){
       alert(`Please provide the valid details`);
       return false;
     }
-    if(expenses.some(item=>item.description === newExpense.description)){
+    if(expenses.some(item=>item.description === newExpense.description) && !editingId){
       alert(`The entered expense ${newExpense.description} alredy exists`);
       return false;
     }
@@ -73,52 +72,33 @@ const ExpenseTracker: React.FC = () => {
 
   const setIdOfExpense = (arr:Expense[]):number=>{
     if(arr.length === 0){return 1}
-    return arr.length;
+    return arr.length+1;
   }
 
   const addExpense = ()=>{
-    const newExpense:Expense = {
-      id: setIdOfExpense(expenses),
-      description: formData.description,
-      category:formData.category,
-      amount: Number(formData.amount),
-      date: formData.date 
-    }
-
-    if(validateExpenses(newExpense)){
-      setExpenses([...expenses,newExpense]);
-      setFormData({
-        description: '',
-        amount: '',
-        category: '',
-        date: new Date().toISOString().split('T')[0]
-      });
-      setEditingId(null)
-      setIsModalOpen(false);
+    if(validateExpenses(formData)){
+      setExpenses([...expenses,{...formData,id:setIdOfExpense(expenses),amount:Number(formData.amount)}]);
+      closeModal();
     }else{
-      return setIsModalOpen(true);
-    }
+      setIsModalOpen(true);
+    };
   };
 
   const deleteExpense = (expenseToDelete:Expense)=>{
     alert(`The expense with description ${expenseToDelete.description} will be deleted`);
     setExpenses(expenses.filter(item=>item.description !== expenseToDelete.description));
+    closeModal();
   }
 
   const editExpense = (expenseId:number)=>{
-    const newExpense:Expense = {
-      id: expenseId,
-      description: formData.description,
-      category:formData.category,
-      amount: Number(formData.amount),
-      date: formData.date 
-    }
-    if(!validateExpenses(newExpense)){return setIsModalOpen(true)}
-    const findExpense = expenses.findIndex(item=>item.id === expenseId);
+
+    if(!validateExpenses(formData)){return setIsModalOpen(true)};
+    const findExpense :number = expenses.findIndex(item=>item.id === expenseId);
     if(findExpense !== -1){
-      expenses[findExpense]=newExpense;
-      setExpenses(expenses)
-    }
+      expenses[findExpense]={...formData,id:expenseId,amount:Number(formData.amount)};
+      setExpenses(expenses);
+      closeModal();
+    };
     setIsModalOpen(false);
   }
 
