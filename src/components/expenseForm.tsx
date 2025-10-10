@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { X } from "lucide-react";
 import { Expense } from "../interface/expense";
 import { FormData } from "./expenseTracker";
-
 interface ExpenseFormProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -27,6 +26,42 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   setHoveredButton,
   styles,
 }) => {
+
+    const [errors, setErrors] = useState({
+    description: "",
+    amount: "",
+    category: "",
+    date: "",
+  });
+
+  const validateForm = (): boolean => {
+    let newErrors = { description: "", amount: "", category: "", date: "" };
+    let isValid = true;
+    if (!formData.description.trim()) {
+      newErrors.description = "Description is required";
+      isValid = false;
+    }
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = (): void => {
+    if (!validateForm()) return;
+    const expense: Expense = {
+      id: editingId !== null ? editingId : Date.now(),
+      description: formData.description.trim(),
+      amount: parseFloat(formData.amount),
+      category: formData.category,
+      date: formData.date,
+    };
+    if (editingId !== null) {
+      setExpenses(expenses.map((exp) => (exp.id === editingId ? expense : exp)));
+    } else {
+      setExpenses([...expenses, expense]);
+    }
+    closeModal();
+  };
+
   return (
     <>
       <div style={styles.modalHeader}>
@@ -43,17 +78,22 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
           <X size={24} />
         </button>
       </div>
+
       <div style={styles.formGroup}>
         <label style={styles.label}>Description</label>
         <input
           type="text"
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          style={styles.input}
+          style={{
+            ...styles.input,
+            borderColor: errors.description ? "red" : "#ccc",
+          }}
           placeholder="Enter description"
-          required
         />
+        {errors.description && <p style={{ color: "red", fontSize: 13 }}>{errors.description}</p>}
       </div>
+
       <div style={styles.formGroup}>
         <label style={styles.label}>Amount</label>
         <input
@@ -61,18 +101,23 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
           step="0.01"
           value={formData.amount}
           onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-          style={styles.input}
+          style={{
+            ...styles.input,
+            borderColor: errors.amount ? "red" : "#ccc",
+          }}
           placeholder="0.00"
-          required
         />
       </div>
+
       <div style={styles.formGroup}>
         <label style={styles.label}>Category</label>
         <select
           value={formData.category}
           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-          style={styles.input}
-          required
+          style={{
+            ...styles.input,
+            borderColor: errors.category ? "red" : "#ccc",
+          }}
         >
           <option value="">Select category</option>
           {categories.map((cat) => (
@@ -82,16 +127,20 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
           ))}
         </select>
       </div>
+
       <div style={styles.formGroup}>
         <label style={styles.label}>Date</label>
         <input
           type="date"
           value={formData.date}
           onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-          style={styles.input}
-          required
+          style={{
+            ...styles.input,
+            borderColor: errors.date ? "red" : "#ccc",
+          }}
         />
       </div>
+
       <div style={styles.buttonGroup}>
         <button
           style={{
@@ -100,25 +149,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
           }}
           onMouseEnter={() => setHoveredButton("submit")}
           onMouseLeave={() => setHoveredButton(null)}
-          onClick={() => {
-            if (!formData.description || !formData.amount || !formData.category) {
-              alert("Please fill all fields!");
-              return;
-            }
-            const expense: Expense = {
-              id: editingId !== null ? editingId : Date.now(),
-              description: formData.description,
-              amount: parseFloat(formData.amount),
-              category: formData.category,
-              date: formData.date,
-            };
-            if (editingId !== null) {
-              setExpenses(expenses.map((exp) => (exp.id === editingId ? expense : exp)));
-            } else {
-              setExpenses([...expenses, expense]);
-            }
-            closeModal();
-          }}
+          onClick={handleSubmit}
         >
           {editingId ? "Update Expense" : "Add Expense"}
         </button>
@@ -138,3 +169,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   );
 };
 export default ExpenseForm;
+
+
+
+
+
+
+
+
