@@ -41,6 +41,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
       newErrors.description = "Description is required";
       isValid = false;
     }
+    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+      newErrors.amount = "Amount must be greater than 0";
+      isValid = false;
+    }
     setErrors(newErrors);
     return isValid;
   };
@@ -107,6 +111,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
           }}
           placeholder="0.00"
         />
+        {errors.amount && <p style={{ color: "red", fontSize: 13 }}>{errors.amount}</p>}
       </div>
 
       <div style={styles.formGroup}>
