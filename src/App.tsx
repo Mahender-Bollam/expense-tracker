@@ -57,12 +57,21 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   }
   const handleExpense = () : void => {
+    
     const expense: Expense ={
       id :expenses.length+1,
       description : formData.description,
       amount : Number(formData.amount),
       category : formData.category,
       date : formData.date
+    }
+     if(!expense.description  || !expense.amount || !expense.category || !expense.date){
+      alert("Fill all details");
+      return ;
+    }
+    else if(expense.amount <= 0){
+      alert("Amount must greater than 0");
+      return ;
     }
     if(editingId!==null){
       setExpenses((preExpense) => preExpense.map((expense) => expense.id === editingId ? {
@@ -73,21 +82,11 @@ const ExpenseTracker: React.FC = () => {
         category : formData.category,
       }:expense
     ))
-    }
+    }  
     else{
-       setExpenses([...expenses , expense])
+      setExpenses([...expenses , expense]);
     }
-    setIsModalOpen(false);
-    
-    if(!expense.description  || !expense.amount || !expense.category || !expense.date){
-      alert("Fill all details");
-      return setIsModalOpen(true);
-    }
-    else if(expense.amount <= 0){
-      alert("Amount must greater than 0");
-      return setIsModalOpen(true);
-    }
-   
+   setIsModalOpen(false);
    
   } 
   
