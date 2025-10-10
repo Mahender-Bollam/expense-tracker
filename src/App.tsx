@@ -1,6 +1,7 @@
 import React, { useState, CSSProperties, useEffect } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-import { Expense,FormData ,ModalProps,HoveredButton,HoveredExpense} from './types/types';
+import { Expense, FormData, ModalProps, HoveredButton, HoveredExpense } from './types/types';
+import { validateForm } from './utils/utils';
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -320,8 +321,6 @@ const ExpenseTracker: React.FC = () => {
     setErrors({})
   };
 
-
-
   const handleEdit = (expense: Expense): void => {
     setFormData({
       description: expense.description,
@@ -334,32 +333,18 @@ const ExpenseTracker: React.FC = () => {
   };
 
   useEffect(() => {
-    const hasData = Object.keys(formData).some((key) => key != 'date' && formData[key as keyof FormData]);
+    const hasData = Object.keys(formData).some((key) => key !== 'date' && formData[key as keyof FormData]);
     if (hasData) {
-      validateForm()
+      setErrors(validateForm(formData))
+      return
     }
   }, [formData])
 
 
-  const validateForm = () => {
-    const errors: Partial<FormData> = {};
-    if (!formData.description) {
-      errors.description = 'Please enter description';
-    }
-    if (!formData.amount || Number(formData.amount) <= 0) {
-      errors.amount = 'Please enter positive amount';
-    }
-    if (!formData.category) {
-      errors.category = 'Please select category';
-    }
-    const hasErrors = Object.keys(errors).some((key) => errors[key as keyof FormData]);
-    setErrors(errors);
-    return hasErrors;
-  }
-
   const onSubmit = () => {
-    const hasErrors = validateForm()
-    if (hasErrors) {
+    const errors = validateForm(formData)
+    setErrors(errors)
+    if (Object.keys(errors).length > 0) {
       return;
     }
 
@@ -370,7 +355,7 @@ const ExpenseTracker: React.FC = () => {
       return;
     }
     const updateExpences = expenses.map((item) => {
-      if (item.id == editingId) {
+      if (item.id === editingId) {
         return {
           ...item,
           ...formData,
@@ -384,7 +369,7 @@ const ExpenseTracker: React.FC = () => {
   }
   const handleDelete = () => {
     const updatedExpenses = expenses.filter((item) => {
-      return item.id != hoveredExpense
+      return item.id !== hoveredExpense
     })
     setExpenses(updatedExpenses)
 
@@ -410,6 +395,7 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
+              data-testid='add-expense'
               onClick={handleAdd}
               style={{
                 ...styles.addButton,
@@ -583,6 +569,7 @@ const ExpenseTracker: React.FC = () => {
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
             }}
             onClick={onSubmit}
+            data-testid='submit-button'
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
           >
