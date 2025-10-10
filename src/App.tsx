@@ -63,14 +63,7 @@ const ExpenseTracker: React.FC = () => {
       id:expenses.length+1
     });
   setEditingId(expense.id);
-  setIsModalOpen(true);
-      // const updatedExpense = {
-      // description: formData.description,
-      // amount: parseInt(formData.amount),
-      // category: formData.category,
-      // date: formData.date,
-      // id: expenses.length+1
-      // }    
+  setIsModalOpen(true); 
 
   };
 
