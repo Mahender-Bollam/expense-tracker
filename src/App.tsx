@@ -258,7 +258,7 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Date</label>
+          <label style={styles.label} data-testid = "date">Date</label>
           <input
             type="date"
             value={formData.date}
