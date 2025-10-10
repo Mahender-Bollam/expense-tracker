@@ -49,6 +49,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
       newErrors.category = "Select a category";
       isValid = false;
     }
+    if (!formData.date) {
+      newErrors.date = "Date is required";
+      isValid = false;
+    }
     setErrors(newErrors);
     return isValid;
   };
@@ -149,6 +153,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
             borderColor: errors.date ? "red" : "#ccc",
           }}
         />
+        {errors.date && <p style={{ color: "red", fontSize: 13 }}>{errors.date}</p>}
       </div>
 
       <div style={styles.buttonGroup}>
