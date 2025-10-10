@@ -21,10 +21,16 @@ test('open edit expense form', () => {
   fireEvent.click(screen.getAllByTestId("expense-edit")[0])
   expect(screen.getByText('Edit Expense')).toBeInTheDocument();
 
-  expect(screen.getByPlaceholderText("Enter description")).toHaveValue('Groceries')
+  const descriptionInput = screen.getByPlaceholderText('Enter description');
+  expect(descriptionInput).toHaveValue('Groceries')
   expect(screen.getByPlaceholderText("0.00")).toHaveValue(85.5)
   expect(screen.getByPlaceholderText("Enter date")).toHaveValue('2025-10-05')
   expect(screen.getByTestId("cateegoryid")).toHaveValue("Food")
+  fireEvent.change(descriptionInput, { target: { value: 'Description updated' } });
+
+  fireEvent.click(screen.getByTestId('submit-button'));
+  expect(screen.getByText('Description updated')).toBeInTheDocument();
+  expect(screen.queryByText('Groceries')).not.toBeInTheDocument();
 });
 
 test('delete expense', () => {
@@ -76,4 +82,23 @@ test("validation messages disappear on valid input", () => {
   expect(screen.queryByText('Please enter positive amount')).not.toBeInTheDocument();
   fireEvent.change(screen.getByTestId('cateegoryid'), { target: { value: 'Food' } });
   expect(screen.queryByText('Please select category')).not.toBeInTheDocument();
+});
+
+it('delete expense once delete button click', () => {
+  render(<App />);
+
+  expect(screen.getByText('Groceries')).toBeInTheDocument();
+  fireEvent.mouseEnter(screen.getAllByTestId('expense-row')[0]);
+  const deleteButton = screen.getAllByTestId('expense-delete')[0];
+  fireEvent.click(deleteButton);
+  expect(screen.queryByText('Groceries')).not.toBeInTheDocument();
+});
+
+it('opens modal on Add button is click', () => {
+  render(<App />);
+
+  const addButton = screen.getByTestId('add-expense');
+  fireEvent.click(addButton);
+
+  expect(screen.getByPlaceholderText('Enter description')).toBeInTheDocument();
 });

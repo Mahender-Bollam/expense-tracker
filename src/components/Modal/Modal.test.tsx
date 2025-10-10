@@ -8,6 +8,7 @@ describe('Modal', () => {
         expect(screen.getByText('Text')).toBeInTheDocument()
         fireEvent.click(screen.getByTestId("modal"))
         expect(mockclose).toHaveBeenCalled()
+        
     })
     test("hides modal component", () => {
         render(<Modal isOpen={false} onClose={mockclose}><div>Text</div></Modal>)
