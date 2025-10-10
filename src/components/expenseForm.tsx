@@ -42,7 +42,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
       isValid = false;
     }
     if (!formData.amount || parseFloat(formData.amount) <= 0) {
-      newErrors.amount = "Amount must be greater than 0";
+      newErrors.amount = "Amount should be greater than 0";
+      isValid = false;
+    }
+    if (!formData.category.trim()) {
+      newErrors.category = "Select a category";
       isValid = false;
     }
     setErrors(newErrors);
@@ -131,6 +135,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
             </option>
           ))}
         </select>
+        {errors.category && <p style={{ color: "red", fontSize: 13 }}>{errors.category}</p>}
       </div>
 
       <div style={styles.formGroup}>
