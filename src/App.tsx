@@ -84,7 +84,8 @@ const ExpenseTracker: React.FC = () => {
           </div>
         </div>
         <ExpenseCard expenses={expenses} hoveredButton={hoveredButton} setHoveredButton={setHoveredButton}
-        hoveredExpense={hoveredExpense} setHoveredExpense={setHoveredExpense}setFormData={setFormData} setEditingId={setEditingId} setIsModalOpen={setIsModalOpen}/>
+        hoveredExpense={hoveredExpense} setHoveredExpense={setHoveredExpense}setFormData={setFormData} 
+        setEditingId={setEditingId} setIsModalOpen={setIsModalOpen} setExpenses={setExpenses}/>
       </div>
       <Model isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} closeModal={closeModal} 
      editingId={editingId} hoveredButton={hoveredButton} 
