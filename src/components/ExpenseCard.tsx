@@ -5,7 +5,7 @@ import { Calendar, Edit2, Tag, Trash2 } from 'lucide-react'
 import { expenseCardProp} from '../types/propTypes'
 
 
-const ExpenseCard = ({expenses,hoveredButton,setHoveredButton,hoveredExpense,setHoveredExpense,setFormData,setEditingId,setIsModalOpen}:expenseCardProp) => {
+const ExpenseCard = ({expenses,hoveredButton,setHoveredButton,hoveredExpense,setHoveredExpense,setFormData,setEditingId,setIsModalOpen,setExpenses}:expenseCardProp) => {
 
       const handleEdit = (expense: Expense): void => {
         setFormData({
@@ -17,8 +17,12 @@ const ExpenseCard = ({expenses,hoveredButton,setHoveredButton,hoveredExpense,set
         });
       setEditingId(expense.id);
       setIsModalOpen(true); 
-    
       };
+
+    const handleDelete = (expenseId: number)=>{
+      alert('Are you sure to delete the Expense!')
+      setExpenses(updateExpense=> updateExpense.filter(expense => expense.id !== expenseId))
+    }
   return (
             <div style={styles.card}>
               <h2 style={styles.sectionTitle}>Recent Expenses</h2>
@@ -73,6 +77,7 @@ const ExpenseCard = ({expenses,hoveredButton,setHoveredButton,hoveredExpense,set
                             <Edit2 size={18} />
                           </button>
                           <button
+                          onClick={()=>handleDelete(expense.id)}
                             style={{
                               ...styles.deleteButton,
                               ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
