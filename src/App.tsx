@@ -34,7 +34,7 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(null);
     setFormData({
       description: '',
-      amount: 0,
+      amount: '',
       category: '',
       date: new Date().toISOString().split('T')[0],
       id:expenses.length+1
@@ -44,7 +44,7 @@ const ExpenseTracker: React.FC = () => {
   const handleAdd = ():void =>{
     setFormData({
       description: '',
-      amount: 0,
+      amount: '',
       category: '',
       date: new Date().toISOString().split('T')[0],
       id: expenses.length+1
