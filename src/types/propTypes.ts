@@ -24,5 +24,6 @@ setHoveredExpense: React.Dispatch<React.SetStateAction<HoveredExpense>>
 setEditingId: React.Dispatch<React.SetStateAction<number | null>>
 setFormData: React.Dispatch<React.SetStateAction<FormData>>
 setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+setExpenses: React.Dispatch<React.SetStateAction<Expense[]>>
 
 }
