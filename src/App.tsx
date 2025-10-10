@@ -1,7 +1,7 @@
 import { styles } from './styles';
 import React, { useState} from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-import { Expense,ModalProps,FormData } from './types/ExpenseDetails';
+import { ModalProps,Expense,FormData } from './types/ExpenseDetails';
 
 
 type HoveredButton = string | null;
