@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { Expense } from "../interface/expense";
-import { FormData } from "./expenseTracker";
+import { FormData } from "../interface/formData";
+
 interface ExpenseFormProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
