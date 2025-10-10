@@ -1,29 +1,6 @@
 import React, { useState, CSSProperties } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-
-interface FormData {
-  description: string;
-  amount: string;
-  category: string;
-  date: string;
-}
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
-
-type HoveredButton = string | null;
-type HoveredExpense = number | null;
+import{Expense, FormData, ModalProps, HoveredButton, HoveredExpense} from './type';
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -319,12 +296,11 @@ const ExpenseTracker: React.FC = () => {
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
-  
+ 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
-  const [expense, setExpense] = useState<boolean>();
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
@@ -351,13 +327,63 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
-const removeExpense = (expense: Expense): void =>{
- 
-}
+const handleAddExpense = (): void => {
+    setFormData({
+      description: '',
+      amount: '',
+      category: '',
+      date: ''
+    });
+    setEditingId(null);
+    setIsModalOpen(true);
+  };
+
+const addExpense = () => {
+  const newExpense: Expense = {
+    id: Date.now(),
+    description: formData.description,
+    amount: parseFloat(formData.amount),
+    category: formData.category,
+    date: formData.date,
+  };
+
+  setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+  alert("Expense added successfully!");
+};
+
+const updateExpense = () => {
+  setExpenses((prevExpenses) =>
+    prevExpenses.map((expense) =>
+      expense.id === editingId
+        ? { ...expense, ...formData, amount: parseFloat(formData.amount) }
+        : expense
+    )
+  );
+  alert("Expense updated successfully!");
+  setEditingId(null);
+};
+
+const handleSubmit = (e: any) => {
+  e.preventDefault();
+
+  if (editingId) {
+    updateExpense();
+  } else {
+    addExpense();
+  }
+
+};
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
-  
+const removeExpense = (expenseRemove: Expense): void => {
+    const updatedExpenses = expenses.filter(exp => exp.id !== expenseRemove.id);
+    setExpenses(updatedExpenses);
+     alert("Expense deleted successfully!");
+  };
+
+
+             
 
   return (
     <div style={styles.container}>
@@ -371,11 +397,14 @@ const removeExpense = (expense: Expense): void =>{
               </h1>
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
-            <button
 
-            onClick={() => handleEdit(expense)}
+
+            
+            
+            <button
+            onClick={() => handleAddExpense()}
               style={{
-                
+
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
@@ -387,7 +416,6 @@ const removeExpense = (expense: Expense): void =>{
               Add Expense
             </button>
           </div>
-
           <div style={styles.totalCard}>
             <p style={styles.totalLabel}>Total Expenses</p>
             <p style={styles.totalAmount}>${totalExpense.toFixed(2)}</p>
@@ -466,7 +494,7 @@ const removeExpense = (expense: Expense): void =>{
           )}
         </div>
       </div>
-
+      
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <div style={styles.modalHeader}>
           <h2 style={styles.modalTitle}>
@@ -484,7 +512,7 @@ const removeExpense = (expense: Expense): void =>{
             <X size={24} />
           </button>
         </div>
-
+        <form onSubmit={handleSubmit}>
         <div style={styles.formGroup}>
           <label style={styles.label}>Description</label>
           <input
@@ -493,6 +521,7 @@ const removeExpense = (expense: Expense): void =>{
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
             style={styles.input}
             placeholder="Enter description"
+            required
           />
         </div>
 
@@ -505,6 +534,7 @@ const removeExpense = (expense: Expense): void =>{
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
             style={styles.input}
             placeholder="0.00"
+            required
           />
         </div>
 
@@ -514,6 +544,7 @@ const removeExpense = (expense: Expense): void =>{
             value={formData.category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
             style={styles.input}
+            required
           >
             <option value="">Select category</option>
             {categories.map((cat: string) => (
@@ -521,7 +552,6 @@ const removeExpense = (expense: Expense): void =>{
             ))}
           </select>
         </div>
-
         <div style={styles.formGroup}>
           <label style={styles.label}>Date</label>
           <input
@@ -529,6 +559,7 @@ const removeExpense = (expense: Expense): void =>{
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
             style={styles.input}
+            required
           />
         </div>
 
@@ -555,9 +586,9 @@ const removeExpense = (expense: Expense): void =>{
             Cancel
           </button>
         </div>
+        </form>
       </Modal>
     </div>
   );
 };
-
 export default ExpenseTracker;
