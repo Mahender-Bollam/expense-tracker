@@ -6,7 +6,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 
   return (
     <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div data-testid="modal-child" style={styles.modal} onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
     </div>
