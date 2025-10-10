@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { render, screen } from "@testing-library/react";
 import App from "./App";
 import userEvent from "@testing-library/user-event";
@@ -58,6 +58,17 @@ describe("Expense Tracker testcases", () => {
 
       expect(mockAlert).toHaveBeenCalled()
 
+  })
+  test("it should close if click on cancel button" , ()=>{
+    render(<App />)
+    const button = screen.getByText(/Add Expense/i)
+    userEvent.click(button)
+    expect(screen.getByText("Add New Expense")).toBeInTheDocument();
+
+    const AddExpenseBtn = screen.getByRole("button", {name : /cancel/i})
+    expect(AddExpenseBtn).toBeInTheDocument();
+    userEvent.click(AddExpenseBtn)
+    expect(screen.getByText("Expense Tracker")).toBeInTheDocument();
   })
   })
 
