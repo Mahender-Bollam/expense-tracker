@@ -4,17 +4,19 @@ import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react'
 interface Expense {
   id: number;
   description: string;
-  amount: number;
+  amount: number ;
   category: string;
   date: string;
 }
 
 interface FormData {
+  id: number;
   description: string;
-  amount: string;
+  amount: string | number;
   category: string;
   date: string;
 }
+
 
 interface ModalProps {
   isOpen: boolean;
@@ -317,7 +319,8 @@ const ExpenseTracker: React.FC = () => {
     description: '',
     amount: '',
     category: '',
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split('T')[0],
+    id:expenses.length+1
   });
   
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -334,10 +337,36 @@ const ExpenseTracker: React.FC = () => {
       description: '',
       amount: '',
       category: '',
-      date: new Date().toISOString().split('T')[0]
+      date: new Date().toISOString().split('T')[0],
+      id:expenses.length+1
     });
   };
 
+
+
+  const handleAdd = ():void =>{
+    setFormData({
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0],
+      id: expenses.length+1
+    });
+    setEditingId(null);
+    setIsModalOpen(true);
+  }
+  const handleSubmit =()=>{
+    setFormData({
+      description: formData.description,
+      amount: formData.description,
+      category: formData.description,
+      date:  formData.description,
+      id: expenses.length+1
+      })
+      console.log(formData.id)
+    setExpenses([...expenses,{...formData, amount: Number(formData.amount)}])
+    setIsModalOpen(false)
+  }
 
 
   const handleEdit = (expense: Expense): void => {
@@ -345,9 +374,11 @@ const ExpenseTracker: React.FC = () => {
       description: expense.description,
       amount: expense.amount.toString(),
       category: expense.category,
-      date: expense.date
+      date: expense.date,
+      id:expenses.length+1
+
     });
-    setEditingId(expense.id);
+  setEditingId(expense.id);
     setIsModalOpen(true);
   };
 
@@ -367,8 +398,9 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
+            onClick={() => handleAdd()}
               style={{
-                ...styles.addButton,
+                ...styles.addButton,...styles.actionButtons,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
               onMouseEnter={() => setHoveredButton('add')}
@@ -524,9 +556,10 @@ const ExpenseTracker: React.FC = () => {
 
         <div style={styles.buttonGroup}>
           <button
+          onClick={handleSubmit}
             style={{
               ...styles.primaryButton,
-              ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
+              ...(hoveredButton === 'submit' ? styles.primaryButtonHover :{})
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
