@@ -4,9 +4,7 @@ import Modal from './ModalComponent';
 import { X } from 'lucide-react';
 import { modalCardProp } from '../types/propTypes';
 
-
-  const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
-
+const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
 const Model = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredButton,formData,setFormData,expenses,setExpenses,setIsModalOpen}:modalCardProp) => {
 
