@@ -3,22 +3,23 @@ import Modal from './Modal';
 import { styles } from '../styles/ExpenseTracker';
 import { ModelCardProps } from '../interface/ModelProps';
 
-const ModalCard=({isModalOpen,closeModal,formData,setFormData,hoveredButton,setHoveredButton,editingId,handleClick}:ModelCardProps)=>{
+const ModalCard=(props:ModelCardProps)=>{
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
     return(
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <Modal isOpen={props.isModalOpen} onClose={props.closeModal}>
         <div style={styles.modalHeader}>
           <h2 style={styles.modalTitle}>
-            {editingId ? 'Edit Expense' : 'Add New Expense'}
+            {props.editingId ? 'Edit Expense' : 'Add New Expense'}
           </h2>
           <button
-            onClick={closeModal}
+            data-testid="close-button"
+            onClick={props.closeModal}
             style={{
               ...styles.closeButton,
-              ...(hoveredButton === 'close' ? styles.closeButtonHover : {})
+              ...(props.hoveredButton === 'close' ? styles.closeButtonHover : {})
             }}
-            onMouseEnter={() => setHoveredButton('close')}
-            onMouseLeave={() => setHoveredButton(null)}
+            onMouseEnter={() => props.setHoveredButton('close')}
+            onMouseLeave={() => props.setHoveredButton(null)}
           >
             <X size={24} />
           </button>
@@ -28,8 +29,8 @@ const ModalCard=({isModalOpen,closeModal,formData,setFormData,hoveredButton,setH
           <label style={styles.label}>Description</label>
           <input
             type="text"
-            value={formData.description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
+            value={props.formData.description}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.setFormData({ ...props.formData, description: e.target.value })}
             style={styles.input}
             placeholder="Enter description"
           />
@@ -40,8 +41,8 @@ const ModalCard=({isModalOpen,closeModal,formData,setFormData,hoveredButton,setH
           <input
             type="number"
             step="0.01"
-            value={formData.amount}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
+            value={props.formData.amount}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.setFormData({ ...props.formData, amount: e.target.value })}
             style={styles.input}
             placeholder="0.00"
           />
@@ -49,9 +50,9 @@ const ModalCard=({isModalOpen,closeModal,formData,setFormData,hoveredButton,setH
 
         <div style={styles.formGroup}>
           <label style={styles.label}>Category</label>
-          <select
-            value={formData.category}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
+          <select data-testid="select-category"
+            value={props.formData.category}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => props.setFormData({ ...props.formData, category: e.target.value })}
             style={styles.input}
           >
             <option value="">Select category</option>
@@ -64,33 +65,34 @@ const ModalCard=({isModalOpen,closeModal,formData,setFormData,hoveredButton,setH
         <div style={styles.formGroup}>
           <label style={styles.label}>Date</label>
           <input
+            data-testid="date-input"
             type="date"
-            value={formData.date}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
+            value={props.formData.date}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.setFormData({ ...props.formData, date: e.target.value })}
             style={styles.input}
           />
         </div>
 
         <div style={styles.buttonGroup}>
           <button
-          onClick={handleClick}
+          onClick={props.handleClick}
             style={{
               ...styles.primaryButton,
-              ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
+              ...(props.hoveredButton === 'submit' ? styles.primaryButtonHover : {})
             }}
-            onMouseEnter={() => setHoveredButton('submit')}
-            onMouseLeave={() => setHoveredButton(null)}
+            onMouseEnter={() => props.setHoveredButton('submit')}
+            onMouseLeave={() => props.setHoveredButton(null)}
           >
-            {editingId ? 'Update Expense' : 'Add Expense'}
+            {props.editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
-            onClick={closeModal}
+            onClick={props.closeModal}
             style={{
               ...styles.secondaryButton,
-              ...(hoveredButton === 'cancel' ? styles.secondaryButtonHover : {})
+              ...(props.hoveredButton === 'cancel' ? styles.secondaryButtonHover : {})
             }}
-            onMouseEnter={() => setHoveredButton('cancel')}
-            onMouseLeave={() => setHoveredButton(null)}
+            onMouseEnter={() => props.setHoveredButton('cancel')}
+            onMouseLeave={() => props.setHoveredButton(null)}
           >
             Cancel
           </button>
