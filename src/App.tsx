@@ -1,30 +1,7 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { styles } from './styles/styles';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-
-interface FormData {
-  description: string;
-  amount: string;
-  category: string;
-  date: string;
-}
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
-
-type HoveredButton = string | null;
-type HoveredExpense = number | null;
+import { Expense, FormData , ModalProps,HoveredButton,HoveredExpense } from './types/types';
 
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
@@ -87,13 +64,31 @@ const ExpenseTracker: React.FC = () => {
       category : formData.category,
       date : formData.date
     }
-    if(!expense.description || !expense.amount || !expense.category || !expense.date){
+    if(editingId!==null){
+      setExpenses((preExpense) => preExpense.map((expense) => expense.id === editingId ? {
+        ...expense,
+        description : formData.description,
+        amount : Number(formData.amount),
+        date : formData.date,
+        category : formData.category,
+      }:expense
+    ))
+    }
+    else{
+       setExpenses([...expenses , expense])
+    }
+    setIsModalOpen(false);
+    
+    if(!expense.description  || !expense.amount || !expense.category || !expense.date){
       alert("Fill all details");
-      return;
+      return setIsModalOpen(true);
+    }
+    else if(expense.amount <= 0){
+      alert("Amount must greater than 0");
+      return setIsModalOpen(true);
     }
    
-    setExpenses([...expenses , expense])
-    setIsModalOpen(false);
+   
   } 
   
   const handleDelete = (id:number) => {
@@ -141,6 +136,7 @@ const ExpenseTracker: React.FC = () => {
               <Plus size={20} />
               Add Expense
             </button>
+          
           </div>
 
           <div style={styles.totalCard}>
@@ -210,6 +206,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
+                      
                       >
                         <Trash2 size={18} />
                       </button>
