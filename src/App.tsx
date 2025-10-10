@@ -1,68 +1,10 @@
 import React, { useState, CSSProperties } from 'react';
-import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-
-interface FormData {
-  description: string;
-  amount: string;
-  category: string;
-  date: string;
-}
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
-
-type HoveredButton = string | null;
-type HoveredExpense = number | null;
+import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X, ImageOff } from 'lucide-react';
+import { Expense, FormData,ModalProps,HoveredButton,HoveredExpense } from './types/expenseData'; 
+ import './App.css'
 
 const styles: Record<string, CSSProperties> = {
-  container: {
-    minHeight: '100vh',
-    background: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
-    padding: '24px'
-  },
-  maxWidth: {
-    maxWidth: '896px',
-    margin: '0 auto'
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: '16px',
-    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-    padding: '32px',
-    marginBottom: '24px'
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '24px'
-  },
-  titleWrapper: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  title: {
-    fontSize: '30px',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px'
-  },
-  subtitle: {
-    color: '#6b7280'
-  },
+
   addButton: {
     backgroundColor: '#6366f1',
     color: 'white',
@@ -79,37 +21,6 @@ const styles: Record<string, CSSProperties> = {
   },
   addButtonHover: {
     backgroundColor: '#4f46e5'
-  },
-  totalCard: {
-    background: 'linear-gradient(to right, #6366f1, #9333ea)',
-    borderRadius: '12px',
-    padding: '24px',
-    color: 'white'
-  },
-  totalLabel: {
-    fontSize: '14px',
-    opacity: 0.9,
-    marginBottom: '4px'
-  },
-  totalAmount: {
-    fontSize: '36px',
-    fontWeight: 'bold'
-  },
-  sectionTitle: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: '16px'
-  },
-  emptyState: {
-    color: '#6b7280',
-    textAlign: 'center',
-    padding: '32px 0'
-  },
-  expenseList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px'
   },
   expenseItem: {
     display: 'flex',
@@ -136,34 +47,7 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: '600',
     color: '#1f2937'
   },
-  categoryBadge: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    padding: '4px 8px',
-    backgroundColor: '#e0e7ff',
-    color: '#4338ca',
-    borderRadius: '4px',
-    fontSize: '12px',
-    fontWeight: '500'
-  },
-  expenseDate: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontSize: '14px',
-    color: '#6b7280'
-  },
-  expenseRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px'
-  },
-  expenseAmount: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    color: '#1f2937'
-  },
+ 
   actionButtons: {
     display: 'flex',
     gap: '8px'
@@ -239,30 +123,6 @@ const styles: Record<string, CSSProperties> = {
   closeButtonHover: {
     backgroundColor: '#f3f4f6'
   },
-  formGroup: {
-    marginBottom: '20px'
-  },
-  label: {
-    display: 'block',
-    fontSize: '14px',
-    fontWeight: '500',
-    color: '#374151',
-    marginBottom: '8px'
-  },
-  input: {
-    width: '100%',
-    padding: '10px 16px',
-    border: '1px solid #d1d5db',
-    borderRadius: '8px',
-    fontSize: '14px',
-    transition: 'all 0.2s',
-    boxSizing: 'border-box'
-  },
-  buttonGroup: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '24px'
-  },
   primaryButton: {
     flex: 1,
     padding: '12px 24px',
@@ -324,18 +184,34 @@ const ExpenseTracker: React.FC = () => {
     alert('Missed it, so fill in all fields');
     return;
   }
-    const newExpense: Expense = {
+    if (editingId) {
+    const modifyexpense = expenses.map((expense) =>
+    expense.id === editingId
+        ? { ...expense, description: formData.description, amount: parseFloat(formData.amount), category: formData.category, date: formData.date }
+        : expense
+    );
+    setExpenses(modifyexpense);
+  }else{
+const newExpense: Expense = {
     id: expenses.length + 1,
     description: formData.description,
-    amount: parseFloat(formData.amount),
+    amount:parseInt(formData.amount),
     category: formData.category,
     date: formData.date
   };
    setExpenses([...expenses, newExpense]);
+}
+   closeModal();
 
-  closeModal();
+}
+
+const handleDeleteExpense = (id: number): void => {
+  const updatedExpenses = expenses.filter(expense => expense.id !== id);
+  setExpenses(updatedExpenses);
 };
 
+
+   
   
   const [editingId, setEditingId] = useState<number|null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -343,6 +219,7 @@ const ExpenseTracker: React.FC = () => {
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense|null>(null);
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
+
 
   const closeModal = (): void => {
     setIsModalOpen(false);
@@ -364,7 +241,7 @@ const ExpenseTracker: React.FC = () => {
       category: expense.category,
       date: expense.date
     });
-    setEditingId(expense.id);
+     setEditingId(expense.id);
     setIsModalOpen(true);
   };
 
@@ -372,16 +249,16 @@ const ExpenseTracker: React.FC = () => {
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
-    <div style={styles.container}>
-      <div style={styles.maxWidth}>
-        <div style={styles.card}>
-          <div style={styles.header}>
-            <div style={styles.titleWrapper}>
-              <h1 style={styles.title}>
+    <div className='container'>
+      <div className='maxWidth'>
+        <div className='card'>
+          <div className='header'>
+            <div className='titleWrapper'>
+              <h1 className='tile'>
                 <DollarSign color="#6366f1" size={32} />
                 Expense Tracker
               </h1>
-              <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
+              <p className='subtitile'>Manage your daily expenses efficiently</p>
             </div>
             <button
               style={{
@@ -397,19 +274,19 @@ const ExpenseTracker: React.FC = () => {
             </button>
           </div>
 
-          <div style={styles.totalCard}>
-            <p style={styles.totalLabel}>Total Expenses</p>
-            <p style={styles.totalAmount}>${totalExpense.toFixed(2)}</p>
+          <div className='totalCard'>
+            <p className='totalLabel'>Total Expenses</p>
+            <p className='totalAmount'>${totalExpense.toFixed(2)}</p>
           </div>
         </div>
 
-        <div style={styles.card}>
-          <h2 style={styles.sectionTitle}>Recent Expenses</h2>
+        <div className='card'>
+          <h2 className='sectionTitle'>Recent Expenses</h2>
           
           {expenses.length === 0 ? (
-            <p style={styles.emptyState}>No expenses yet. Add your first expense above!</p>
+            <p className='emptyState'>No expenses yet. Add your first expense above!</p>
           ) : (
-            <div style={styles.expenseList}>
+            <div className='expenseList'>
               {expenses.map((expense: Expense) => (
                 <div
                   key={expense.id}
@@ -421,15 +298,15 @@ const ExpenseTracker: React.FC = () => {
                   onMouseEnter={() => setHoveredExpense(expense.id)}
                   onMouseLeave={() => setHoveredExpense(null)}
                 >
-                  <div style={styles.expenseContent}>
-                    <div style={styles.expenseTitleRow}>
-                      <h3 style={styles.expenseTitle}>{expense.description}</h3>
-                      <span style={styles.categoryBadge}>
+                  <div className='expenseContent'>
+                    <div className='expenseTitleRow'>
+                      <h3 className='expenseTitle'>{expense.description}</h3>
+                      <span className='categoryBadge'>
                         <Tag size={12} />
                         {expense.category}
                       </span>
                     </div>
-                    <div style={styles.expenseDate}>
+                    <div className='expenseDate'>
                       <Calendar size={14} />
                       {new Date(expense.date).toLocaleDateString('en-US', { 
                         month: 'short', 
@@ -439,8 +316,8 @@ const ExpenseTracker: React.FC = () => {
                     </div>
                   </div>
 
-                  <div style={styles.expenseRight}>
-                    <span style={styles.expenseAmount}>
+                  <div className='expenseRight'>
+                    <span className='expenseAmount'>
                       ${expense.amount.toFixed(2)}
                     </span>
                     <div style={styles.actionButtons}>
@@ -458,10 +335,12 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                       onClick={(e) => handleDeleteExpense(expense.id)}
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
                         }}
+                       
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
@@ -478,8 +357,8 @@ const ExpenseTracker: React.FC = () => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <div style={styles.modalHeader}>
-          <h2 style={styles.modalTitle}>
+        <div className='modalHeader'>
+          <h2 className='modalTitle'>
             {editingId ? 'Edit Expense' : 'Add New Expense'}
           </h2>
           <button
@@ -496,35 +375,35 @@ const ExpenseTracker: React.FC = () => {
           </button>
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Description</label>
+        <div className='formGroup'>
+          <label className='label'>Description</label>
           <input
             type="text"
             value={formData.description}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
-            style={styles.input}
+            className='input'
             placeholder="Enter description"
           />
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Amount</label>
+        <div className='formGroup'>
+          <label className='label'>Amount</label>
           <input
             type="number"
             step="0.01"
             value={formData.amount}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
-            style={styles.input}
+            className='input'
             placeholder="0.00"
           />
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Category</label>
+        <div className='formGroup'>
+          <label className='label'>Category</label>
           <select
             value={formData.category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
-            style={styles.input}
+            className='input'
           >
             <option value="">Select category</option>
             {categories.map((cat: string) => (
@@ -533,17 +412,17 @@ const ExpenseTracker: React.FC = () => {
           </select>
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Date</label>
+        <div className='formGroup'>
+          <label className='label'>Date</label>
           <input
             type="date"
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
-            style={styles.input}
+            className='input'
           />
         </div>
        <button  onClick={() => setIsModalOpen(true)}> </button>
-        <div style={styles.buttonGroup}>
+        <div className='buttonGroup'>
           <button
             style={{
               ...styles.primaryButton,
@@ -554,7 +433,8 @@ const ExpenseTracker: React.FC = () => {
             onMouseLeave={() => setHoveredButton(null)}
            
           >
-            {editingId ? 'Update Expense': 'Add Expense'}
+            {
+            editingId ? 'Update Expense': 'Add Expense'}
           </button>
           <button
             onClick={closeModal}
