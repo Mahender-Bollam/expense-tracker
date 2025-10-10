@@ -6,13 +6,9 @@ import { HoveredButton, HoveredExpense } from "../types/types";
 import ExpenseForm from "./expenseForm";
 import Modal from "./modal";
 import ExpenseList from "./expenseList";
+import { FormData } from "../interface/formData";
 
-export interface FormData {
-  description: string;
-  amount: string;
-  category: string;
-  date: string;
-}
+
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
     { id: 1, description: "Groceries", amount: 85.5, category: "Food", date: "2025-10-05" },
