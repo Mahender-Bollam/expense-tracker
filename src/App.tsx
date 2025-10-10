@@ -123,30 +123,6 @@ const styles: Record<string, CSSProperties> = {
   closeButtonHover: {
     backgroundColor: '#f3f4f6'
   },
-  formGroup: {
-    marginBottom: '20px'
-  },
-  label: {
-    display: 'block',
-    fontSize: '14px',
-    fontWeight: '500',
-    color: '#374151',
-    marginBottom: '8px'
-  },
-  input: {
-    width: '100%',
-    padding: '10px 16px',
-    border: '1px solid #d1d5db',
-    borderRadius: '8px',
-    fontSize: '14px',
-    transition: 'all 0.2s',
-    boxSizing: 'border-box'
-  },
-  buttonGroup: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '24px'
-  },
   primaryButton: {
     flex: 1,
     padding: '12px 24px',
@@ -208,8 +184,15 @@ const ExpenseTracker: React.FC = () => {
     alert('Missed it, so fill in all fields');
     return;
   }
-    
-  const newExpense: Expense = {
+    if (editingId) {
+    const modifyexpense = expenses.map((expense) =>
+    expense.id === editingId
+        ? { ...expense, description: formData.description, amount: parseFloat(formData.amount), category: formData.category, date: formData.date }
+        : expense
+    );
+    setExpenses(modifyexpense);
+  }else{
+const newExpense: Expense = {
     id: expenses.length + 1,
     description: formData.description,
     amount:parseInt(formData.amount),
@@ -217,7 +200,9 @@ const ExpenseTracker: React.FC = () => {
     date: formData.date
   };
    setExpenses([...expenses, newExpense]);
+}
    closeModal();
+
 }
 
 const handleDeleteExpense = (id: number): void => {
@@ -256,7 +241,7 @@ const handleDeleteExpense = (id: number): void => {
       category: expense.category,
       date: expense.date
     });
-    setEditingId(expense.id);
+     setEditingId(expense.id);
     setIsModalOpen(true);
   };
 
@@ -390,35 +375,35 @@ const handleDeleteExpense = (id: number): void => {
           </button>
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Description</label>
+        <div className='formGroup'>
+          <label className='label'>Description</label>
           <input
             type="text"
             value={formData.description}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
-            style={styles.input}
+            className='input'
             placeholder="Enter description"
           />
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Amount</label>
+        <div className='formGroup'>
+          <label className='label'>Amount</label>
           <input
             type="number"
             step="0.01"
             value={formData.amount}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
-            style={styles.input}
+            className='input'
             placeholder="0.00"
           />
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Category</label>
+        <div className='formGroup'>
+          <label className='label'>Category</label>
           <select
             value={formData.category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
-            style={styles.input}
+            className='input'
           >
             <option value="">Select category</option>
             {categories.map((cat: string) => (
@@ -427,17 +412,17 @@ const handleDeleteExpense = (id: number): void => {
           </select>
         </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Date</label>
+        <div className='formGroup'>
+          <label className='label'>Date</label>
           <input
             type="date"
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
-            style={styles.input}
+            className='input'
           />
         </div>
        <button  onClick={() => setIsModalOpen(true)}> </button>
-        <div style={styles.buttonGroup}>
+        <div className='buttonGroup'>
           <button
             style={{
               ...styles.primaryButton,
