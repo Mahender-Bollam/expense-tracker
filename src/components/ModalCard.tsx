@@ -1,3 +1,4 @@
+import { FormData } from '../types/formDataType';
 import { styles } from '../styles/Styles';
 import Modal from './ModalComponent';
 import { X } from 'lucide-react';
@@ -20,6 +21,29 @@ const Model = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredButton
     setExpenses([...expenses,{...formData, amount: Number(formData.amount)}])
     setIsModalOpen(false)
   }
+  const handleEditSubmit =(expense:FormData,e:any)=>{
+    setFormData({
+      id:expense.id,
+      description: e.target.value,
+      amount: Number(e.target.value),
+      category: e.target.value,
+      date: e.target.value
+      })
+      const updatedExpenses={
+        id:formData.id,
+        description:formData.description,
+        amount:Number(formData.amount),
+        category:formData.category,
+        date:formData.date
+      }
+       
+      setExpenses(prevExpenses=>{
+        return prevExpenses.map((item)=>item.id === editingId ? updatedExpenses : item)
+      })
+      console.log(formData)
+      console.log(expenses)
+      setIsModalOpen(false)
+    }
 
 
   return (
@@ -90,7 +114,7 @@ const Model = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredButton
 
         <div style={styles.buttonGroup}>
           <button
-          onClick={handleSubmit}
+          onClick={editingId ? (e:any)=>handleEditSubmit(formData,e):handleSubmit}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover :{})
