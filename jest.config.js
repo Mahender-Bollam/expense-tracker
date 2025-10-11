@@ -7,6 +7,15 @@ module.exports = {
   transform: {
     ...tsJestTransformCfg,
   },
+  roots: ['<rootDir>/src'],
+  collectCoverage: true,
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/models/**',       
+    '!src/**/*.d.ts',        
+  ],
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov'],
   coveragePathIgnorePatterns: [
     '/node_modules/', 
     '/src/models/' 
