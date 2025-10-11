@@ -33,6 +33,7 @@ const ExpenseCard = ({ expenses, hoveredButton, setHoveredButton, hoveredExpense
         <div style={styles.expenseList}>
           {expenses.map((expense: Expense) => (
             <div
+            data-testid='expense-block-hover'
               key={expense.id}
               style={{
                 ...styles.expenseItem,
