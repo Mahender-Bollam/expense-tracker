@@ -1,4 +1,4 @@
-import {  ModalProps } from "../types/ExpenseDetails";
+import {  HandleButtonProps, ModalProps } from "../types/ExpenseDetails";
 import { styles } from "../styles";
 import {  X } from 'lucide-react';
 
@@ -15,7 +15,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 };
 
 
-const ModalCard = ({isModalOpen,closeModal,editingId,formData,setFormData,setHoveredButton,hoveredButton,expenses,setExpenses,setIsModalOpen}:any) =>{
+const ModalCard = ({isModalOpen,closeModal,editingId,formData,setFormData,setHoveredButton,hoveredButton,expenses,setExpenses,setIsModalOpen}:HandleButtonProps) =>{
     const handleSubmit = () =>{
     setFormData({
       id:expenses.length+1,
@@ -26,7 +26,7 @@ const ModalCard = ({isModalOpen,closeModal,editingId,formData,setFormData,setHov
 
     })
     setExpenses([...expenses,{ ...formData, amount:Number(formData.amount) }])
-    console.log(`form details ${formData}`)
+    // console.log(`form details ${formData}`)
     setIsModalOpen(false)
     
   }
@@ -53,7 +53,6 @@ const ModalCard = ({isModalOpen,closeModal,editingId,formData,setFormData,setHov
 
   }
 
-
     const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
     return(
     <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -62,6 +61,7 @@ const ModalCard = ({isModalOpen,closeModal,editingId,formData,setFormData,setHov
             {editingId ? 'Edit Expense' : 'Add New Expense'}
           </h2>
           <button
+            data-testid="close-icon"
             onClick={closeModal}
             style={{
               ...styles.closeButton,
@@ -75,13 +75,15 @@ const ModalCard = ({isModalOpen,closeModal,editingId,formData,setFormData,setHov
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Description</label>
+          <label htmlFor="desc" style={styles.label}>Description</label>
           <input
+            id="decs"
             type="text"
             value={formData.description}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
             style={styles.input}
             placeholder="Enter description"
+            data-testid="description"
           />
         </div>
 
@@ -122,7 +124,7 @@ const ModalCard = ({isModalOpen,closeModal,editingId,formData,setFormData,setHov
         </div>
 
         <div style={styles.buttonGroup}>
-          <button
+          <button data-testid="submit-button"
         //   onClick={handleSubmit}
           onClick={editingId ? (e:any)=>handleEditSubmit(formData,e): handleSubmit}
             style={{
@@ -135,6 +137,7 @@ const ModalCard = ({isModalOpen,closeModal,editingId,formData,setFormData,setHov
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
+            data-testid="cancel-button"
             onClick={closeModal}
             style={{
               ...styles.secondaryButton,
