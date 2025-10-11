@@ -216,6 +216,7 @@ const ExpenseTracker: React.FC = () => {
             {editingId ? 'Edit Expense' : 'Add New Expense'}
           </h2>
           <button
+             title="Close Modal"
             onClick={closeModal}
             style={{
               ...styles.closeButton,
