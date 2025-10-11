@@ -1,9 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react"
 import ModalCard from "../../components/ModalCard"
-import Modal from "../../components/ModalComponent"
-import { AppWindow } from "lucide-react"
-import ExpenseTracker from "../../App"
-import userEvent from "@testing-library/user-event"
 
 const mockExpenses = [{ id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' }]
 
@@ -41,7 +37,14 @@ describe('Modal Card component', () => {
         fireEvent.change(screen.getByText(/Select Category/i), { target: { value: 'Shopping' } })
         fireEvent.click(screen.getByRole('button',{name: /Add Expense/i}))
     })
-   
+    test('Should able to edit the expense',()=>{
+        renderComponent({editingId:mockExpenses[0].id,isModalOpen:true })
+        fireEvent.change(screen.getByPlaceholderText(/Enter description/i),{ target: { value: 'MySelf' } })
+        fireEvent.click(screen.getByRole('button',{name: /Update Expense/i}))
+        expect(mockSetFormData).toHaveBeenCalledWith({
+            ...mockFormData, description: 'MySelf'
+        })
+    })
 })
 
 
