@@ -12,6 +12,13 @@ test('renders learn react link', () => {
   expect(screen.getByText(/Manage your daily expenses efficiently/i)).toBeInTheDocument()
 });
 
+test('Should open the modal when clicked on Add expense',()=>{
+  render(<App/>)
+  const addBtn = screen.getByRole('button',{name: /Add Expense/i})
+  userEvent.click(addBtn)
+  expect(screen.getByPlaceholderText(/Enter description/i)).toBeInTheDocument()
+})
+
 
 })
 
