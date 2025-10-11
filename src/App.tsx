@@ -1,11 +1,11 @@
-import React, { useState} from 'react';
-import { Plus, DollarSign} from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, DollarSign } from 'lucide-react';
 import { Expense } from './types/expenseType';
 import { FormData } from './types/formDataType';
 import { styles } from './styles/Styles';
-import Model from './components/ModalCard';
 import ExpenseCard from './components/ExpenseCard';
 import { HoveredButton, HoveredExpense } from './types/hoverTypes';
+import ModalCard from './components/ModalCard';
 
 
 const ExpenseTracker: React.FC = () => {
@@ -13,20 +13,20 @@ const ExpenseTracker: React.FC = () => {
     { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
     { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
   ]);
-  
+
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: 0,
     category: '',
     date: new Date().toISOString().split('T')[0],
-    id:expenses.length+1
+    id: expenses.length + 1
   });
-  
+
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
-  
+
   const closeModal = (): void => {
     setIsModalOpen(false);
     setEditingId(null);
@@ -35,16 +35,16 @@ const ExpenseTracker: React.FC = () => {
       amount: '',
       category: '',
       date: new Date().toISOString().split('T')[0],
-      id:expenses.length+1
+      id: expenses.length + 1
     });
   };
-  const handleAdd = ():void =>{
+  const handleAdd = (): void => {
     setFormData({
       description: '',
       amount: '',
       category: '',
       date: new Date().toISOString().split('T')[0],
-      id: expenses.length+1
+      id: expenses.length + 1
     });
     setEditingId(null);
     setIsModalOpen(true);
@@ -52,6 +52,7 @@ const ExpenseTracker: React.FC = () => {
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
+  const modalProps = {}
   return (
     <div style={styles.container}>
       <div style={styles.maxWidth}>
@@ -65,9 +66,9 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
-            onClick={() => handleAdd()}
+              onClick={() => handleAdd()}
               style={{
-                ...styles.addButton,...styles.actionButtons,
+                ...styles.addButton, ...styles.actionButtons,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
               onMouseEnter={() => setHoveredButton('add')}
@@ -84,13 +85,13 @@ const ExpenseTracker: React.FC = () => {
           </div>
         </div>
         <ExpenseCard expenses={expenses} hoveredButton={hoveredButton} setHoveredButton={setHoveredButton}
-        hoveredExpense={hoveredExpense} setHoveredExpense={setHoveredExpense}setFormData={setFormData} 
-        setEditingId={setEditingId} setIsModalOpen={setIsModalOpen} setExpenses={setExpenses}/>
+          hoveredExpense={hoveredExpense} setHoveredExpense={setHoveredExpense} setFormData={setFormData}
+          setEditingId={setEditingId} setIsModalOpen={setIsModalOpen} setExpenses={setExpenses} />
       </div>
-      <Model isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} closeModal={closeModal} 
-     editingId={editingId} hoveredButton={hoveredButton} 
-    setHoveredButton={setHoveredButton} formData={formData}
-      setFormData={setFormData} expenses={expenses} setExpenses={setExpenses}/>
+      <ModalCard isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} closeModal={closeModal}
+        editingId={editingId} hoveredButton={hoveredButton}
+        setHoveredButton={setHoveredButton} formData={formData}
+        setFormData={setFormData} expenses={expenses} setExpenses={setExpenses} />
 
     </div>
   );
