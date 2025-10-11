@@ -66,6 +66,29 @@ describe("ExpenseForm Component", () => {
     expect(mockSetExpenses).toHaveBeenCalledTimes(1);
     expect(mockCloseModal).toHaveBeenCalled();
   });
+  
+  test("updates expense", () => {
+    const mockExpenses = [
+      { id: 1, description: "Old", amount: 50, category: "Food", date: "2025-10-09" },
+    ];
+    const props = {
+      ...baseProps,
+      formData: {
+        description: "Updated",
+        amount: "100",
+        category: "Food",
+        date: "2025-10-10",
+      },
+      editingId: 1,
+      expenses: mockExpenses,
+    };
+    render(<ExpenseForm {...props} />);
+    fireEvent.click(screen.getByText("Update Expense"));
+    expect(mockSetExpenses).toHaveBeenCalledWith([
+      { id: 1, description: "Updated", amount: 100, category: "Food", date: "2025-10-10" },
+    ]);
+    expect(mockCloseModal).toHaveBeenCalled();
+  });
 });
 
 
