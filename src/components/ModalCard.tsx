@@ -75,7 +75,7 @@ const ModalCard=(props:ModelCardProps)=>{
 
         <div style={styles.buttonGroup}>
           <button
-          onClick={props.handleClick}
+          onClick={props.editingId?props.updateExpense:props.addExpense}
             style={{
               ...styles.primaryButton,
               ...(props.hoveredButton === 'submit' ? styles.primaryButtonHover : {})
