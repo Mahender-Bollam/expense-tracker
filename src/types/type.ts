@@ -58,3 +58,8 @@ export type ValidateExpenseParam = [
   expenses : Expense[],
   editingId : number | null
 ]
+
+export type ShareFormDataType = {
+  dataOfForm: FormData,
+  setDataOfForm: React.Dispatch<React.SetStateAction<FormData>>
+}

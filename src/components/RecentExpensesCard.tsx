@@ -16,7 +16,7 @@ export const RecentExpenses: React.FC<RecentExpensesCard> = ({expenses, handleEd
           ) : (
             <div style={styles.expenseList}>
               {expenses.map((expense: Expense) => (
-                <ExpenseCard expense={expense} handleEdit={handleEdit} deleteExpense={deleteExpense}/>
+                <ExpenseCard expense={expense} handleEdit={handleEdit} deleteExpense={deleteExpense} key={expense.id}/>
               ))}
             </div>
           )}
