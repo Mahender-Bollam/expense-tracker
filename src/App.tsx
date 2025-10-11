@@ -52,7 +52,6 @@ const ExpenseTracker: React.FC = () => {
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
-  const modalProps = {}
   return (
     <div style={styles.container}>
       <div style={styles.maxWidth}>
