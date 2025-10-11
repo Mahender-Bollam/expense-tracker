@@ -56,6 +56,11 @@ describe('Expense card component',()=>{
         fireEvent.mouseEnter(screen.getByTitle(/Delete/i))
         fireEvent.mouseLeave(screen.getByTitle(/Delete/i))
     })
+    test('Should hover the expense card block when mouse entered on it',()=>{
+        renderComponent();
+        fireEvent.mouseEnter(screen.getByTestId(/expense-block-hover/i))
+        fireEvent.mouseLeave(screen.getByTestId(/expense-block-hover/i))
+    })
 })
 
 
