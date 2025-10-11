@@ -1,6 +1,3 @@
-import { ExpenseCard } from "../components/ExpenseCard";
-
-
 
 export interface Expense {
   id: number;
@@ -41,7 +38,7 @@ export interface OpenOrDeleteExpenseBtn  {
 export interface EditOrAddExpenseBtn {
   editingId: number | null;
   editExpense: (expenseId: number) => void;
-  addExpense: () => void
+  addExpense: any
 }
 
 export interface ExpenseCrd {
@@ -55,3 +52,9 @@ export interface RecentExpensesCard {
   handleEdit: (expense: Expense) => void;
   deleteExpense:  (expenseToDelete: Expense) => void
 }
+
+export type ValidateExpenseParam = [
+  newExpense : FormData,
+  expenses : Expense[],
+  editingId : number | null
+]
