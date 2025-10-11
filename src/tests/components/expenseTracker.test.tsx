@@ -54,6 +54,13 @@ describe("ExpenseTracker Component", () => {
     expect(screen.queryByText("Add New Expense")).not.toBeInTheDocument();
   });
 
+  test("does not delete an expense when confirmation is canceled", () => {
+    (window.confirm as jest.Mock).mockReturnValueOnce(false);
+    render(<ExpenseTracker />);
+    const deleteButton = screen.getAllByTitle("Delete")[0];
+    fireEvent.click(deleteButton);
+    expect(screen.getByText("Groceries")).toBeInTheDocument();
+  });
 });
 
 
