@@ -4,7 +4,7 @@ import { FormData } from "./formDataType"
 
 export type modalCardProp = {
   isModalOpen: boolean
-  closeModal: () => void
+setEditingId: React.Dispatch<React.SetStateAction<number | null>>
   editingId: number | null
   hoveredButton: HoveredButton
   setHoveredButton: React.Dispatch<React.SetStateAction<HoveredButton>>
