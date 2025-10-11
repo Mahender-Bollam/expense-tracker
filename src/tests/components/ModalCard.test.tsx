@@ -61,6 +61,11 @@ describe('Modal Card component', () => {
         fireEvent.mouseEnter(screen.getByTestId(/expense-hover/i))
         fireEvent.mouseLeave(screen.getByTestId(/expense-hover/i))
     })
+    test('Should handle hovering of the modal cancel button',()=>{
+        renderComponent({isModalOpen:true});
+        fireEvent.mouseEnter(screen.getByTestId(/cancel-hover/i))
+        fireEvent.mouseLeave(screen.getByTestId(/cancel-hover/i))
+    })
 })
 
 
