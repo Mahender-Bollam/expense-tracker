@@ -37,6 +37,15 @@ describe("ExpenseTracker Component", () => {
     expect(window.confirm).toHaveBeenCalledWith("You want to delete this expense?");
     expect(screen.queryByText("Groceries")).not.toBeInTheDocument();
   });
+  
+  test("handles on Add Expense button", () => {
+    render(<ExpenseTracker />);
+    const addButton = screen.getByText("Add Expense");
+    fireEvent.mouseEnter(addButton);
+    fireEvent.mouseLeave(addButton);
+    expect(addButton).toBeInTheDocument();
+  });
+
 });
 
 
