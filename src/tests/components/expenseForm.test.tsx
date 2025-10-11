@@ -142,6 +142,16 @@ describe("ExpenseForm Component", () => {
       amount: "100",
     });
   });
+
+  test("updates formData when user selects a category option", () => {
+  render(<ExpenseForm {...baseProps} />);
+  const select = screen.getByRole("combobox");
+  fireEvent.change(select, { target: { value: "Food" } });
+  expect(mockSetFormData).toHaveBeenCalledWith({
+    ...baseProps.formData,
+    category: "Food",
+  });
+});
 });
 
 
