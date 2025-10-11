@@ -56,6 +56,7 @@ const ModalCard = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredBu
               ...styles.closeButton,
               ...(hoveredButton === 'close' ? styles.closeButtonHover : {})
             }}
+            data-testid='cancel-icon'
             onMouseEnter={() => setHoveredButton('close')}
             onMouseLeave={() => setHoveredButton(null)}
           >
@@ -112,6 +113,7 @@ const ModalCard = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredBu
 
         <div style={styles.buttonGroup}>
           <button
+          data-testid='expense-hover'
           onClick={editingId ? (e:any)=>handleEditSubmit(formData,e):handleSubmit}
             style={{
               ...styles.primaryButton,
