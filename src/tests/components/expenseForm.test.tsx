@@ -104,6 +104,15 @@ describe("ExpenseForm Component", () => {
     fireEvent.mouseLeave(addButton);
     expect(mockSetHoveredButton).toHaveBeenCalledWith(null);
   });
+  
+  test("handles hover events on Cancel button", () => {
+    render(<ExpenseForm {...baseProps} />);
+    const cancelButton = screen.getByText("Cancel");
+    fireEvent.mouseEnter(cancelButton);
+    expect(mockSetHoveredButton).toHaveBeenCalledWith("cancel");
+    fireEvent.mouseLeave(cancelButton);
+    expect(mockSetHoveredButton).toHaveBeenCalledWith(null);
+  });
 });
 
 
