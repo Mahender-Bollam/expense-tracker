@@ -38,12 +38,20 @@ describe("ExpenseTracker Component", () => {
     expect(screen.queryByText("Groceries")).not.toBeInTheDocument();
   });
   
-  test("handles on Add Expense button", () => {
+  test("handles Add Expense button", () => {
     render(<ExpenseTracker />);
     const addButton = screen.getByText("Add Expense");
     fireEvent.mouseEnter(addButton);
     fireEvent.mouseLeave(addButton);
     expect(addButton).toBeInTheDocument();
+  });
+
+  test("closes modal when Cancel button is clicked", () => {
+    render(<ExpenseTracker />);
+    fireEvent.click(screen.getByText("Add Expense"));
+    const cancelButton = screen.getByText("Cancel");
+    fireEvent.click(cancelButton);
+    expect(screen.queryByText("Add New Expense")).not.toBeInTheDocument();
   });
 
 });
