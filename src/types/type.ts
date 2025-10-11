@@ -24,3 +24,21 @@ export interface ModalProps {
 
 export type HoveredButton = string | null;
 export type HoveredExpense = number | null;
+
+export interface OpenOrCloseModelBtn {
+  title: string;
+  setIsModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  closeModel ?: ()=>void;
+}
+
+export interface OpenOrDeleteExpenseBtn  {
+  manageExpense:(expense: Expense) => void;
+  expense: Expense;
+  title: string
+}
+
+export interface EditOrAddExpenseBtn {
+  editingId: number | null;
+  editExpense: (expenseId: number) => void;
+  addExpense: () => void
+}

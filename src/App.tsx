@@ -1,7 +1,8 @@
 import React, { useState} from 'react';
-import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-import { FormData, ModalProps, Expense, HoveredButton, HoveredExpense } from './types/type';
+import { DollarSign, Calendar, Tag } from 'lucide-react';
+import { FormData, ModalProps, Expense, HoveredExpense } from './types/type';
 import { styles } from './styles/styles';
+import { EditOrAddExpenseButton , OpenOrCloseModelButton , OpenOrDeleteAnExpenseButton } from './components/Buttons';
 
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
@@ -31,7 +32,6 @@ const ExpenseTracker: React.FC = () => {
   
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
@@ -117,18 +117,7 @@ const ExpenseTracker: React.FC = () => {
               </h1>
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
-            <button
-              onClick={()=>setIsModalOpen(true)}
-              style={{
-                ...styles.addButton,
-                ...(hoveredButton === 'add' ? styles.addButtonHover : {})
-              }}
-              onMouseEnter={() => setHoveredButton('add')}
-              onMouseLeave={() => setHoveredButton(null)}
-            >
-              <Plus size={20} />
-              Add Expense
-            </button>
+            <OpenOrCloseModelButton  title='Add Expense'  setIsModalOpen={setIsModalOpen} />
           </div>
 
           <div style={styles.totalCard}>
@@ -177,30 +166,8 @@ const ExpenseTracker: React.FC = () => {
                       ${expense.amount.toFixed(2)}
                     </span>
                     <div style={styles.actionButtons}>
-                      <button
-                        onClick={() => handleEdit(expense)}
-                        style={{
-                          ...styles.editButton,
-                          ...(hoveredButton === `edit-${expense.id}` ? styles.editButtonHover : {})
-                        }}
-                        onMouseEnter={() => setHoveredButton(`edit-${expense.id}`)}
-                        onMouseLeave={() => setHoveredButton(null)}
-                        title="Edit"
-                      >
-                        <Edit2 size={18} />
-                      </button>
-                      <button
-                        onClick={()=>deleteExpense(expense)}
-                        style={{
-                          ...styles.deleteButton,
-                          ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
-                        }}
-                        onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
-                        onMouseLeave={() => setHoveredButton(null)}
-                        title="Delete"
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                      <OpenOrDeleteAnExpenseButton manageExpense={handleEdit} expense={expense} title='editExpense'/>
+                      <OpenOrDeleteAnExpenseButton  manageExpense={deleteExpense} expense={expense} title='deleteExpense'/>
                     </div>
                   </div>
                 </div>
@@ -215,17 +182,7 @@ const ExpenseTracker: React.FC = () => {
           <h2 style={styles.modalTitle}>
             {editingId ? 'Edit Expense' : 'Add New Expense'}
           </h2>
-          <button
-            onClick={closeModal}
-            style={{
-              ...styles.closeButton,
-              ...(hoveredButton === 'close' ? styles.closeButtonHover : {})
-            }}
-            onMouseEnter={() => setHoveredButton('close')}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            <X size={24} />
-          </button>
+          <OpenOrCloseModelButton   title='close' closeModel={closeModal}/>
         </div>
 
         <div style={styles.formGroup}>
@@ -276,28 +233,8 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button
-            onClick={()=>editingId? editExpense(editingId) :addExpense()}
-            style={{
-              ...styles.primaryButton,
-              ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
-            }}
-            onMouseEnter={() => setHoveredButton('submit')}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            {editingId ? 'Update Expense' : 'Add Expense'}
-          </button>
-          <button
-            onClick={closeModal}
-            style={{
-              ...styles.secondaryButton,
-              ...(hoveredButton === 'cancel' ? styles.secondaryButtonHover : {})
-            }}
-            onMouseEnter={() => setHoveredButton('cancel')}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            Cancel
-          </button>
+          <EditOrAddExpenseButton editingId={editingId} editExpense={editExpense} addExpense={addExpense}/>
+          <OpenOrCloseModelButton  title='cancel' closeModel={closeModal}/>
         </div>
       </Modal>
     </div>
