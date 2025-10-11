@@ -6,7 +6,7 @@ import { modalCardProp } from '../types/propTypes';
 
 const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
-const Model = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredButton,formData,setFormData,expenses,setExpenses,setIsModalOpen}:modalCardProp) => {
+const ModalCard = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredButton,formData,setFormData,expenses,setExpenses,setIsModalOpen}:modalCardProp) => {
 
    const handleSubmit =()=>{
     setFormData({
@@ -138,4 +138,4 @@ const Model = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredButton
   )
 }
 
-export default Model
+export default ModalCard
