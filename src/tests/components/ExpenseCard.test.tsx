@@ -29,6 +29,12 @@ describe('Expense card component',()=>{
         fireEvent.click(screen.getByTitle("Edit"))
 
     })
+    test('Should display alert when deleting the expense',()=>{
+        renderComponent();
+        fireEvent.click(screen.getByTitle('Delete'))
+        jest.spyOn(window, 'alert').mockImplementation(() => {});
+
+    })
    
 })
 
