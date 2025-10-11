@@ -40,7 +40,11 @@ describe('Expense card component',()=>{
         fireEvent.mouseEnter(screen.getByTitle(/Edit/i))
         fireEvent.mouseLeave(screen.getByTitle(/Edit/i))
     })
-
+    test('Should handle the mouse event when hover on delete button',()=>{
+        renderComponent();
+        fireEvent.mouseEnter(screen.getByTitle(/Delete/i))
+        fireEvent.mouseLeave(screen.getByTitle(/Delete/i))
+    })
 })
 
 
