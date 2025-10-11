@@ -18,7 +18,10 @@ test('Should open the modal when clicked on Add expense',()=>{
   userEvent.click(addBtn)
   expect(screen.getByPlaceholderText(/Enter description/i)).toBeInTheDocument()
 })
-
+test('Should test the hovering on add expense button',()=>{
+  render(<App />)
+  fireEvent.mouseLeave(screen.getByText(/Add Expense/i))
+})
 
 })
 
