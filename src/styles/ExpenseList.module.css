@@ -1,0 +1,11 @@
+.expenseList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.emptyState {
+  color: #6b7280;
+  text-align: center;
+  padding: 32px 0;
+}
