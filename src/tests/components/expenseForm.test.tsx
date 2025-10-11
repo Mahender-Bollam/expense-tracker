@@ -51,6 +51,21 @@ describe("ExpenseForm Component", () => {
     expect(mockSetExpenses).not.toHaveBeenCalled();
   });
 
+  test("adds new expense when valid data is submitted", () => {
+    const props = {
+      ...baseProps,
+      formData: {
+        description: "Lunch",
+        amount: "200",
+        category: "Food",
+        date: "2025-10-10",
+      },
+    };
+    render(<ExpenseForm {...props} />);
+    fireEvent.click(screen.getByText("Add Expense"));
+    expect(mockSetExpenses).toHaveBeenCalledTimes(1);
+    expect(mockCloseModal).toHaveBeenCalled();
+  });
 });
 
 
