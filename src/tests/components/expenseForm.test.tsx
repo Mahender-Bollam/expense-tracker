@@ -122,6 +122,16 @@ describe("ExpenseForm Component", () => {
     fireEvent.mouseLeave(closeButton);
     expect(mockSetHoveredButton).toHaveBeenCalledWith(null);
   });
+  
+  test("calls setFormData when typing description", () => {
+    render(<ExpenseForm {...baseProps} />);
+    const descInput = screen.getByPlaceholderText("Enter description");
+    fireEvent.change(descInput, { target: { value: "Groceries" } });
+    expect(mockSetFormData).toHaveBeenCalledWith({
+      ...baseProps.formData,
+      description: "Groceries",
+    });
+  });
 });
 
 
