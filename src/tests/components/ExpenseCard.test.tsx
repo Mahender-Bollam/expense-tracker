@@ -25,12 +25,12 @@ const mockSetHoveredExpense = jest.fn()
 
 window.alert = jest.fn()
 
-const renderComponent = () =>{
+const renderComponent = (props={}) =>{
     render(
             <ExpenseCard expenses={mockExpenses} setExpenses={mockSetExpenses} 
             hoveredButton={mockHoveredButton} setHoveredButton={mockSetHoveredButton} 
             setHoveredExpense={mockSetHoveredExpense} setFormData={mockSetFormData} setEditingId={mockSetEditingId} 
-            setIsModalOpen={mockSetIsModalOpen} hoveredExpense={mockHoveredExpense}/>
+            setIsModalOpen={mockSetIsModalOpen} hoveredExpense={mockHoveredExpense} {...props}/>
         )
 }
 
@@ -57,7 +57,7 @@ describe('Expense card component',()=>{
         fireEvent.mouseLeave(screen.getByTitle(/Delete/i))
     })
     test('Should hover the expense card block when mouse entered on it',()=>{
-        renderComponent();
+        renderComponent({hoveredExpense:mockExpenses[0].id});
         fireEvent.mouseEnter(screen.getByTestId(/expense-block-hover/i))
         fireEvent.mouseLeave(screen.getByTestId(/expense-block-hover/i))
     })
