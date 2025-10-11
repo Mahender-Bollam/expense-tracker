@@ -4,22 +4,9 @@ import { JSX } from 'react/jsx-runtime';
 import { Expense,FormData,ModalProps  } from './interfaces/expense';
 import { HoveredButton,HoveredExpense } from './types/expense';
 import { styles } from './styles/expense-tracker';
+import { Modal } from './modal';
   
  
-  
-  
-
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        {children}
-      </div>
-    </div>
-  );
-};
 
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
@@ -318,6 +305,3 @@ const ExpenseTracker: React.FC = () => {
 
 export default ExpenseTracker;
 
-function elseif(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
