@@ -27,17 +27,6 @@ const ExpenseTracker: React.FC = () => {
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
 
-  const closeModal = (): void => {
-    setIsModalOpen(false);
-    setEditingId(null);
-    setFormData({
-      description: '',
-      amount: '',
-      category: '',
-      date: new Date().toISOString().split('T')[0],
-      id: expenses.length + 1
-    });
-  };
   const handleAdd = (): void => {
     setFormData({
       description: '',
@@ -87,7 +76,7 @@ const ExpenseTracker: React.FC = () => {
           hoveredExpense={hoveredExpense} setHoveredExpense={setHoveredExpense} setFormData={setFormData}
           setEditingId={setEditingId} setIsModalOpen={setIsModalOpen} setExpenses={setExpenses} />
       </div>
-      <ModalCard isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} closeModal={closeModal}
+      <ModalCard isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} setEditingId={setEditingId}
         editingId={editingId} hoveredButton={hoveredButton}
         setHoveredButton={setHoveredButton} formData={formData}
         setFormData={setFormData} expenses={expenses} setExpenses={setExpenses} />
