@@ -55,7 +55,12 @@ describe('Modal Card component', () => {
         fireEvent.click(screen.getByTestId(/cancel-icon/i))
         expect(mockCloseModal).toHaveBeenCalled()
     })
-
+   
+    test('Should handle hovering of the modal submit button',()=>{
+        renderComponent({isModalOpen:true});
+        fireEvent.mouseEnter(screen.getByTestId(/expense-hover/i))
+        fireEvent.mouseLeave(screen.getByTestId(/expense-hover/i))
+    })
 })
 
 
