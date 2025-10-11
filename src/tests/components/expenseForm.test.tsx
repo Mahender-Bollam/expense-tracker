@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import ExpenseForm from "../../components/expenseForm";
 import "@testing-library/jest-dom";
 import { Expense } from "../../interface/expense";
@@ -40,6 +40,17 @@ describe("ExpenseForm Component", () => {
     expect(screen.getByText("Category")).toBeInTheDocument();
     expect(screen.getByText("Date")).toBeInTheDocument();
   });
+
+  test("shows validation errors when submitting empty form", () => {
+    render(<ExpenseForm {...baseProps} />);
+    fireEvent.click(screen.getByText("Add Expense"));
+    expect(screen.getByText("Description is required")).toBeInTheDocument();
+    expect(screen.getByText("Amount should be greater than 0")).toBeInTheDocument();
+    expect(screen.getByText("Select a category")).toBeInTheDocument();
+    expect(screen.getByText("Date is required")).toBeInTheDocument();
+    expect(mockSetExpenses).not.toHaveBeenCalled();
+  });
+
 });
 
 
