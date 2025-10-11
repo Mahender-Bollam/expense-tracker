@@ -17,6 +17,14 @@ describe("ExpenseTracker Component", () => {
     fireEvent.click(screen.getByText("Add Expense"));
     expect(screen.getByText("Add New Expense")).toBeInTheDocument();
   });
+
+  test("opens Edit Expense modal when Edit button is clicked", () => {
+    render(<ExpenseTracker />);
+    const editButton = screen.getAllByTitle("Edit")[0];
+    fireEvent.click(editButton);
+    expect(screen.getByText("Edit Expense")).toBeInTheDocument();
+  });
+
 });
 
 
