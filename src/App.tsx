@@ -1,5 +1,5 @@
 import React from "react";
-import ExpenseTracker from './ExpenseTracker';
+import ExpenseTracker from '../src/components/ExpenseTracker';
 
 const App: React.FC = () => {
   return (
