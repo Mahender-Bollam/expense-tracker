@@ -95,6 +95,15 @@ describe("ExpenseForm Component", () => {
     fireEvent.click(screen.getByText("Cancel"));
     expect(mockCloseModal).toHaveBeenCalled();
   });
+
+  test("handles hover events correctly", () => {
+    render(<ExpenseForm {...baseProps} />);
+    const addButton = screen.getByText("Add Expense");
+    fireEvent.mouseEnter(addButton);
+    expect(mockSetHoveredButton).toHaveBeenCalledWith("submit");
+    fireEvent.mouseLeave(addButton);
+    expect(mockSetHoveredButton).toHaveBeenCalledWith(null);
+  });
 });
 
 
