@@ -49,3 +49,9 @@ export interface ExpenseCrd {
   handleEdit: (expense: Expense) => void;
   deleteExpense:  (expenseToDelete: Expense) => void
 }
+
+export interface RecentExpensesCard {
+  expenses: Expense[];
+  handleEdit: (expense: Expense) => void;
+  deleteExpense:  (expenseToDelete: Expense) => void
+}
