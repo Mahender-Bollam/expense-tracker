@@ -38,7 +38,7 @@ export interface OpenOrDeleteExpenseBtn  {
 export interface EditOrAddExpenseBtn {
   editingId: number | null;
   editExpense: (expenseId: number) => void;
-  addExpense: any
+  addExpense: ()=>void
 }
 
 export interface ExpenseCrd {
@@ -56,6 +56,10 @@ export interface RecentExpensesCard {
 export interface HeaderCrd {
   expenses: Expense[];
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export interface ChildOfModalCompnt extends EditOrAddExpenseBtn {
+  closeModal: ()=>void
 }
 export type ValidateExpenseParam = [
   newExpense : FormData,

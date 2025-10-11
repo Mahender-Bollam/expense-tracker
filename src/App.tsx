@@ -1,11 +1,10 @@
 import React, { createContext, useState} from 'react';
 import { FormData, ModalProps, Expense, ShareFormDataType} from './types/type';
 import { styles } from './styles/styles';
-import { EditOrAddExpenseButton , OpenOrCloseModelButton } from './components/Buttons';
 import { RecentExpenses } from './components/RecentExpensesCard';
 import { setIdOfExpense, validateExpense } from './utils/ValidateExpense';
-import { InputFields } from './components/InputFields';
 import { HeaderCard } from './components/HeaderCard';
+import { ChildOfModalComponent } from './components/ChildOfModalComp';
 
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
@@ -92,38 +91,18 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(false);
   };
 
-
-  const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-
   return (
     <div style={styles.container}>
-      <div style={styles.maxWidth}>
-        
+      <div style={styles.maxWidth}>   
         <HeaderCard expenses={expenses} setIsModalOpen={setIsModalOpen}/>
-
         <div style={styles.card}>
           <RecentExpenses expenses={expenses} handleEdit={handleEdit} deleteExpense={deleteExpense}/>
         </div>
-
       </div>
-
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <div style={styles.modalHeader}>
-          <h2 style={styles.modalTitle}>
-            {editingId ? 'Edit Expense' : 'Add New Expense'}
-          </h2>
-          <OpenOrCloseModelButton   title='close' closeModel={closeModal}/>
-        </div>
-
         <ShareFormData value={{dataOfForm:formData,setDataOfForm:setFormData}}>
-          <InputFields/>
-        </ShareFormData>
-
-        <div style={styles.buttonGroup}>
-          <EditOrAddExpenseButton editingId={editingId} editExpense={editExpense} addExpense={addExpense}/>
-          <OpenOrCloseModelButton  title='cancel' closeModel={closeModal}/>
-        </div>
-
+          <ChildOfModalComponent editingId={editingId} editExpense={editExpense} addExpense={addExpense} closeModal={closeModal}/>
+        </ShareFormData>  
       </Modal>
     </div>
   );
