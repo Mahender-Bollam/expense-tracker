@@ -89,6 +89,12 @@ describe("ExpenseForm Component", () => {
     ]);
     expect(mockCloseModal).toHaveBeenCalled();
   });
+
+  test("calls closeModal when Cancel button is clicked", () => {
+    render(<ExpenseForm {...baseProps} />);
+    fireEvent.click(screen.getByText("Cancel"));
+    expect(mockCloseModal).toHaveBeenCalled();
+  });
 });
 
 
