@@ -1,0 +1,19 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
+  padding: 24px;
+}
+
+.maxWidth {
+  max-width: 896px;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 32px;
+  margin-bottom: 24px;
+}
