@@ -50,6 +50,11 @@ describe('Modal Card component', () => {
         expect(fireEvent.mouseEnter(screen.getByTestId(/cancel-icon/i))).toBeTruthy()
         expect(fireEvent.mouseLeave(screen.getByTestId(/cancel-icon/i))).toBeTruthy()
     })
+    test('Should close the modal on clicked X',()=>{
+        renderComponent({isModalOpen:true})
+        fireEvent.click(screen.getByTestId(/cancel-icon/i))
+        expect(mockCloseModal).toHaveBeenCalled()
+    })
 
 })
 
