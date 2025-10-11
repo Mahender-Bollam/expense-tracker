@@ -1,23 +1,12 @@
 import React, { createContext, useState} from 'react';
-import { FormData, ModalProps, Expense, ShareFormDataType} from './types/type';
+import { FormData, Expense, ShareFormDataType} from './types/type';
 import { styles } from './styles/styles';
 import { RecentExpenses } from './components/RecentExpensesCard';
 import { setIdOfExpense, validateExpense } from './utils/ValidateExpense';
 import { HeaderCard } from './components/HeaderCard';
 import { ChildOfModalComponent } from './components/ChildOfModalComp';
+import { Modal } from './components/PopupModal';
 
-
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        {children}
-      </div>
-    </div>
-  );
-};
 export const ShareFormData = createContext<ShareFormDataType>({
   dataOfForm:{
     description: '',
