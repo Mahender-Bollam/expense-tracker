@@ -4,7 +4,7 @@ import ModalCard from "../../components/ModalCard"
 const mockExpenses = [{ id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' }]
 
 const mockFormData = {
-    id: 2, description: 'Self', amount: '85', category: 'Shopping', date: '2025-10-10'
+     id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' 
 }
 
 const mockSetExpenses = jest.fn()
@@ -12,7 +12,7 @@ const mockHoveredButton = ''
 const mockSetHoveredButton = jest.fn()
 const mockSetFormData = jest.fn()
 const mockSetIsModalOpen = jest.fn()
-const mockCloseModal = jest.fn
+const mockCloseModal = jest.fn()
 window.alert = jest.fn()
 
 
@@ -45,6 +45,12 @@ describe('Modal Card component', () => {
             ...mockFormData, description: 'MySelf'
         })
     })
+    test('Should handle the mouse event',()=>{
+        renderComponent({isModalOpen:true })
+        expect(fireEvent.mouseEnter(screen.getByTestId(/cancel-icon/i))).toBeTruthy()
+        expect(fireEvent.mouseLeave(screen.getByTestId(/cancel-icon/i))).toBeTruthy()
+    })
+
 })
 
 
