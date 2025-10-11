@@ -1,8 +1,7 @@
 import { X } from "lucide-react";
 import { HoveredButton } from "../types/Button";
 import { styles } from "./Styles";
-import { FormData } from "../App";
-import { Expense } from "../App";
+import { FormData } from "./ExpenseTrackor";
 
 interface ModalProps {
   isOpen: boolean;
@@ -14,15 +13,15 @@ interface ModalProps {
   formData: FormData;
   hoveredButton: HoveredButton;
   categories: string[];
-  updateExpense: (expense: Expense, e: any) => void;
-  addexpense: (e: any) => void
+  updateExpense: () => void;
+  addexpense: () => void
 }
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose ,editingId,closeModal,setHoveredButton,setFormData,hoveredButton,formData,categories ,updateExpense,addexpense}) => {
   if (!isOpen) return null;
 
   return (
-    <div style={styles.overlay} onClick={onClose}>
+    <div  role="dialog" style={styles.overlay} onClick={onClose}>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div style={styles.modalHeader}>
           <h2 style={styles.modalTitle}>
@@ -36,14 +35,16 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose ,editingId,closeMo
             }}
             onMouseEnter={() => setHoveredButton('close')}
             onMouseLeave={() => setHoveredButton(null)}
+            role="but"
           >
             <X size={24} />
           </button>
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Description</label>
+          <label htmlFor="description" style={styles.label}>Description</label>
           <input
+            id="description"
             type="text"
             value={formData.description}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
@@ -53,8 +54,9 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose ,editingId,closeMo
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Amount</label>
+          <label htmlFor="amount"style={styles.label}>Amount</label>
           <input
+            id="amount"
             type="number"
             step="0.01"
             value={formData.amount}
@@ -65,8 +67,9 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose ,editingId,closeMo
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Category</label>
+          <label htmlFor="category-select" style={styles.label}>Category</label>
           <select
+            id="category-select"
             value={formData.category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
             style={styles.input}
@@ -79,12 +82,14 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose ,editingId,closeMo
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Date</label>
+          <label htmlFor="date"style={styles.label}>Date</label>
           <input
+            id="date"
             type="date"
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
             style={styles.input}
+            placeholder="date"
           />
         </div>
 
@@ -96,10 +101,10 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose ,editingId,closeMo
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
-            onClick={editingId ? (e: any) => updateExpense(formData, e) : addexpense}
+            onClick={editingId ? updateExpense : addexpense}
+
           >
             {editingId ? 'Update Expense' : 'Add Expense'}
-
           </button>
           <button
             onClick={closeModal}
