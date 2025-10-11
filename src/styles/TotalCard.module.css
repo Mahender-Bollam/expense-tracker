@@ -1,0 +1,17 @@
+.totalCard {
+  background: linear-gradient(to right, #6366f1, #9333ea);
+  border-radius: 12px;
+  padding: 24px;
+  color: white;
+}
+
+.totalLabel {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.totalAmount {
+  font-size: 36px;
+  font-weight: bold;
+}
