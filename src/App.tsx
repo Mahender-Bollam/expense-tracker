@@ -1,11 +1,11 @@
 import React, { createContext, useState} from 'react';
-import { DollarSign} from 'lucide-react';
 import { FormData, ModalProps, Expense, ShareFormDataType} from './types/type';
 import { styles } from './styles/styles';
 import { EditOrAddExpenseButton , OpenOrCloseModelButton } from './components/Buttons';
 import { RecentExpenses } from './components/RecentExpensesCard';
 import { setIdOfExpense, validateExpense } from './utils/ValidateExpense';
 import { InputFields } from './components/InputFields';
+import { HeaderCard } from './components/HeaderCard';
 
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
@@ -98,27 +98,8 @@ const ExpenseTracker: React.FC = () => {
   return (
     <div style={styles.container}>
       <div style={styles.maxWidth}>
-        <div style={styles.card}>
-          <div style={styles.header}>
-
-            <div style={styles.titleWrapper}>
-              <h1 style={styles.title}>
-                <DollarSign color="#6366f1" size={32} />
-                Expense Tracker
-              </h1>
-              <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
-            </div>
-
-            <OpenOrCloseModelButton  title='Add Expense'  setIsModalOpen={setIsModalOpen} />
-
-          </div>
-
-          <div style={styles.totalCard}>
-            <p style={styles.totalLabel}>Total Expenses</p>
-            <p style={styles.totalAmount}>${totalExpense.toFixed(2)}</p>
-          </div>
-
-        </div>
+        
+        <HeaderCard expenses={expenses} setIsModalOpen={setIsModalOpen}/>
 
         <div style={styles.card}>
           <RecentExpenses expenses={expenses} handleEdit={handleEdit} deleteExpense={deleteExpense}/>

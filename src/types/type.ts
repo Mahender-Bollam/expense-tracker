@@ -53,6 +53,10 @@ export interface RecentExpensesCard {
   deleteExpense:  (expenseToDelete: Expense) => void
 }
 
+export interface HeaderCrd {
+  expenses: Expense[];
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
 export type ValidateExpenseParam = [
   newExpense : FormData,
   expenses : Expense[],
