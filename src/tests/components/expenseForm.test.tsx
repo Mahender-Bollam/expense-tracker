@@ -132,6 +132,16 @@ describe("ExpenseForm Component", () => {
       description: "Groceries",
     });
   });
+
+  test("calls setFormData when entering amount", () => {
+    render(<ExpenseForm {...baseProps} />);
+    const amountInput = screen.getByPlaceholderText("0.00");
+    fireEvent.change(amountInput, { target: { value: "100" } });
+    expect(mockSetFormData).toHaveBeenCalledWith({
+      ...baseProps.formData,
+      amount: "100",
+    });
+  });
 });
 
 
