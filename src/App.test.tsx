@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
+import ExpenseTracker from './App';
 
 test('renders  tittle element', () => {
   render(<App />);
@@ -11,3 +12,8 @@ test('renders description of page',()=>{
   render(<App/>);
   expect(screen.getByText(/Manage your daily expenses efficiently/i)).toBeInTheDocument();
 })
+test(' display the total amount correctly', () => {
+    render(<App />);
+    expect(screen.getByText('Total Expenses')).toBeInTheDocument();
+    expect(screen.getByText('$130.50')).toBeInTheDocument(); 
+  });
