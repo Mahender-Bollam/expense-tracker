@@ -9,6 +9,7 @@ interface ExpenseListProps {
   setHoveredExpense: React.Dispatch<React.SetStateAction<HoveredExpense>>;
   hoveredButton: HoveredButton;
   setHoveredButton: React.Dispatch<React.SetStateAction<HoveredButton>>;
+  onDelete: (id: number) => void;  
 }
 
 const ExpenseList: React.FC<ExpenseListProps> = ({
@@ -17,6 +18,7 @@ const ExpenseList: React.FC<ExpenseListProps> = ({
   setHoveredExpense,
   hoveredButton,
   setHoveredButton,
+  onDelete
 }) => {
   return (
     <>
@@ -33,6 +35,7 @@ const ExpenseList: React.FC<ExpenseListProps> = ({
               setHoveredExpense={setHoveredExpense}
               hoveredButton={hoveredButton}
               setHoveredButton={setHoveredButton}
+              onDelete={onDelete}  
             />
           ))}
         </div>

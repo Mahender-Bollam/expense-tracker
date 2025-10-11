@@ -9,6 +9,7 @@ interface ExpenseItemProps {
   setHoveredExpense: React.Dispatch<React.SetStateAction<number | null>>;
   hoveredButton: HoveredButton;
   setHoveredButton: React.Dispatch<React.SetStateAction<HoveredButton>>;
+  onDelete: (id: number) => void;  // required prop
 }
 
 const ExpenseItem: React.FC<ExpenseItemProps> = ({
@@ -17,6 +18,7 @@ const ExpenseItem: React.FC<ExpenseItemProps> = ({
   setHoveredExpense,
   hoveredButton,
   setHoveredButton,
+  onDelete,
 }) => {
   return (
     <div
@@ -46,7 +48,6 @@ const ExpenseItem: React.FC<ExpenseItemProps> = ({
         <span className={styles.expenseAmount}>${expense.amount.toFixed(2)}</span>
         <div className={styles.actionButtons}>
           <button
-            style={{}}
             className={`${styles.editButton} ${
               hoveredButton === `edit-${expense.id}` ? styles.editButtonHover : ''
             }`}
@@ -60,6 +61,7 @@ const ExpenseItem: React.FC<ExpenseItemProps> = ({
             className={`${styles.deleteButton} ${
               hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : ''
             }`}
+            onClick={() => onDelete(expense.id)}  
             onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
             onMouseLeave={() => setHoveredButton(null)}
             title="Delete"
