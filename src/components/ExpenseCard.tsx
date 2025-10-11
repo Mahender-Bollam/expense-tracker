@@ -66,6 +66,7 @@ const ExpenseCard = ({ expenses, hoveredButton, setHoveredButton, hoveredExpense
                 </span>
                 <div style={styles.actionButtons}>
                   <button
+                  data-testid='edit-button-hover'
                     onClick={() => handleEdit(expense)}
                     style={{
                       ...styles.editButton,
