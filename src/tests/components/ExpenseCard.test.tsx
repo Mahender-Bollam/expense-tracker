@@ -35,7 +35,12 @@ describe('Expense card component',()=>{
         jest.spyOn(window, 'alert').mockImplementation(() => {});
 
     })
-   
+    test('Should handle the mouse event when hover on edit button',()=>{
+        renderComponent();
+        fireEvent.mouseEnter(screen.getByTitle(/Edit/i))
+        fireEvent.mouseLeave(screen.getByTitle(/Edit/i))
+    })
+
 })
 
 
