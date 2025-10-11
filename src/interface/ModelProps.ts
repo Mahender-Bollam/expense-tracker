@@ -16,7 +16,8 @@ export interface ModelCardProps{
     hoveredButton:HoveredButton,
     setHoveredButton:Function,
     editingId:number|null,
-    handleClick:MouseEventHandler<HTMLButtonElement>
+    addExpense:MouseEventHandler<HTMLButtonElement>,
+    updateExpense:MouseEventHandler<HTMLButtonElement>
 }
 
 export type HoveredButton = string | null;

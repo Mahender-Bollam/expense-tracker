@@ -26,7 +26,7 @@ const ExpenseTracker = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
-  const {closeModal,handleAdd,handleClick,handleDelete,handleEdit}=useExpenseOperations({expenses,formData,editingId,setIsModalOpen,setEditingId,setFormData,setExpenses})
+  const {closeModal,handleAdd,addExpense,handleDelete,handleEdit,updateExpense}=useExpenseOperations({expenses,formData,editingId,setIsModalOpen,setEditingId,setFormData,setExpenses})
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
@@ -144,7 +144,8 @@ const ExpenseTracker = () => {
       hoveredButton={hoveredButton} 
       setHoveredButton={setHoveredButton} 
       editingId={editingId} 
-      handleClick={handleClick}/>
+      addExpense={addExpense}
+      updateExpense={updateExpense}/>
     </div>
   );
 };
