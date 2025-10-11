@@ -9,7 +9,6 @@ export type HoveredButton = string | null;
 type HoveredExpense = number | null;
 
 
-
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
     { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
@@ -82,8 +81,7 @@ const ExpenseTracker: React.FC = () => {
     setExpenses((removeExpense: Expense[]) =>
       removeExpense.filter((card) => card.id !== expenseId)
     );
-    console.log("removed expense")
-   
+    // console.log("removed expense")
   };
 
   return (
@@ -166,6 +164,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`edit-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Edit"
+                        data-testid='edit-button'
                       >
                         <Edit2 size={18} />
                       </button>
@@ -178,6 +177,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
+                        data-testid='remove-button'
                       >
                         <Trash2 size={18} />
                       </button>
