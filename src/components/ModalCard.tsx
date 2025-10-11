@@ -125,6 +125,7 @@ const ModalCard = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredBu
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
+          data-testid='cancel-hover'
             onClick={closeModal}
             style={{
               ...styles.secondaryButton,
