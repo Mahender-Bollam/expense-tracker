@@ -23,14 +23,14 @@ export interface ModalProps {
 }
 
 export type HandleButtonProps = {
-    isModalOpen:Boolean;
-    closeModal:ModalProps;
+    isModalOpen:boolean;
+    closeModal:()=>void
     editingId:number | null;
     formData:FormData;
     setFormData:Function;
     setHoveredButton:Function;
     hoveredButton:HoveredButton;
-    handleEditSubmit:Function
-    handleSubmit:Function;
-    ModalProps:object;
+    expenses: Expense[]
+    setExpenses:Function;
+    setIsModalOpen:Function;
 }
