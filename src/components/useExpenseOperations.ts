@@ -1,11 +1,11 @@
 import { Expense } from "../interface/Expense";
 import { ExpenseOperationsProps } from "../interface/ExpenseOperationsProps";
-const useExpenseOperations=({expenses,formData,editingId,setIsModalOpen,setEditingId,setFormData,setExpenses}:ExpenseOperationsProps)=>{
-let localId:number=expenses.length;
+const useExpenseOperations=(props:ExpenseOperationsProps)=>{
+let localId:number=props.expenses.length;
   const closeModal = (): void => {
-    setIsModalOpen(false);
-    setEditingId(null);
-    setFormData({
+    props.setIsModalOpen(false);
+    props.setEditingId(null);
+    props.setFormData({
       id:0,
       description: '',
       amount: '',
@@ -15,93 +15,78 @@ let localId:number=expenses.length;
   };
 
   const handleEdit = (expense: Expense): void => {
-    setFormData({
+    props.setFormData({
       id:expense.id,
       description: expense.description,
       amount: expense.amount.toString(),
       category: expense.category,
       date: expense.date
     });
-    setEditingId(expense.id);
-    setIsModalOpen(true);
+    props.setEditingId(expense.id);
+    props.setIsModalOpen(true);
   };
 
   const handleAdd = (): void => {
-    setIsModalOpen(true);
+     props.setFormData({
+      id:0,
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0]
+    });
+    props.setIsModalOpen(true);
+    props.setEditingId(null)
   };
 
 const handleDelete=(expense:Expense)=>{  
   alert("Are you sure to delete expense?")
-  setExpenses(()=>{return expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
+  props.setExpenses(()=>{return props.expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
 }
 
-const handleAddData=(e:any)=>{
-  setIsModalOpen(false);
-  setEditingId(null);
-  if(formData.amount===""|| formData.category===""||formData.date===""||formData.description===""){
+const addExpense=()=>{
+  props.setIsModalOpen(false);
+  props.setEditingId(null);
+  if(props.formData.amount===""|| props.formData.category===""||props.formData.date===""||props.formData.description===""){
     alert("Please fill all the fields.")
-    return setIsModalOpen(true)
+    return props.setIsModalOpen(true)
   }
-  else if(parseInt(formData.amount)<=0){
+  else if(parseInt(props.formData.amount)<=0){
     alert("Amount must be greater than zero.")
-    return setIsModalOpen(true)
+    return props.setIsModalOpen(true)
   }
   else{
-  setFormData({
-    id:localId+1,
-    description:e.target.value,
-    amount:e.target.value,
-    category:e.target.value,
-    date:e.target.value
-    });
-  const {description,amount,category,date}=formData
-  setExpenses(()=>{return [...expenses,
+  const {description,amount,category,date}=props.formData
+  props.setExpenses(()=>{return [...props.expenses,
     {id:localId+1,
     description,
     amount:parseInt(amount),
     category,
     date}]})
-  console.log(expenses)
+  console.log(props.expenses)
     }
 }
-const handleUpdate=(e:any)=>{
-  const existing=expenses.find(existingExpense=>existingExpense.id===formData.id)
-  if(formData.amount===""|| formData.category===""||formData.date===""||formData.description===""){
+const updateExpense=()=>{
+  if(props.formData.amount===""|| props.formData.category===""||props.formData.date===""||props.formData.description===""){
     alert("Please fill all the fields.")
-    return setIsModalOpen(true)
+    return props.setIsModalOpen(true)
   }
-  else if(parseInt(formData.amount)<=0){
+  else if(parseInt(props.formData.amount)<=0){
     alert("Amount must be greater than zero.")
-    return setIsModalOpen(true)
-  }
-  else if(!existing){
-   return alert("Expense is not found")
+    return props.setIsModalOpen(true)
   }
   else{
-  setFormData({
-    id:localId,
-    description:e.target.value,
-    amount:e.target.value,
-    category:e.target.value,
-    date:e.target.value
-    })
-    const {description,amount,category,date}=formData
-    const updatedExpense={
-      id:localId+1,
-      description,
-      amount:parseInt(amount),
-      category,
-      date
-    }
-   setExpenses((expenses:Expense[])=>expenses.map(expense=>expense.id===formData.id?updatedExpense:expense))
-  
-  setIsModalOpen(false)
+  props.setIsModalOpen(false)
+  const {description,amount,category,date}=props.formData
+  props.setExpenses((expenses:Expense[])=>{return expenses.map(expense=>expense.id===props.formData.id ? 
+  {...expense,
+  description,
+  amount:parseInt(amount),
+  category,
+  date} : expense)})
 }
 }
-const handleClick=(e:any)=>{
-  editingId?handleUpdate(e):handleAddData(e)
-}
-return {closeModal,handleAdd,handleAddData,handleClick,handleDelete,handleEdit,handleUpdate}
+const expenses=props.expenses
+return {closeModal,handleAdd,addExpense,updateExpense,handleDelete,handleEdit,expenses}
 }
 
 export default useExpenseOperations;
