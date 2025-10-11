@@ -7,6 +7,10 @@ module.exports = {
   transform: {
     ...tsJestTransformCfg,
   },
+  coveragePathIgnorePatterns: [
+    '/node_modules/', 
+    '/src/models/' 
+  ],
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
   testMatch: [
     "<rootDir>/__tests__/**/*.ts",
