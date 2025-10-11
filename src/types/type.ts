@@ -1,3 +1,4 @@
+import { ExpenseCard } from "../components/ExpenseCard";
 
 
 
@@ -41,4 +42,10 @@ export interface EditOrAddExpenseBtn {
   editingId: number | null;
   editExpense: (expenseId: number) => void;
   addExpense: () => void
+}
+
+export interface ExpenseCrd {
+  expense: Expense;
+  handleEdit: (expense: Expense) => void;
+  deleteExpense:  (expenseToDelete: Expense) => void
 }
