@@ -1,6 +1,17 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import ExpenseCard from '../../components/ExpenseCard';
 
+test('Should display no expenses when expenses is empty',()=>{
+    render(
+            <ExpenseCard expenses={[]} setExpenses={mockSetExpenses} 
+            hoveredButton={mockHoveredButton} setHoveredButton={mockSetHoveredButton} 
+            setHoveredExpense={mockSetHoveredExpense} setFormData={mockSetFormData} setEditingId={mockSetEditingId} 
+            setIsModalOpen={mockSetIsModalOpen} hoveredExpense={mockHoveredExpense}/>
+        )
+    expect(screen.getByText(/No expenses yet. Add your first expense above!/i)).toBeInTheDocument()
+
+})
+
 const mockExpenses = [ { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' }]
 
 const mockSetExpenses = jest.fn()
