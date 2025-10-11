@@ -40,6 +40,12 @@
 - Handled the errors.
 - Handled the delete button gracefully.
 
+## Feature : Testing and Cleaning the code 
+
+- Implement testing for all component files.
+- Seperate files based on components and types.
+- Clean the code and refactor the code for readability.
+
 ## Setup & Run 🛠
 
 1. **Create react app**:
@@ -55,6 +61,10 @@
 
     ```bash
     npm install
+    ```
+4. **Run the Tests**:
+    ```bash
+    npm test -- --coverage --watchAll
     ```
 4. **Run the application**:
 
