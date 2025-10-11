@@ -3,7 +3,7 @@ import "@testing-library/jest-dom"
 import ModalCard from "../components/Modal";
 import userEvent from "@testing-library/user-event";
 import { Expense, FormData } from "../types/ExpenseDetails";
-import { X } from "lucide-react";
+
 
 
 describe('test the modal',()=>{
@@ -109,6 +109,8 @@ describe('test the modal',()=>{
     const icon = screen.getByTestId('close-icon')
     fireEvent.mouseEnter(icon)
     fireEvent.mouseLeave(icon)
+    fireEvent.click(icon)
+    expect(closeModal).toHaveBeenCalled()
   })
    test('handle the cancel button',()=>{
     ModalCardProps({isModalOpen:true});
@@ -122,7 +124,21 @@ describe('test the modal',()=>{
     fireEvent.mouseEnter(submit)
     fireEvent.mouseLeave(submit)
   })
+//     test('set an expense using form in date',()=>{
+//     ModalCardProps({isModalOpen:true});
+//     const date =screen.getByPlaceholderText('11/10/2025') 
+//     fireEvent.change(date,{target:{value:'6/10/2025'}});
+//     expect(setFormData).toHaveBeenCalledWith({...formData,date:'6/10/2025'})
 
+//   })
+//   test('set an expense using form in date',()=>{
+//     ModalCardProps({isModalOpen:true});
+//     const date =screen.getByPlaceholderText(/date/i) as unknown as HTMLInputElement
+//     userEvent.clear(date)
+//     userEvent.type(date,formData.date);
+//     expect(setFormData).toHaveBeenCalled()
+//   })
+ 
 
 })
 
