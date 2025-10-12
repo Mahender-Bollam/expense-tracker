@@ -253,8 +253,9 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Category</label>
+          <label htmlFor="category" style={styles.label}>Category</label>
           <select
+            id="category" 
             value={formData.category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
             style={styles.input}
@@ -267,8 +268,9 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Date</label>
+          <label htmlFor="date"style={styles.label}>Date</label>
           <input
+           id='date'
             type="date"
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
