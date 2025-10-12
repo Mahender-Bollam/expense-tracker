@@ -89,5 +89,18 @@ describe('ExpenseTracker Component', () => {
         expect(screen.queryByText(/Add New Expense/i)).not.toBeInTheDocument();
       });
     });
+     test('shows validation alert when adding expense without required fields', async () => {
+        const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+        render(<ExpenseTracker />);
+        const addButtons = screen.getAllByText(/Add Expense/i);
+        fireEvent.click(addButtons[0]);
+        await waitFor(() => {
+          expect(screen.getByText(/Add New Expense/i)).toBeInTheDocument();
+        });
+        const submitButtons = screen.getAllByText(/Add Expense/i);
+        fireEvent.click(submitButtons[submitButtons.length - 1]);
+        expect(alertMock).toHaveBeenCalledWith('Missed it, so fill in all fields');
+        alertMock.mockRestore();
+     });
     
 });
