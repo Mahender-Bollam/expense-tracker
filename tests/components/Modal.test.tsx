@@ -33,4 +33,15 @@ describe('Modal Component', () => {
     fireEvent.click(closeButton);
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
+  test('does not close when modal content is clicked', () => {
+    const mockOnClose = jest.fn();
+    render(
+      <Modal isOpen={true} onClose={mockOnClose}>
+        <div>Modal Content</div>
+      </Modal>
+    );
+    const modalContent = screen.getByText('Modal Content');
+    fireEvent.click(modalContent);
+    expect(mockOnClose).not.toHaveBeenCalled();
+  });
 });
