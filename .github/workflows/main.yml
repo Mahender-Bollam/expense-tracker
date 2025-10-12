@@ -1,0 +1,26 @@
+name: CI workflow for expense-tracker application
+
+on:
+    pull_request:
+        types: closed
+    push:
+        branches:
+            - anas/feat-manage-expences
+            
+jobs:
+    website:
+        name: Compose BookMart application
+        runs-on: ubuntu-latest
+        steps:
+            -
+                name: Checkout to code
+                uses: actions/checkout@v3
+
+            
+            -
+                name: Compose and run application with docker
+                run: docker compose up -d --build
+
+            -
+                name: Simple message to verify workflow is running
+                run: echo "Every thing is ok"
