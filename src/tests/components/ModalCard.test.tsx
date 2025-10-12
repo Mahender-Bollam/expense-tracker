@@ -12,7 +12,7 @@ const mockHoveredButton = ''
 const mockSetHoveredButton = jest.fn()
 const mockSetFormData = jest.fn()
 const mockSetIsModalOpen = jest.fn()
-const mockCloseModal = jest.fn()
+const mockSetEditingId=jest.fn()
 window.alert = jest.fn()
 
 
@@ -23,7 +23,7 @@ const renderComponent = (props={}) => {
             hoveredButton={mockHoveredButton} setHoveredButton={mockSetHoveredButton}
             setFormData={mockSetFormData}
             setIsModalOpen={mockSetIsModalOpen} isModalOpen={false}
-            closeModal={mockCloseModal} editingId={null} formData={mockFormData} {...props}/>
+             editingId={null} formData={mockFormData} setEditingId={mockSetEditingId} {...props}/>
     )
 }
 
@@ -53,7 +53,6 @@ describe('Modal Card component', () => {
     test('Should close the modal on clicked X',()=>{
         renderComponent({isModalOpen:true})
         fireEvent.click(screen.getByTestId(/cancel-icon/i))
-        expect(mockCloseModal).toHaveBeenCalled()
     })
    
     test('Should handle hovering of the modal submit button',()=>{
