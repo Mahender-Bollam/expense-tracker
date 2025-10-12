@@ -8,6 +8,7 @@ export const OpenOrCloseModelButton : React.FC<OpenOrCloseModelBtn> = ({title,se
     const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
     return(
         <button 
+            data-testid='openModalButtonId'
             onClick={()=>(title ==='Add Expense')? setIsModalOpen(true) : closeModel()}
             style={{
             ...(title ==='Add Expense' ? styles.addButton : (title ==='close' ? styles.closeButton : styles.secondaryButton)),
@@ -28,6 +29,7 @@ export const OpenOrDeleteAnExpenseButton  :React.FC<OpenOrDeleteExpenseBtn>  = (
     const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
     return(
         <button
+        data-testid = {title === 'editExpense' ? 'editExpenseId' : 'deleteExpenseId'}
         onClick={() => manageExpense(expense)}
         style={{
             ...(title === 'editExpense' ? styles.editButton : styles.deleteButton),
@@ -46,6 +48,7 @@ export const EditOrAddExpenseButton  :React.FC<EditOrAddExpenseBtn> = ({editingI
     const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
     return(
         <button
+            data-testid={editingId ? 'updateExpenseId' : 'addExpenseId'}
             onClick={()=>editingId? editExpense(editingId) :addExpense()}
             style={{
                 ...styles.primaryButton,

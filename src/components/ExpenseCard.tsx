@@ -10,6 +10,7 @@ export const ExpenseCard: React.FC<ExpenseCrd> = ({expense, handleEdit, deleteEx
     const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
     return(
         <div
+            data-testid = 'expenseCardId'
             key={expense.id}
             style={{
                 ...styles.expenseItem,
