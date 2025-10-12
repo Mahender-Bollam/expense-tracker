@@ -62,7 +62,7 @@ describe('Expense card component',()=>{
         fireEvent.mouseLeave(screen.getByTestId(/expense-block-hover/i))
     })
     test('Should handle mouse hover on edit',()=>{
-        renderComponent({hoveredButton:mockExpenses[0].id})
+        renderComponent({hoveredButton:`edit-${mockExpenses[0].id}`})
         fireEvent.mouseEnter(screen.getByTestId(/edit-button-hover/i))
         fireEvent.mouseLeave(screen.getByTestId(/edit-button-hover/i))
     })
