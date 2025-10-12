@@ -52,5 +52,13 @@ test('edits an existing expense', async () => {
   expect(screen.getByText('Lunch')).toBeInTheDocument();
  
 });
+test('deletes an expense', () => {
+  render(<App />);
+  const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => { });
+  const deleteButton = screen.getAllByTitle('Delete')[0];
+  fireEvent.click(deleteButton);
+  expect(alertMock).toHaveBeenCalledWith('Are you sure you want to delete this expense? ');
+  expect(screen.queryByText('Groceries')).not.toBeInTheDocument();
+});
 
 
