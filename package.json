@@ -2,6 +2,13 @@
   "name": "expense-tracker",
   "version": "0.1.0",
   "private": true,
+  "jest":{
+     "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/types/",
+      "index.tsx"
+    ]
+  },
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
