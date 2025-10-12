@@ -6,8 +6,19 @@ import { modalCardProp } from '../types/propTypes';
 
 const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
-const ModalCard = ({isModalOpen, closeModal,editingId,hoveredButton,setHoveredButton,formData,setFormData,expenses,setExpenses,setIsModalOpen}:modalCardProp) => {
+const ModalCard = ({isModalOpen,editingId,hoveredButton,setHoveredButton,formData,setFormData,expenses,setExpenses,setIsModalOpen,setEditingId}:modalCardProp) => {
 
+  const closeModal = (): void => {
+    setIsModalOpen(false);
+    setEditingId(null);
+    setFormData({
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0],
+      id: expenses.length + 1
+    });
+  };
    const handleSubmit =()=>{
     setFormData({
       description: formData.description,
