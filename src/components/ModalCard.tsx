@@ -101,6 +101,7 @@ const ModalCard = ({isModalOpen,editingId,hoveredButton,setHoveredButton,formDat
         <div style={styles.formGroup}>
           <label style={styles.label}>Category</label>
           <select
+          data-testid='dropdown-select'
             value={formData.category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
             style={styles.input}
@@ -115,6 +116,7 @@ const ModalCard = ({isModalOpen,editingId,hoveredButton,setHoveredButton,formDat
         <div style={styles.formGroup}>
           <label style={styles.label}>Date</label>
           <input
+            data-testid='date-testid'
             type="date"
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
