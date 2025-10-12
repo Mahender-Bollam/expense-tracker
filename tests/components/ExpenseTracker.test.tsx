@@ -102,5 +102,21 @@ describe('ExpenseTracker Component', () => {
         expect(alertMock).toHaveBeenCalledWith('Missed it, so fill in all fields');
         alertMock.mockRestore();
      });
-    
+     test('edits expense and updates date correctly', async () => {
+      render(<ExpenseTracker />);
+      const editButtons = screen.getAllByTitle('Edit');
+      fireEvent.click(editButtons[0]);
+      await waitFor(() => {
+        expect(screen.getByText(/Edit Expense/i)).toBeInTheDocument();
+      });
+      const dateInputs = screen.getAllByDisplayValue('2025-10-05');
+      fireEvent.change(dateInputs[0], {
+        target: { value: '2025-10-15' },
+      });
+      const updateButton = screen.getByText(/Update Expense/i);
+      fireEvent.click(updateButton);
+      await waitFor(() => {
+        expect(screen.getByText(/Oct 15, 2025/i)).toBeInTheDocument();
+      });
+    });
 });
