@@ -1,55 +1,28 @@
 import React, { useState } from 'react';
-import {styles} from './styles';
-import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
+import { Plus, DollarSign } from 'lucide-react';
+import { styles } from './styles';
+import { Expense, FormData } from './types/expense';
+import { Modal } from './components/Modal/Modal';
+import { ExpenseForm } from './components/ExpenseForm/ExpenseForm';
+import { ExpenseList } from './components/ExpenseList/ExpenseList';
 
-interface FormData {
-  description: string;
-  amount: string;
-  category: string;
-  date: string;
-}
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
-
-type HoveredButton = string | null;
-type HoveredExpense = number | null;
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-  return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
-        {children}
-      </div>
-    </div>
-  );
-};
-const ExpenseTracker: React.FC = () => {
+function App() {
   const [expenses, setExpenses] = useState<Expense[]>([
     { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
     { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
   ]);
+  
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
+  
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
-  const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
-  const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
+  const [hoveredButton, setHoveredButton] = useState<string | null>(null);
+
   const closeModal = (): void => {
     setIsModalOpen(false);
     setEditingId(null);
@@ -60,61 +33,63 @@ const ExpenseTracker: React.FC = () => {
       date: new Date().toISOString().split('T')[0]
     });
   };
+
   const navigateModel = (): void => {
-     setFormData({
-      description: "",
-      amount: "",
-      category: "",
-      date: "",
+    setFormData({
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0]
     });
     setIsModalOpen(true);
-  }
-  const handleExpense = () : void => {
-    const expense: Expense ={
-      id :expenses.length+1,
-      description : formData.description,
-      amount : Number(formData.amount),
-      category : formData.category,
-      date : formData.date
+  };
+
+  const handleExpense = (): void => {
+    if (editingId !== null) {
+      setExpenses((preExpense) =>
+        preExpense.map((expense) =>
+          expense.id === editingId
+            ? {
+                ...expense,
+                description: formData.description,
+                amount: Number(formData.amount),
+                date: formData.date,
+                category: formData.category,
+              }
+            : expense
+        )
+      );
+    } else {
+      const expense: Expense = {
+        id: expenses.length + 1,
+        description: formData.description,
+        amount: Number(formData.amount),
+        category: formData.category,
+        date: formData.date,
+      };
+      setExpenses([...expenses, expense]);
     }
-     if(!expense.description  || !expense.amount || !expense.category || !expense.date){
-      alert("Fill all details");
-      return ;
-    }
-    else if(expense.amount <= 0){
-      alert("Amount must greater than 0");
-      return ;
-    }
-    if(editingId!==null){
-      setExpenses((preExpense) => preExpense.map((expense) => expense.id === editingId ? {
-        ...expense,
-        description : formData.description,
-        amount : Number(formData.amount),
-        date : formData.date,
-        category : formData.category,
-      }:expense
-    ))
-    }
-    else{
-      setExpenses([...expenses , expense]);
-    }
-   setIsModalOpen(false);
-  }
-  const handleDelete = (id:number) => {
-    const exit = expenses.filter(current => current.id !== id);
+    closeModal();
+  };
+
+  const handleDelete = (id: number): void => {
+    const exit = expenses.filter((current) => current.id !== id);
     setExpenses(exit);
-  }
-  const handleEdit = (expense:Expense): void => {
+  };
+
+  const handleEdit = (expense: Expense): void => {
     setFormData({
       description: expense.description,
       amount: expense.amount.toString(),
       category: expense.category,
-      date: expense.date
+      date: expense.date,
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
+
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
   return (
     <div style={styles.container}>
       <div style={styles.maxWidth}>
@@ -128,10 +103,10 @@ const ExpenseTracker: React.FC = () => {
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
             <button
-              onClick={() =>navigateModel()}
+              onClick={navigateModel}
               style={{
                 ...styles.addButton,
-                ...(hoveredButton === 'add' ? styles.addButtonHover : {})
+                ...(hoveredButton === 'add' ? styles.addButtonHover : {}),
               }}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
@@ -145,166 +120,28 @@ const ExpenseTracker: React.FC = () => {
             <p style={styles.totalAmount}>${totalExpense.toFixed(2)}</p>
           </div>
         </div>
+
         <div style={styles.card}>
           <h2 style={styles.sectionTitle}>Recent Expenses</h2>
-          {expenses.length === 0 ? (
-            <p style={styles.emptyState}>No expenses yet. Add your first expense above!</p>
-          ) : (
-            <div style={styles.expenseList}>
-              {expenses.map((expense: Expense) => (
-                <div
-                  key={expense.id}
-                  style={{
-                    ...styles.expenseItem,
-                    ...(hoveredExpense === expense.id ? styles.expenseItemHover : {})
-                  }}
-                  onMouseEnter={() => setHoveredExpense(expense.id)}
-                  onMouseLeave={() => setHoveredExpense(null)}
-                >
-                  <div style={styles.expenseContent}>
-                    <div style={styles.expenseTitleRow}>
-                      <h3 style={styles.expenseTitle}>{expense.description}</h3>
-                      <span style={styles.categoryBadge}>
-                        <Tag size={12} />
-                        {expense.category}
-                      </span>
-                    </div>
-                    <div style={styles.expenseDate}>
-                      <Calendar size={14} />
-                      {new Date(expense.date).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </div>
-                  </div>
-                  <div style={styles.expenseRight}>
-                    <span style={styles.expenseAmount}>
-                      ${expense.amount.toFixed(2)}
-                    </span>
-                    <div style={styles.actionButtons}>
-                      <button
-                        onClick={() => handleEdit(expense)}
-                        style={{
-                          ...styles.editButton,
-                          ...(hoveredButton === `edit-${expense.id}` ? styles.editButtonHover : {})
-                        }}
-                        onMouseEnter={() => setHoveredButton(`edit-${expense.id}`)}
-                        onMouseLeave={() => setHoveredButton(null)}
-                        title="Edit"
-                      >
-                        <Edit2 size={18} />
-                      </button>
-                      <button
-                        onClick={() =>handleDelete(expense.id)}
-                        style={{
-                          ...styles.deleteButton,
-                          ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
-                        }}
-                        onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
-                        onMouseLeave={() => setHoveredButton(null)}
-                        title="Delete"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <ExpenseList
+            expenses={expenses}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         </div>
       </div>
+
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <div style={styles.modalHeader}>
-          <h2 style={styles.modalTitle}>
-            {editingId ? 'Edit Expense' : 'Add New Expense'}
-          </h2>
-          <button
-            onClick={closeModal}
-            style={{
-              ...styles.closeButton,
-              ...(hoveredButton === 'close' ? styles.closeButtonHover : {})
-            }}
-            onMouseEnter={() => setHoveredButton('close')}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            <X size={24} />
-          </button>
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Description</label>
-          <input
-            type="text"
-            value={formData.description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
-            style={styles.input}
-            placeholder="Enter description"
-            required
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Amount</label>
-          <input
-            type="number"
-            step="0.01"
-            value={formData.amount}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, amount: e.target.value })}
-            style={styles.input}
-            placeholder="0.00"
-            required
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Category</label>
-          <select
-            value={formData.category}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, category: e.target.value })}
-            style={styles.input}
-            required
-          >
-            <option value="">Select category</option>
-            {categories.map((cat: string) => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Date</label>
-          <input
-            type="date"
-            value={formData.date}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
-            style={styles.input}
-            required
-          />
-        </div>
-        <div style={styles.buttonGroup}>
-          <button
-            onClick={() =>handleExpense()}
-            style={{
-              ...styles.primaryButton,
-              ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
-            }}
-            onMouseEnter={() => setHoveredButton('submit')}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            {editingId ? 'Update Expense' : 'Add Expense'}
-          </button>
-          <button
-            onClick={closeModal}
-            style={{
-              ...styles.secondaryButton,
-              ...(hoveredButton === 'cancel' ? styles.secondaryButtonHover : {})
-            }}
-            onMouseEnter={() => setHoveredButton('cancel')}
-            onMouseLeave={() => setHoveredButton(null)}
-          >
-            Cancel
-          </button>
-        </div>
+        <ExpenseForm
+          formData={formData}
+          onFormChange={setFormData}
+          onSubmit={handleExpense}
+          onCancel={closeModal}
+          isEditing={editingId !== null}
+        />
       </Modal>
     </div>
   );
-};
-export default ExpenseTracker;
+}
+
+export default App;
