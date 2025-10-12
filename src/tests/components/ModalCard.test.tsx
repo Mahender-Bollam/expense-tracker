@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react"
 import ModalCard from "../../components/ModalCard"
+import userEvent from "@testing-library/user-event"
 
 const mockExpenses = [{ id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' }]
 
@@ -30,11 +31,13 @@ const renderComponent = (props={}) => {
 
 describe('Modal Card component', () => {
 
-    test('Should add the expense', () => {
+    test('Should add the expense will all details', () => {
         renderComponent({isModalOpen:true})
         fireEvent.change(screen.getByPlaceholderText(/Enter description/i), { target: { value: 'Self' } });
         fireEvent.change(screen.getByPlaceholderText(/0.00/i), { target: { value: '260' } });
-        fireEvent.change(screen.getByText(/Select Category/i), { target: { value: 'Shopping' } })
+         const category = screen.getByTestId('dropdown-select') 
+        userEvent.selectOptions(category,'Food')  
+        fireEvent.change(screen.getByTestId('date-testid'),{target:{value:'2025-10-13'}})
         fireEvent.click(screen.getByRole('button',{name: /Add Expense/i}))
     })
     test('Should able to edit the expense',()=>{
