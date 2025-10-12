@@ -1,7 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
-
 describe("Expense tracker" ,() =>{
   it("Should render header correctly",() => {
     render(
@@ -68,5 +67,25 @@ describe("Expense tracker" ,() =>{
     const button = screen.getByTestId('add-expense');
     fireEvent.click(button);
     expect(alertMock).toHaveBeenCalled();
+  })
+  it("Should edit the existing expense", () => {
+    
+    render(
+      <App/>
+    );
+    const edit = screen.getAllByTitle("Edit");
+    fireEvent.click(edit[0]);
+    const desccription = screen.getByDisplayValue("Groceries");
+    const amount = screen.getByDisplayValue("85.5");
+    const category = screen.getByDisplayValue("Food");
+    const date = screen.getByDisplayValue("2025-10-05");
+    fireEvent.change(desccription,{target : {value:"Shirt"}});
+    fireEvent.change(amount,{target : {value:"300"}});
+    fireEvent.change(category,{target : {value:"Shopping"}});
+    fireEvent.change(date,{target : {value:"2025-10-11"}});
+    const button = screen.getByRole('button' , {name :"Update Expense"});
+    fireEvent.click(button);
+    const expense = screen.getByText("Shirt");
+    expect(expense).toBeInTheDocument();
   })
 })
