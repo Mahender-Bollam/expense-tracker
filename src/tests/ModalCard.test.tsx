@@ -23,6 +23,15 @@ describe("ModalCard",()=>{
         fireEvent.mouseLeave(closeButton)
     })
 
+     test("should click on closeModal with close hover",()=>{
+        const updatedOptions={...options,hoveredButton:"close"}
+        render(<ModalCard {...updatedOptions}/>)
+        const closeButton=screen.getByTestId("close-button")
+        userEvent.click(closeButton)
+        fireEvent.mouseEnter(closeButton)
+        fireEvent.mouseLeave(closeButton)
+    })
+
     test("should change input value on change",()=>{
         render(<ModalCard {...options}/>)
         const description=screen.getByPlaceholderText("Enter description");
@@ -52,10 +61,26 @@ describe("ModalCard",()=>{
         fireEvent.mouseLeave(clickButton)  
     })
 
+    test("should handle addExpense with edit hoverButton",async ()=>{
+        const updatedOptions={...options,hoveredButton:"submit"}
+        render(<ModalCard {...updatedOptions}/>)
+        const clickButton=screen.getByRole("button",{name:"Add Expense"})
+        fireEvent.click(clickButton);
+        fireEvent.mouseEnter(clickButton)
+        fireEvent.mouseLeave(clickButton)  
+    })
+
     test("should click cancel to close modal",()=>{
         render(<ModalCard {...options}/>)
         const cancel=screen.getByRole("button",{name:"Cancel"})
         userEvent.click(cancel);
+        fireEvent.mouseEnter(cancel) 
+        fireEvent.mouseLeave(cancel);
+    })
+    test("should handle cancel to close modal",()=>{
+        const updatedOptions={...options,hoveredButton:"cancel"}
+        render(<ModalCard {...updatedOptions}/>)
+        const cancel=screen.getByRole("button",{name:"Cancel"})
         fireEvent.mouseEnter(cancel) 
         fireEvent.mouseLeave(cancel);
     })
