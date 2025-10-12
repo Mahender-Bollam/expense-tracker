@@ -61,4 +61,16 @@ test('deletes an expense', () => {
   expect(screen.queryByText('Groceries')).not.toBeInTheDocument();
 });
 
+test('shows alert when trying to submit invalid form', () => {
+  render(<App />);
+  const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => { });
+  fireEvent.click(screen.getAllByText(/Add Expense/i)[0]);  
+  fireEvent.change(screen.getByPlaceholderText('Enter description'), { target: { value: '' } });
+  fireEvent.change(screen.getByPlaceholderText('0.00'), { target: { value: '' } });
+  fireEvent.change(screen.getByLabelText('Category'), { target: { value: 'Food' } });
+  fireEvent.change(screen.getByLabelText('Date'), { target: { value: '2025-10-07' } });
+  expect(screen.getByText(/Add New Expense/i)).toBeInTheDocument();
+  fireEvent.click(screen.getAllByText(/Add Expense/i)[1]);
+   expect(alertMock).toHaveBeenCalledWith('Please Enter all details and amount must be postive');
+});
 
