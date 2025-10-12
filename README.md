@@ -1,46 +1,134 @@
-# Getting Started with Create React App
+# Expense Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Table of Contents
 
-## Available Scripts
+- [ Description](#-description)
+- [ Features ](#-features)
+- [ Technologies Used](#-technologies-used)
+- [ Installation](#-installation)
+- [ Contribution](#-contribution)
+- [ Contact](#-contact)
+- [ License](#-license)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Description
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- A UI react application of **Expense Tracker** built using **TypeScript**, enabling users to add, update or delete expenses. 
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Features
+**Add Expense:**
+- Add feature , adds the new expense to the list with details;
+  - Description.
+  - Amount
+  - Category
+  - Date
 
-### `npm test`
+**Edit Expense:**
+- Edit expense, fixed the update expense functionality.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Delete Expense:**
+- Delete expense with alert message when user clicks on delete icon.
 
-### `npm run build`
+**Separated Components:**
+- Separated the componentd,
+  - ExpenseForm
+  - Expenselist
+  - ExpenseTracker
+  - Modal
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Testing:**
+- Implemented testing to the react application.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+--- 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Technologies Used
 
-### `npm run eject`
+- **TypeScript** 
+- **Reactjs** 
+- **CSS**
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+---
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Technologies Stack
+- **TypeScript**
+    - TypeScript download and installation guide 
+       - visit : https://www.typescriptlang.org/download/
+- **Reactjs**
+    - visit : https://react.dev/
+- **Nodejs**
+    - Visit : https://nodejs.org/en
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+---
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Installation
 
-## Learn More
+### 1. Clone the Repository
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+git clone https://github.com/Umamaheswari-gude/expense-tracker.git
+cd expense-tracker
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Run the application 
+```bash
+npm start
+```
+- The app will be available at `http://localhost:4009`
+---
+
+### 4. Run the tests
+```bash
+npm test
+```
+
+----
+
+## Contribution
+
+We welcome contributions from the community!
+
+### Steps to Contribute:
+
+1. Fork the repository
+2. Create a feature branch
+```bash
+
+git checkout -b feat/<your-feature>
+```
+
+3. Write your code and tests
+4. Commit changes with clear messages
+```bash
+git add .
+git commit -m "Add your-feature"
+```
+
+5. Push to your branch
+```bash
+git push origin feat/<your-feature>
+```
+
+6. Create a Pull Request~
+
+---
+
+## Contact
+
+- *Author:* Umamaheswari gude
+- *GitHub:* [github.com/Umamaheswari-gude](https://github.com/Umamaheswari-gude)  
+- ⁠*Email:* umamaheswari.g@everest.engineering
+
+---
+
+## License
+
+This project is licensed under the *MIT License*.  
+See the [LICENSE](LICENSE) file for details.
+
