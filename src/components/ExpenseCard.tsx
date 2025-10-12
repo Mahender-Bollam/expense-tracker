@@ -79,6 +79,7 @@ const ExpenseCard = ({ expenses, hoveredButton, setHoveredButton, hoveredExpense
                     <Edit2 size={18} />
                   </button>
                   <button
+                    data-testid='delete-hover'
                     onClick={() => handleDelete(expense.id)}
                     style={{
                       ...styles.deleteButton,
