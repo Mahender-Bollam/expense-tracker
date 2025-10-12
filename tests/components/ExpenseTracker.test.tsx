@@ -21,5 +21,12 @@ describe('ExpenseTracker Component', () => {
       await waitFor(() => {
         expect(screen.getByText('Updated Groceries')).toBeInTheDocument();
       });
-  });
+    });
+    test('displays multiple expenses with different categories', () => {
+      render(<ExpenseTracker />);
+      expect(screen.getByText('Groceries')).toBeInTheDocument();
+      expect(screen.getByText('Gas')).toBeInTheDocument();
+      expect(screen.getAllByText('Food').length).toBeGreaterThan(0);
+      expect(screen.getByText('Transport')).toBeInTheDocument();
+    });
 });
