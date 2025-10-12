@@ -13,4 +13,13 @@ describe('Modal Component', () => {
     expect(screen.getByText('Modal Content')).toBeInTheDocument();
     expect(screen.getByText('X')).toBeInTheDocument();
   });
+
+  test('does not render modal when isOpen is false', () => {
+    render(
+      <Modal isOpen={false} onClose={() => {}}>
+        <div>Modal Content</div>
+      </Modal>
+    );
+    expect(screen.queryByText('Modal Content')).not.toBeInTheDocument();
+  });
 });
