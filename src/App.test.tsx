@@ -88,4 +88,14 @@ describe("Expense tracker" ,() =>{
     const expense = screen.getByText("Shirt");
     expect(expense).toBeInTheDocument();
   })
+  it("Should delete the expense",() => {
+     render(
+      <App/>
+    );
+    const expense = screen.getByText("Groceries");
+    expect(expense).toBeInTheDocument();
+    const remove = screen.getAllByTitle("Delete");
+    fireEvent.click(remove[0]);
+    expect(expense).not.toBeInTheDocument();
+  })
 })
