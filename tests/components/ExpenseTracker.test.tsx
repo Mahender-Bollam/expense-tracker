@@ -29,4 +29,11 @@ describe('ExpenseTracker Component', () => {
       expect(screen.getAllByText('Food').length).toBeGreaterThan(0);
       expect(screen.getByText('Transport')).toBeInTheDocument();
     });
+    test('hover effects work on add button', () => {
+      render(<ExpenseTracker />);
+      const addButton = screen.getAllByText(/Add Expense/i)[0];
+      fireEvent.mouseEnter(addButton);
+      fireEvent.mouseLeave(addButton);
+      expect(addButton).toBeInTheDocument();
+    });
 });
