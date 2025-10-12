@@ -38,8 +38,19 @@ test('correctly handles the expense form', async () => {
   fireEvent.click(screen.getAllByText(/Add Expense/i)[1]); 
   expect(alertMock).toHaveBeenCalledWith('Add Expense  successfull');
   expect(screen.getByText('Hyderbadbiryani')).toBeInTheDocument();
-
-   
-
 });
+
+test('edits an existing expense', async () => {
+  render(<App />);
+  const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => { });
+  fireEvent.click(screen.getAllByTitle('Edit')[0]);
+  expect(screen.getByText('Edit Expense')).toBeInTheDocument();
+  const input = screen.getByPlaceholderText('Enter description');
+  fireEvent.change(input, { target: { value: 'Lunch' } });
+  fireEvent.click(screen.getByText(/Update Expense/i));
+  expect(alertMock).toHaveBeenCalledWith('Expense updated successfully');
+  expect(screen.getByText('Lunch')).toBeInTheDocument();
+ 
+});
+
 
