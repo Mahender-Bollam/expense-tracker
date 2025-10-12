@@ -71,4 +71,9 @@ describe('ExpenseTracker Component', () => {
       const descriptionInput = screen.getByPlaceholderText(/Enter description/i) as HTMLInputElement;
       expect(descriptionInput.value).toBe('');
     });
+
+     test('displays total expenses correctly', () => {
+    render(<ExpenseTracker />);
+    expect(screen.getByText('$130.50')).toBeInTheDocument();
+  });
 });
