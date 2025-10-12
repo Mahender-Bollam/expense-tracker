@@ -44,6 +44,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           }}
           onMouseEnter={() => setHoveredButton('close')}
           onMouseLeave={() => setHoveredButton(null)}
+          aria-label="Close modal"
+          title="Close"
         >
           <X size={24} />
         </button>
