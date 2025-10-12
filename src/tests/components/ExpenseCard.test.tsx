@@ -66,6 +66,11 @@ describe('Expense card component',()=>{
         fireEvent.mouseEnter(screen.getByTestId(/edit-button-hover/i))
         fireEvent.mouseLeave(screen.getByTestId(/edit-button-hover/i))
     })
+    test('Should handle mouse hovering of delete when there is expenseid',()=>{
+        renderComponent({hoveredButton: `delete-${mockExpenses[0].id}` })
+        fireEvent.mouseEnter(screen.getByTestId(/delete-hover/i))
+        fireEvent.mouseLeave(screen.getByTestId(/delete-hover/i))
+    })
 })
 
 
