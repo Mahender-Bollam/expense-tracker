@@ -47,4 +47,9 @@ describe('ExpenseTracker Component', () => {
       expect(updateButtons[0]).toBeInTheDocument();
       expect(deleteButtons[0]).toBeInTheDocument();
     });
+    test('displays correct date format for expenses', () => {
+      render(<ExpenseTracker />);
+      expect(screen.getByText(/Oct 5, 2025/i)).toBeInTheDocument();
+      expect(screen.getByText(/Oct 6, 2025/i)).toBeInTheDocument();
+    });
 });
