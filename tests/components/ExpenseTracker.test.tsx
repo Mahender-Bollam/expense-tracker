@@ -36,4 +36,15 @@ describe('ExpenseTracker Component', () => {
       fireEvent.mouseLeave(addButton);
       expect(addButton).toBeInTheDocument();
     });
+    test('hover effects work on edit and delete buttons', () => {
+      render(<ExpenseTracker />);
+      const updateButtons = screen.getAllByTitle('Edit');
+      const deleteButtons = screen.getAllByTitle('Delete');
+      fireEvent.mouseEnter(updateButtons[0]);
+      fireEvent.mouseLeave(updateButtons[0]);
+      fireEvent.mouseEnter(deleteButtons[0]);
+      fireEvent.mouseLeave(deleteButtons[0]);
+      expect(updateButtons[0]).toBeInTheDocument();
+      expect(deleteButtons[0]).toBeInTheDocument();
+    });
 });
