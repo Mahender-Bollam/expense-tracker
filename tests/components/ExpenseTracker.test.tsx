@@ -52,4 +52,23 @@ describe('ExpenseTracker Component', () => {
       expect(screen.getByText(/Oct 5, 2025/i)).toBeInTheDocument();
       expect(screen.getByText(/Oct 6, 2025/i)).toBeInTheDocument();
     });
+    test('clears form data when modal is closed', async () => {
+      render(<ExpenseTracker />);
+      const addButton = screen.getAllByText(/Add Expense/i)[0];
+      fireEvent.click(addButton);
+      await waitFor(() => {
+        expect(screen.getByText(/Add New Expense/i)).toBeInTheDocument();
+      });
+      fireEvent.change(screen.getByPlaceholderText(/Enter description/i), {
+        target: { value: 'Test' },
+      });
+      const cancelButton = screen.getByText(/Cancel/i);
+      fireEvent.click(cancelButton);
+      fireEvent.click(addButton);
+      await waitFor(() => {
+        expect(screen.getByText(/Add New Expense/i)).toBeInTheDocument();
+      });
+      const descriptionInput = screen.getByPlaceholderText(/Enter description/i) as HTMLInputElement;
+      expect(descriptionInput.value).toBe('');
+    });
 });
