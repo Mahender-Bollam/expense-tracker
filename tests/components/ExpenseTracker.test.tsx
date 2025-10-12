@@ -73,7 +73,21 @@ describe('ExpenseTracker Component', () => {
     });
 
      test('displays total expenses correctly', () => {
-    render(<ExpenseTracker />);
-    expect(screen.getByText('$130.50')).toBeInTheDocument();
-  });
+      render(<ExpenseTracker />);
+      expect(screen.getByText('$130.50')).toBeInTheDocument();
+    });
+    test('closes modal when Cancel button is clicked', async () => {
+      render(<ExpenseTracker />);
+      const addButton = screen.getAllByText(/Add Expense/i)[0];
+      fireEvent.click(addButton);
+      await waitFor(() => {
+        expect(screen.getByText(/Add New Expense/i)).toBeInTheDocument();
+      });
+      const cancelButton = screen.getByText(/Cancel/i);
+      fireEvent.click(cancelButton);
+      await waitFor(() => {
+        expect(screen.queryByText(/Add New Expense/i)).not.toBeInTheDocument();
+      });
+    });
+    
 });
