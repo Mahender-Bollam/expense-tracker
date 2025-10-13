@@ -337,19 +337,61 @@ const ExpenseTracker: React.FC = () => {
       date: new Date().toISOString().split('T')[0]
     });
   };
+ const handleAdd = () => {
 
+         setIsModalOpen(!isModalOpen);
+         console.log(formData)
+         
 
+    };
+  const handleUpdate=(e:any)=>{
+      e.preventDefault();
+      setExpenses((prevExpenses)=>
+         prevExpenses.map(( exp) => exp.id === editingId ?{...exp,description: formData.description,
+      amount: parseInt(formData.amount),
+      category: formData.category,
+      date: formData.date,} :exp)
+
+      );
+      alert("Updated Sucessfully")
+      closeModal()
+  }
+  
 
   const handleEdit = (expense: Expense): void => {
+
+    
     setFormData({
       description: expense.description,
       amount: expense.amount.toString(),
       category: expense.category,
       date: expense.date
     });
+    
+
     setEditingId(expense.id);
     setIsModalOpen(true);
-  };
+  }
+  const handleSubmit=():void =>{
+
+      //event.preventDefault();
+       const ex:Expense={
+        
+        id:expenses.length +1, 
+        description: formData.description,
+        amount: parseInt(formData.amount),
+        category: formData.category,
+        date: formData.date }
+        setExpenses([...expenses, ex])
+         console.log("vani")
+
+         closeModal();
+
+      }
+     
+  
+  
+
 
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -371,6 +413,7 @@ const ExpenseTracker: React.FC = () => {
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
               }}
+              onClick={handleAdd}
               onMouseEnter={() => setHoveredButton('add')}
               onMouseLeave={() => setHoveredButton(null)}
             >
@@ -474,7 +517,7 @@ const ExpenseTracker: React.FC = () => {
             <X size={24} />
           </button>
         </div>
-
+       
         <div style={styles.formGroup}>
           <label style={styles.label}>Description</label>
           <input
@@ -486,7 +529,7 @@ const ExpenseTracker: React.FC = () => {
           />
         </div>
 
-        <div style={styles.formGroup}>
+         <div style={styles.formGroup}>
           <label style={styles.label}>Amount</label>
           <input
             type="number"
@@ -530,7 +573,9 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
-          >
+            onClick= {handleUpdate}>
+
+            
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
           <button
