@@ -1,46 +1,66 @@
-# Getting Started with Create React App
+# Expense Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Description
 
-## Available Scripts
+A user-friendly web application designed to help individuals efficiently manage their personal finances by tracking daily expenses, setting budgets, and generating insightful reports.Table of Contents
+## Table Of Contents
 
-In the project directory, you can run:
+  - Installation & Setup
 
-### `npm start`
+  - Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  - License
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+  - Contact
 
-### `npm test`
+  - Author
+## Features
+    
+   - Adds the test cases for the features add expense,delete expense,update expense.
+   
+   
+ ## Installation & Setup
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To get started with the Add Expense Tracker:
 
-### `npm run build`
+##### Clone the repository:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+     git clone https://github.com/yourusername/add-expense-tracker.git
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+##### Navigate into the project directory:
 
-### `npm run eject`
+     cd add-expense-tracker
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+##### Install dependencies:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+     npm install
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+##### Run the application:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+     npm start
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+##### Run the test:
+     npm test
+##### Run the test coverage:
+    npm test -- --coverage
+
+The app will be accessible at http://localhost:3000
+
+### License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Contact
+
+For any inquiries or support, please reach out to:
+
+Email: sreevaniyaramaddu@gmail.com
+
+GitHub: https://github.com/sreevani1034
+
+## Author
+
+Developed by    Sreevani
