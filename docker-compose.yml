@@ -1,0 +1,10 @@
+services:
+  website:
+    build: 
+      context: .
+
+    image: anas412mohammed8docker/expense-tracker:v1.01
+
+    ports:
+      - "3000:3000"
+
