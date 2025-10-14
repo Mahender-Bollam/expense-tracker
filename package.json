@@ -44,9 +44,9 @@
   },
   "jest":{
     "coveragePathIgnorePatterns":[
-      "src/types",
+      "src/frontend/types",
       "src/index.tsx",
-      "src/reportWebVitals.ts"
+      "src/frontend/reportWebVitals.ts"
     ]
   }
 }
