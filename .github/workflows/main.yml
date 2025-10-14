@@ -16,7 +16,6 @@ jobs:
                 name: Checkout to code
                 uses: actions/checkout@v3
 
-            
             -
                 name: Compose and run application with docker
                 run: docker compose up -d --build

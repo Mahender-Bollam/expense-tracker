@@ -3,7 +3,7 @@ services:
     build: 
       context: .
 
-    image: ${DOCKER_REGISTORY}/expense-tracker:v1.01
+    image: anas412mohammed8docker/expense-tracker:v1.01
 
     ports:
       - "3000:3000"
