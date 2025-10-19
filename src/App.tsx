@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState, CSSProperties, useEffect } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 import { JSX } from 'react/jsx-runtime';
 import { Expense,FormData,ModalProps  } from './interfaces/expense';
@@ -10,9 +10,23 @@ import { Modal } from './modal';
 
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
+    ]);
+useEffect(() => {
+  const getExpenses = async () => {
+    try {
+      const response = await fetch('http://localhost:4001/expenses');
+      const data = await response.json();
+      setExpenses(data);
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+    }
+  };
+
+  getExpenses();
+}, []);
+
+
+
   
   const [formData, setFormData] = useState<FormData>({
     description: '',
@@ -134,7 +148,8 @@ const ExpenseTracker: React.FC = () => {
 
           <div style={styles.totalCard}>
             <p style={styles.totalLabel}>Total Expenses</p>
-            <p style={styles.totalAmount}>${totalExpense.toFixed(2)}</p>
+  
+             <p style={styles.totalAmount}>${typeof totalExpense === 'number' ? totalExpense.toFixed(2) : '0.00'}</p>
           </div>
         </div>
 
@@ -175,7 +190,7 @@ const ExpenseTracker: React.FC = () => {
 
                   <div style={styles.expenseRight}>
                     <span style={styles.expenseAmount}>
-                      ${expense.amount.toFixed(2)}
+                     ${typeof expense.amount === 'number' ? expense.amount.toFixed(2) : 'N/A'}
                     </span>
                     <div style={styles.actionButtons}>
                       <button
