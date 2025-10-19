@@ -6,7 +6,7 @@ import { setIdOfExpense, validateExpense } from './utils/ValidateExpense';
 import { HeaderCard } from './components/HeaderCard';
 import { ChildOfModalComponent } from './components/ChildOfModalComp';
 import { Modal } from './components/PopupModal';
-import { fetchExpenses } from './utils/manageDataFromApi';
+import { addExpenseWithAPI, fetchExpenses } from './utils/manageDataFromApi';
 
 export const ShareFormData = createContext<ShareFormDataType>({
   dataOfForm:{
@@ -21,18 +21,19 @@ export const ShareFormData = createContext<ShareFormDataType>({
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   
-  useEffect(()=>{
-    fetchExpenses().then(expenses=>setExpenses(expenses as Expense[]));
-  },[])
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
-  
+
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  useEffect(()=>{
+    fetchExpenses().then(expenses=>setExpenses(expenses as Expense[]));
+  },[expenses])
 
   const closeModal = (): void => {
     setIsModalOpen(false);
@@ -58,7 +59,7 @@ const ExpenseTracker: React.FC = () => {
 
   const addExpense = ()=>{
     if(validateExpense([formData,expenses,editingId])){
-      setExpenses([...expenses,{...formData,id:setIdOfExpense(expenses),amount:Number(formData.amount)}]);
+      addExpenseWithAPI(JSON.stringify({...formData,id: String(setIdOfExpense(expenses))}))
       closeModal();
     }else{
       setIsModalOpen(true);
