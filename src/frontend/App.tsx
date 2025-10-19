@@ -1,4 +1,4 @@
-import React, { createContext, useState} from 'react';
+import React, { createContext, useEffect, useState} from 'react';
 import { FormData, Expense, ShareFormDataType} from './types/type';
 import { styles } from './styles/styles';
 import { RecentExpenses } from './components/RecentExpensesCard';
@@ -6,6 +6,7 @@ import { setIdOfExpense, validateExpense } from './utils/ValidateExpense';
 import { HeaderCard } from './components/HeaderCard';
 import { ChildOfModalComponent } from './components/ChildOfModalComp';
 import { Modal } from './components/PopupModal';
+import { fetchExpenses } from './utils/manageDataFromApi';
 
 export const ShareFormData = createContext<ShareFormDataType>({
   dataOfForm:{
@@ -15,13 +16,14 @@ export const ShareFormData = createContext<ShareFormDataType>({
     date: new Date().toISOString().split('T')[0]
   },
   setDataOfForm: ()=>{}
-})
+});
+
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   
+  useEffect(()=>{
+    fetchExpenses().then(expenses=>setExpenses(expenses as Expense[]));
+  },[])
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: '',
