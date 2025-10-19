@@ -6,7 +6,7 @@ import { setIdOfExpense, validateExpense } from './utils/ValidateExpense';
 import { HeaderCard } from './components/HeaderCard';
 import { ChildOfModalComponent } from './components/ChildOfModalComp';
 import { Modal } from './components/PopupModal';
-import { addExpenseInDatabase, editExpenseInDatabase, fetchExpenses } from './utils/manageDataFromApi';
+import { addExpenseInDatabase, deleteExpenseInDatabase, editExpenseInDatabase, fetchExpenses } from './utils/manageDataFromApi';
 
 export const ShareFormData = createContext<ShareFormDataType>({
   dataOfForm:{
@@ -68,7 +68,7 @@ const ExpenseTracker: React.FC = () => {
 
   const deleteExpense = (expenseToDelete:Expense)=>{
     alert(`The expense with description ${expenseToDelete.description} will be deleted`);
-    setExpenses(expenses.filter(item=>item.description !== expenseToDelete.description));
+    deleteExpenseInDatabase(String(expenseToDelete.id))
     closeModal();
   };
 

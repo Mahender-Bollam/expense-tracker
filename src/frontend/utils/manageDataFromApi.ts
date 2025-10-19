@@ -40,3 +40,18 @@ export const editExpenseInDatabase = async([expense,id]:EditExpenseWithAPI):Prom
         return error as Error;
     }
 };
+
+export const deleteExpenseInDatabase = async(id:string):Promise<string|Error>=>{
+    try{
+        const response = await (await fetch(`http://localhost:3005/expenses/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            })
+        ).text()
+        return response as unknown as string;
+    }catch(error){
+        return error as Error;
+    }
+};
