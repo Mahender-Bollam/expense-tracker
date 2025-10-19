@@ -71,3 +71,5 @@ export type ShareFormDataType = {
   dataOfForm: FormData,
   setDataOfForm: React.Dispatch<React.SetStateAction<FormData>>
 }
+
+export type EditExpenseWithAPI = [expense:string, id:string]
