@@ -125,6 +125,7 @@ const ExpenseTracker: React.FC = () => {
             </div>
             <button 
               onClick={() =>navigateModel()}
+              data-testid="open-model"
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
@@ -277,8 +278,9 @@ const ExpenseTracker: React.FC = () => {
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>Date</label>
+          <label htmlFor="date" style={styles.label}>Date</label>
           <input
+            id='date'
             type="date"
             value={formData.date}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, date: e.target.value })}
@@ -290,6 +292,7 @@ const ExpenseTracker: React.FC = () => {
         <div style={styles.buttonGroup}>
           <button 
             onClick={() =>handleExpense()}
+            data-testid="add-expense"
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
