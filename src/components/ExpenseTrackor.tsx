@@ -1,164 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag } from 'lucide-react';
-import { styles } from './Styles';
-import { HoveredButton, HoveredExpense } from '../types/Button';
-import { Modal } from './Model';
-import {
-  getExpenses, addExpense as addExpenseAPI, updateExpense as updateExpenseAPI, deleteExpense as deleteExpenseAPI
-} from '../api/expenseAPI';
+import { useState } from "react";
+import { Expense, useExpenseTracker } from "../hooks/expenseTracker";
+import { HoveredButton, HoveredExpense } from "../types/Button";
+import { styles } from "./Styles";
+import { Calendar, DollarSign, Edit2, Plus, Tag, Trash2 } from "lucide-react";
+import { Modal } from "./Model";
 
-export interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-export interface FormData {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-  date: string;
-}
+
 
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
-
-  const [formData, setFormData] = useState<FormData>({
-    id: 0,
-    description: '',
-    amount: 0,
-    category: '',
-    date: new Date().toISOString().split('T')[0]
-  });
-
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { expenses, formData, editingId, isModalOpen, categories, totalExpense, setFormData, closeModal, updateExpense, addexpense, removeExpense, handleEdit, handleAddExpense } = useExpenseTracker()
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
 
-  const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
-  useEffect(() => {
-    fetchExpenses();
-  }, []);
-
-  const fetchExpenses = async () => {
-    try {
-      const data = await getExpenses();
-      setExpenses(data);
-    } catch (error) {
-      alert('Failed to load expenses from server');
-      console.error(error);
-    }
-  };
-  const closeModal = (): void => {
-    setIsModalOpen(false);
-    setEditingId(null);
-    setFormData({
-      id: expenses.length + 1,
-      description: '',
-      amount: Number(""),
-      category: '',
-      date: new Date().toISOString().split('T')[0]
-    });
-  };
-
-  const updateExpense = async () => {
-    const { id, description, amount, category, date } = formData;
-
-    if (amount <= 0) {
-      alert("Amount should be greater than 0");
-      return;
-    }
-
-    if (!description || !category || !date) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    try {
-      await updateExpenseAPI(formData);
-      setExpenses(prev =>
-        prev.map(exp => (exp.id === id ? formData : exp))
-      );
-      alert("Expense updated successfully.");
-      setIsModalOpen(false);
-      setEditingId(null);
-    } catch (error) {
-      alert("Failed to update expense");
-      console.error(error);
-    }
-  };
-
-
-
-  const handleEdit = (expense: Expense): void => {
-    setFormData({
-      id: expense.id,
-      description: expense.description,
-      amount: expense.amount,
-      category: expense.category,
-      date: expense.date
-    });
-    setEditingId(expense.id);
-    setIsModalOpen(true);
-  };
-
-  const handleAddExpense = () => {
-    setIsModalOpen(true);
-  }
-
- const addexpense = async () => {
-  const { description, amount, category, date } = formData;
-
-  const numericAmount = Number(amount);
-  if (isNaN(numericAmount) || numericAmount <= 0) {
-    alert("Amount should be a positive number");
-    return;
-  }
-
-  if (!description || !category || !date) {
-    alert("Please fill all fields");
-    return;
-  }
-
-  try {
-    const newExpense = await addExpenseAPI({
-      ...formData,
-      amount: numericAmount
-    });
-    console.log("New Expense from API:", newExpense);
-    setExpenses(prev => [...prev, newExpense.saved]);
-    alert("Expense added successfully");
-    setIsModalOpen(false);
-  } catch (error) {
-    alert("Failed to add expense");
-    console.error(error);
-  }
-};
-
-
-  const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-
-  const removeExpense = async (id: number) => {
-    // eslint-disable-next-line no-restricted-globals
-    const confirmOption = confirm("Are you sure you want to remove this expense?");
-    if (!confirmOption) return;
-
-    try {
-      await deleteExpenseAPI(id.toString());
-      setExpenses(prevExpenses => prevExpenses.filter(item => item.id !== id));
-      alert("Expense removed successfully");
-    } catch (error) {
-      alert("Failed to remove expense");
-      console.error(error);
-    }
-  };
 
   return (
     <div style={styles.container}>
