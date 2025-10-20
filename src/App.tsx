@@ -6,7 +6,7 @@ import { HoveredButton,HoveredExpense } from './types/expense';
 import { styles } from './styles/expense-tracker';
 import { Modal } from './modal';
 import { apiData } from './api';
-import { addExpense } from './serverapi';
+import { addExpense,editExpense } from './serverapi';
 
  
  
@@ -98,13 +98,16 @@ useEffect(() => {
 
 
 
- const handleAddExpense=async ():Promise<any>=> {
+ const handleAddEditExpense=async ():Promise<any>=> {
   if (editingId) {
-    setExpenses((prevExpenses) =>
+     const updatedExpense = { ...formData, id: editingId };
+     const result = await editExpense(updatedExpense, editingId);
+     setExpenses((prevExpenses) =>
       prevExpenses.map((expense) =>
-        expense.id === editingId ? { ...formData, id: editingId } : expense
+        expense.id === editingId ? result : expense
       )
     );
+  
     alert('Expense updated successfully');
     closeModal();
   }
@@ -121,6 +124,7 @@ useEffect(() => {
       closeModal();
       }
 }
+
  }
 
   return (
@@ -166,9 +170,9 @@ useEffect(() => {
             <p style={styles.emptyState}>No expenses yet. Add your first expense above!</p>
           ) : (
             <div style={styles.expenseList}>
-              {expenses.map((expense: Expense) => (
+              {expenses.map((expense: Expense, index) => (
                 <div
-                  key={expense.id}
+                  key={expense.id??index }
                   style={{
                     ...styles.expenseItem,
                     ...(hoveredExpense === expense.id ? styles.expenseItemHover : {})
@@ -300,7 +304,7 @@ useEffect(() => {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button onClick={() => handleAddExpense()}
+          <button onClick={() => handleAddEditExpense()}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
