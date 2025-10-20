@@ -6,7 +6,7 @@ import { HoveredButton,HoveredExpense } from './types/expense';
 import { styles } from './styles/expense-tracker';
 import { Modal } from './modal';
 import { apiData } from './api';
-import { addExpense,editExpense } from './serverapi';
+import { addExpense,deleteExpense,editExpense } from './serverapi';
 
  
  
@@ -84,10 +84,10 @@ useEffect(() => {
   };
 
   
-   const handledeleteItem=(id:number)=>{
+   const handledeleteItem=async (id:number)=>{
     console.log('chaitanya')
     alert("Are you sure you want to delete this expense? ")
-
+    await deleteExpense(id);
     setExpenses((prev) => prev.filter((item) => item.id!== id));
    }
 
