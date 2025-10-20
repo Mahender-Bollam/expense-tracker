@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, DollarSign } from 'lucide-react';
 import { Expense } from './types/expenseType';
 import { FormData } from './types/formDataType';
@@ -9,11 +9,19 @@ import ModalCard from './components/ModalCard';
 
 
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
 
+  const getResult = async() =>{
+    const url = "http://localhost:3000/expenses"
+    fetch(url,{
+      method: 'GET'
+    })
+      .then(r => r.json())
+      .then(setExpenses);
+  }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+  useEffect(()=>{
+    getResult()
+  })
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: 0,
