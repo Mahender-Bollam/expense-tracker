@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag } from 'lucide-react';
 import { Expense } from '../interface/Expense';
 import { FormData } from '../interface/FormData';
@@ -10,10 +10,15 @@ type HoveredButton = string | null;
 type HoveredExpense = number | null;
 
 const ExpenseTracker = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+    useEffect(() => {
+        try{
+          fetch("http://localhost:4000/expenses")
+          .then((res) => {return res.json();})
+          .then((data:Expense[]) => {setExpenses(data);});
+        }
+        catch (error) {console.error('Error fetching products:', error); }       
+      }, [expenses])
   const [formData, setFormData] = useState<FormData>({
     id:0,
     description: '',
