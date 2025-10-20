@@ -29,7 +29,23 @@ export const editExpense = async (expenseData: Expense,id:Number) => {
         const data = await response.json();
         return data; 
     } catch (error) {
-        console.error('Error adding expense:', error); 
+        console.error('Error editing expense:', error); 
+        throw error; 
+    }
+};
+export const deleteExpense=async(id:number)=>{
+   try {
+        const response = await fetch(`${apiData}/${id}`, { 
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            
+        });
+        const data = await response.json();
+        return data; 
+    } catch (error) {
+        console.error('Error editing expense:', error); 
         throw error; 
     }
 };
