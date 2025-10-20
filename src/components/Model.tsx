@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { HoveredButton } from "../types/Button";
 import { styles } from "./Styles";
-import { FormData } from "./ExpenseTrackor";
+import { ExpenseFormData } from "../hooks/expenseTracker";
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,8 +9,8 @@ interface ModalProps {
   editingId: number | null;
   closeModal: () => void;
   setHoveredButton: React.Dispatch<React.SetStateAction<HoveredButton>>;
-  setFormData: (value: React.SetStateAction<FormData>) => void;
-  formData: FormData;
+  setFormData: (value: React.SetStateAction<ExpenseFormData>) => void;
+  formData: ExpenseFormData;
   hoveredButton: HoveredButton;
   categories: string[];
   updateExpense: () => void;
