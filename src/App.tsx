@@ -5,25 +5,27 @@ import { Expense,FormData,ModalProps  } from './interfaces/expense';
 import { HoveredButton,HoveredExpense } from './types/expense';
 import { styles } from './styles/expense-tracker';
 import { Modal } from './modal';
-  
+import { apiData } from './api';
+import { addExpense } from './serverapi';
+
+ 
  
 
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
     ]);
-useEffect(() => {
-  const getExpenses = async () => {
+const getExpenses = async () => {
     try {
-      const response = await fetch('http://localhost:4001/expenses');
+      const response = await fetch(apiData);
       const data = await response.json();
       setExpenses(data);
     } catch (error) {
       console.error('Error fetching expenses:', error);
     }
   };
-
-  getExpenses();
-}, []);
+useEffect(() => {
+   getExpenses();
+  }, []);
 
 
 
@@ -85,6 +87,7 @@ useEffect(() => {
    const handledeleteItem=(id:number)=>{
     console.log('chaitanya')
     alert("Are you sure you want to delete this expense? ")
+
     setExpenses((prev) => prev.filter((item) => item.id!== id));
    }
 
@@ -95,7 +98,7 @@ useEffect(() => {
 
 
 
- const handleAddExpense=(formData: FormData):any=> {
+ const handleAddExpense=async ():Promise<any>=> {
   if (editingId) {
     setExpenses((prevExpenses) =>
       prevExpenses.map((expense) =>
@@ -108,11 +111,14 @@ useEffect(() => {
     else{
       if(formData.amount<=0 || !formData.category || !formData.description || !formData.date){
       alert('Please Enter all details and amount must be postive')
+      return 
       }
       else{
-    setExpenses([ ...expenses,{...formData,id:Date.now()}])
-    alert('Add Expense  successfull')
-    closeModal();
+      const newExpense = { ...formData, id: Date.now() };
+      await addExpense(newExpense);
+      setExpenses((prev) => [...prev, newExpense]);
+      alert('Add Expense  successfull')
+      closeModal();
       }
 }
  }
@@ -294,7 +300,7 @@ useEffect(() => {
         </div>
 
         <div style={styles.buttonGroup}>
-          <button onClick={() => handleAddExpense(formData)}
+          <button onClick={() => handleAddExpense()}
             style={{
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
