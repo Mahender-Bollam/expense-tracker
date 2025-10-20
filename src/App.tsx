@@ -1,5 +1,5 @@
 import { styles } from './styles';
-import React, { useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag} from 'lucide-react';
 import { Expense,FormData } from './types/ExpenseDetails';
 import ModalCard from './components/Modal';
@@ -11,9 +11,14 @@ type HoveredExpense = number | null;
 
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
+    // { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
+    // { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
   ]);
+  useEffect(()=>{
+          fetch("http://localhost:3005/")
+          .then((res)=>res.json())
+          .then((data)=>setExpenses(data))
+      },[]);
   
   const [formData, setFormData] = useState<FormData>({
     id: expenses.length+1,
@@ -31,7 +36,6 @@ const ExpenseTracker: React.FC = () => {
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
   
   
-
   const closeModal = (): void => {
     setIsModalOpen(false);
     setEditingId(null);
