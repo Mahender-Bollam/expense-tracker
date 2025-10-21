@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DollarSign, Plus } from "lucide-react";
 import { styles } from "../styles/tracker.styles";
 import { Expense } from "../interface/expense";
@@ -7,13 +7,10 @@ import ExpenseForm from "./expenseForm";
 import Modal from "./modal";
 import ExpenseList from "./expenseList";
 import { FormData } from "../interface/formData";
-
+import axios from "axios";
 
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: "Groceries", amount: 85.5, category: "Food", date: "2025-10-05" },
-    { id: 2, description: "Gas", amount: 45.0, category: "Transport", date: "2025-10-06" },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
 
   const [formData, setFormData] = useState<FormData>({
     description: "",
@@ -28,6 +25,19 @@ const ExpenseTracker: React.FC = () => {
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
 
   const categories: string[] = ["Food", "Transport", "Entertainment", "Bills", "Shopping", "Health", "Other"];
+  
+  useEffect(() => {
+    const fetchExpense = async () => {
+      try {
+        const res = await axios.get("http://localhost:3010/expenses");
+        setExpenses(res.data);
+      } catch (err) {
+        console.error("Error fetching expenses:", err);
+      }
+    };
+    fetchExpense();
+  }, []);
+
   
   const closeModal = (): void => {
     setIsModalOpen(false);
@@ -59,10 +69,12 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
-  const handleDelete = (id: number): void => {
+  
+    const handleDelete = (id: number): void => {
     const confirmed = window.confirm("You want to delete this expense?");
     if (confirmed) setExpenses(expenses.filter((exp) => exp.id !== id));
   };
+
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   
