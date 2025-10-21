@@ -20,3 +20,8 @@ export const updateTheExpense = async(expenses:Expense) => {
     return response.data
 }
 
+export const deleteTheExpense = async(expenseId:number) => {
+    const response = await axios.delete(`${API_URL}/expense/${expenseId}`)
+    console.log("Api delete Id",expenseId)
+    return response.data
+}
