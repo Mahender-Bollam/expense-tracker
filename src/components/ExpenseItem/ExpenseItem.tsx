@@ -6,7 +6,7 @@ import { Expense } from '../../types/expense';
 interface ExpenseItemProps {
   expense: Expense;
   onEdit: (expense: Expense) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 }
 
 export const ExpenseItem: React.FC<ExpenseItemProps> = ({
