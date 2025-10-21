@@ -25,3 +25,12 @@ export const postData = async (id: number, expense: {
         console.log("Failed to push")
     }
 }
+export const deleteExpense = async (id:number) =>{
+    const response = await axios.delete(`${API}/expens/${id}`);
+    if(!response){
+        console.log("Failed to delete");
+    }
+    else{
+        console.log("Expense deleted")
+    }
+}
