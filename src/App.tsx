@@ -5,7 +5,7 @@ import { validateForm } from './utils/utils';
 import ExpenseForm from './components/ExpenseForm/ExpenseForm';
 import ExpenseItem from './components/ExpenseItem/ExpenseItem';
 import { Modal } from './components/Modal/Modal';
-
+import { createExpense, deleteExpense, getExpenses, updateExpense } from './api/expense';
 const styles: Record<string, CSSProperties> = {
   container: {
     minHeight: '100vh',
@@ -120,10 +120,7 @@ const styles: Record<string, CSSProperties> = {
 };
 
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
 
   const [formData, setFormData] = useState<FormData>({
     description: '',
@@ -152,6 +149,15 @@ const ExpenseTracker: React.FC = () => {
     setErrors({})
   };
 
+  const getData = async () => {
+    const data = await getExpenses();
+    setExpenses(data)
+  }
+
+  useEffect(() => {
+    getData();
+  }, [])
+
   const handleEdit = (expense: Expense): void => {
     setFormData({
       description: expense.description,
@@ -171,8 +177,7 @@ const ExpenseTracker: React.FC = () => {
     }
   }, [formData])
 
-
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const errors = validateForm(formData)
     setErrors(errors)
     if (Object.keys(errors).length > 0) {
@@ -180,8 +185,12 @@ const ExpenseTracker: React.FC = () => {
     }
 
     if (!editingId) {
-      const newId = expenses.length ? expenses[expenses.length - 1].id + 1 : 1
-      setExpenses([...expenses, { id: newId, ...formData, amount: Number(formData.amount) }])
+      try {
+        const data = await createExpense(formData)
+        setExpenses([...expenses, data])
+      } catch {
+        alert('unable to create expense');
+      }
       closeModal()
       return;
     }
@@ -190,28 +199,37 @@ const ExpenseTracker: React.FC = () => {
         return {
           ...item,
           ...formData,
-          amount: Number(formData.amount)
         }
       }
       return item
     })
-    setExpenses(updateExpences)
-    closeModal();
+    try {
+      await updateExpense(editingId, formData)
+      setExpenses(updateExpences);
+      closeModal();
+    } catch {
+      alert('unable to update expense')
+    }
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    if (!hoveredExpense) return;
     const updatedExpenses = expenses.filter((item) => {
       return item.id !== hoveredExpense
     })
-    setExpenses(updatedExpenses)
+    try {
+      await deleteExpense(hoveredExpense)
+      setExpenses(updatedExpenses)
+    } catch {
+      alert('unable to delete expense')
+    }
   }
 
   const handleAdd = () => {
     setIsModalOpen(true);
   }
 
-
-  const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const totalExpense: number = expenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
 
   return (
     <div style={styles.container}>

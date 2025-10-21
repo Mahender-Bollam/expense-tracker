@@ -6,7 +6,7 @@ import { Expense } from '../../types/types';
 const mockExpense: Expense = {
     id: 1,
     description: 'Dinner',
-    amount: 500,
+    amount: '500',
     category: 'Food',
     date: '2025-10-10'
 };

@@ -135,7 +135,7 @@ const ExpenseItem: React.FC<ExpenseItemProps> = ({
       </div>
 
       <div style={styles.expenseRight}>
-        <span style={styles.expenseAmount}>${expense.amount.toFixed(2)}</span>
+        <span style={styles.expenseAmount}>${parseFloat(expense.amount).toFixed(2)}</span>
         <div style={styles.actionButtons}>
           <button
             onClick={() => onEdit(expense)}
