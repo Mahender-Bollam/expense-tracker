@@ -28,6 +28,24 @@ const postData = async () => {
     console.error("There was an error posting the data:", error);
   }
 };
+//get All Expenses 
+  useEffect(() => {
+  axios.get('http://localhost:3000/expenses', {headers: {'Content-Type':'application/json','Access-Control-Allow-Origin': '*'}})
+    .then((response) => {
+      console.log('Full API Response:', response); 
+      console.log('Response data:', response.data); 
+      const expensesArray = response.data;
+      console.log('Expenses array:', expensesArray); 
+      setExpenses(response.data)
+      console.log(expenses)
+    })
+    .catch((error) => {
+      console.error('Error fetching expenses:', error);
+      setExpenses([]);
+    });
+}, [expenses]); 
+
+
 
   
  
