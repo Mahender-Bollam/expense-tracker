@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { styles } from './styles/styles';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 import { Expense, FormData , ModalProps,HoveredButton,HoveredExpense } from './types/types';
-import { getExpense,postData,deleteExpense } from './apiService';
+import { getExpense,postData,deleteExpense, updateExpense } from './apiService';
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -65,17 +65,22 @@ const ExpenseTracker: React.FC = () => {
   }
   const handleExpense = async () => {
     
-    const expense: Expense ={
+    const newExpense: Expense ={
       id :Date.now(),
       description : formData.description,
       amount : Number(formData.amount),
       category : formData.category,
       date : formData.date
     }
-   await postData(expense.id,expense)
+   if(editingId === null) {
+     await postData(newExpense.id , newExpense);
+   }
+   else{
+    const expense = {...newExpense , id :editingId}
+    await updateExpense(editingId,expense);
+   }
    setIsModalOpen(false);
    getAllExpenses();
-   
   } 
   
   const handleDelete = async(id:number) => {
