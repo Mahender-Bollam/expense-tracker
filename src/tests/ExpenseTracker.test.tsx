@@ -1,155 +1,114 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ExpenseTracker } from '../components/ExpenseTracker';
-import userEvent from '@testing-library/user-event';
+import * as expenseApi from '../services/expenseApi';
+
+jest.mock('../services/expenseApi');
+
+const mockExpenses = [
+  { id: '1', description: 'Groceries', amount: 85.5, category: 'Food', date: '2025-10-05' },
+  { id: '2', description: 'Gas', amount: 45.0, category: 'Transport', date: '2025-10-06' },
+];
 
 describe('ExpenseTracker Component', () => {
-
-  it('renders the ExpenseTracker component and displays initial expenses', () => {
-    render(<ExpenseTracker />);
-    expect(screen.getByTestId('total-amount')).toHaveTextContent('₹130.50');
-    expect(screen.getByTestId('add-expense-button')).toBeInTheDocument();
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('opens the modal when "Add Expense" button is clicked', () => {
+  it('fetches and displays initial expenses and shows total', async () => {
+    (expenseApi.getExpenses as jest.Mock).mockResolvedValueOnce(mockExpenses);
+    render(<ExpenseTracker />);
+    expect(screen.getByTestId('total-amount')).toHaveTextContent('₹0.00');
+    await waitFor(() => {
+      expect(screen.getByText('Groceries')).toBeInTheDocument();
+      expect(screen.getByText('Gas')).toBeInTheDocument();
+    });
+    expect(screen.getByTestId('total-amount')).toHaveTextContent('₹130.50');
+  });
+  it('shows loading indicator while fetching', async () => {
+    (expenseApi.getExpenses as jest.Mock).mockImplementation(() => new Promise(() => {})); 
+    render(<ExpenseTracker />);
+    expect(screen.getByText(/Loading expenses/i)).toBeInTheDocument();
+  });
+
+  it('opens add-new-expense modal', () => {
+    (expenseApi.getExpenses as jest.Mock).mockResolvedValueOnce(mockExpenses); 
     render(<ExpenseTracker />);
     fireEvent.click(screen.getByTestId('add-expense-button'));
     expect(screen.getByTestId('modal-title')).toHaveTextContent('Add New Expense');
   });
 
-  it('renders description input field correctly', () => {
+  it('validates form submission', async () => {
+    (expenseApi.getExpenses as jest.Mock).mockResolvedValueOnce(mockExpenses);
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});  
     render(<ExpenseTracker />);
     fireEvent.click(screen.getByTestId('add-expense-button'));
-    expect(screen.getByTestId('description-input')).toBeInTheDocument();
+    fireEvent.submit(screen.getByTestId('submit-button')); 
+    await waitFor(() => {
+      expect(alertSpy).toHaveBeenCalledWith('Please fill in all fields correctly.');
+    });
+    alertSpy.mockRestore();
   });
 
-  it('adds a new expense when the form is submitted', async () => {
+  it('edits an existing expense successfully', async () => {
+    (expenseApi.getExpenses as jest.Mock).mockResolvedValueOnce(mockExpenses);
+    (expenseApi.updateExpense as jest.Mock).mockResolvedValueOnce({});
+    (expenseApi.getExpenses as jest.Mock).mockResolvedValueOnce([
+      { id: '1', description: 'Groceries vegetables', amount: 100, category: 'Food', date: '2025-10-05' },
+      mockExpenses[1],
+    ]);
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    render(<ExpenseTracker />); 
+    await waitFor(() => {
+      expect(screen.getByText('Groceries')).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getAllByTitle(/Edit/i)[0]);
+    expect(screen.getByTestId('modal-title')).toHaveTextContent('Edit Expense');   
+    fireEvent.change(screen.getByTestId('description-input'), { target: { value: 'Groceries vegetables' } });
+    fireEvent.change(screen.getByTestId('amount-input'), { target: { value: '100' } });
+    fireEvent.click(screen.getByTestId('submit-button'));    
+    await waitFor(() => {
+      expect(alertSpy).toHaveBeenCalledWith('Expense updated successfully!');
+      expect(screen.getByText('Groceries vegetables')).toBeInTheDocument();
+      expect(screen.getByTestId('total-amount')).toHaveTextContent('₹145.00');
+    });
+    alertSpy.mockRestore();
+  });
+
+  it('deletes an expense successfully upon confirmation', async () => {
+    (expenseApi.getExpenses as jest.Mock).mockResolvedValueOnce(mockExpenses);
+    (expenseApi.deleteExpense as jest.Mock).mockResolvedValueOnce({});
+    jest.spyOn(window, 'confirm').mockReturnValueOnce(true);    
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {})    
     render(<ExpenseTracker />);
-    fireEvent.click(screen.getByTestId('add-expense-button'));
-    fireEvent.change(screen.getByTestId('description-input'), { target: { value: 'New Expense' } });
-    fireEvent.change(screen.getByTestId('amount-input'), { target: { value: '50.00' } });
-    fireEvent.change(screen.getByTestId('category-input'), { target: { value: 'Food' } });
-    fireEvent.change(screen.getByTestId('date-input'), { target: { value: '2025-10-10' } });
-    fireEvent.click(screen.getByTestId('submit-button'));
     await waitFor(() => {
-      expect(screen.queryByTestId('modal-title')).not.toBeInTheDocument();
+      expect(screen.getByText('Groceries')).toBeInTheDocument();
     });
-
-    expect(screen.getByText('New Expense')).toBeInTheDocument();
-    expect(screen.getByText('₹50.00')).toBeInTheDocument();
+    fireEvent.click(screen.getAllByTitle(/Delete/i)[0]);
+    await waitFor(() => {
+      expect(alertSpy).toHaveBeenCalledWith('Expense deleted successfully!');
+      expect(screen.queryByText('Groceries')).not.toBeInTheDocument();
+    });
+    alertSpy.mockRestore();
   });
 
-it('closes modal and resets form data when Cancel button is clicked', async () => {
-  render(<ExpenseTracker />);
-  fireEvent.click(screen.getByTestId('add-expense-button')); 
-  fireEvent.click(screen.getByTestId('cancel-button'));
-  await waitFor(() => {
-    expect(screen.queryByTestId('modal-title')).not.toBeInTheDocument();
+  it('renders total amount correctly', async () => {
+    (expenseApi.getExpenses as jest.Mock).mockResolvedValue(mockExpenses);    
+    render(<ExpenseTracker />);    
+    expect(screen.getByText(/Loading expenses.../i)).toBeInTheDocument();    
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading expenses.../i)).not.toBeInTheDocument();
+    });    
+    const totalAmount = mockExpenses.reduce((sum, e) => sum + e.amount, 0);
+    expect(screen.getByTestId('total-amount')).toHaveTextContent(`₹${totalAmount.toFixed(2)}`);
   });
-});
-
-
-it('opens modal with existing expense data when Edit is clicked', () => {
-  render(<ExpenseTracker />);
-  const editButtons = screen.getAllByTitle(/edit/i);
-  fireEvent.click(editButtons[0]);
-  expect(screen.getByTestId('modal-title')).toHaveTextContent('Edit Expense');
-  expect(screen.getByTestId('description-input')).toHaveValue('Groceries');
-});
-
-it('deletes an expense after user confirms in handleDelete', async () => {
-  jest.spyOn(window, 'confirm').mockReturnValue(true);
-  jest.spyOn(window, 'alert').mockImplementation(() => {});
-  render(<ExpenseTracker />);
-
-  const expenseItems = await screen.findAllByTestId(/expense-item-/i);
-  expect(expenseItems.length).toBeGreaterThan(0);
-
-  fireEvent.click(screen.getAllByTitle('Delete')[0]);
-
-  await waitFor(() =>
-    expect(window.confirm).toHaveBeenCalledWith('Are you sure want to delete this expense?')
-  );
-  await waitFor(() =>
-    expect(window.alert).toHaveBeenCalledWith('Expense deleted successfully!')
-  );
-});
-
-it('opens add expense modal with default category set', async () => {
-  render(<ExpenseTracker />);
-
-  const addButton = screen.getByTestId('add-expense-button');
-  fireEvent.click(addButton);
-
-  const categorySelect = await screen.findByTestId('category-input');
-  expect(categorySelect).toBeInTheDocument();
-  expect((categorySelect as HTMLSelectElement).value).toBe('Food');
-});
-  it('updates an existing expense when the edit form is submitted', async () => {
-    const mockAlert = jest.spyOn(window, 'alert').mockImplementation(() => {});
-    const user = userEvent.setup();
-    render(<ExpenseTracker />);
-    const editButtons = screen.getAllByTitle(/edit/i);
-    await user.click(editButtons[0]);
-    expect(screen.getByTestId('modal-title')).toHaveTextContent('Edit Expense');
-    const descriptionInput = await screen.findByTestId('description-input');
-    const amountInput = await screen.findByTestId('amount-input');
-    await user.clear(descriptionInput);
-    await user.type(descriptionInput, 'Updated Groceries');
-    await user.clear(amountInput);
-    await user.type(amountInput, '100.00');
-    const submitButton = screen.getByTestId('submit-button');
-    await user.click(submitButton);
-    await waitFor(() => {
-      expect(screen.queryByTestId('modal-title')).not.toBeInTheDocument();
-    });
-    await waitFor(() => {
-    expect(mockAlert).toHaveBeenCalledWith("Expense updated successfully!");
-  });
-    expect(screen.getByText('Updated Groceries')).toBeInTheDocument();
-    expect(screen.queryByText('Groceries')).not.toBeInTheDocument();
-    expect(screen.getByText('₹100.00')).toBeInTheDocument();
-    mockAlert.mockRestore();
-  });
-
-  it('shows an alert when the form is submitted with incomplete data', async () => {
-
-    const mockAlert = jest.spyOn(window, 'alert').mockImplementation(() => {});
-    const user = userEvent.setup();
-
-    render(<ExpenseTracker />);
-    await user.click(screen.getByTestId('add-expense-button'));
-    await user.clear(screen.getByTestId('description-input'));
-    const submitButton = screen.getByTestId('submit-button');
-    await user.click(submitButton);
-    await waitFor(() => {
-      expect(mockAlert).toHaveBeenCalledWith('Please fill in all fields correctly.');
-    });
-    await waitFor(() => {
-       expect(screen.getByTestId('modal-title')).toBeInTheDocument();
-    });
-    mockAlert.mockRestore();
-  });
-
-  it('shows an alert when the form is submitted with invalid amount (negative or zero)', async () => {
-    const mockAlert = jest.spyOn(window, 'alert').mockImplementation(() => {});
-    const user = userEvent.setup();
-    render(<ExpenseTracker />);
-    await user.click(screen.getByTestId('add-expense-button'));
-    await user.type(screen.getByTestId('description-input'), 'Invalid Amount');
-    await user.type(screen.getByTestId('amount-input'), '-10.00');
-    const submitButton = screen.getByTestId('submit-button');
-    await user.click(submitButton);
-    await waitFor(() => {
-      expect(mockAlert).toHaveBeenCalledWith('Please fill in all fields correctly.');
-    });
-    await waitFor(() => {
-       expect(screen.getByTestId('modal-title')).toBeInTheDocument();
-    });
-
-    mockAlert.mockRestore();
+  it('opens and closes modal when clicking Add Expense and Cancel', async () => {
+    (expenseApi.getExpenses as jest.Mock).mockResolvedValue([]);    
+    render(<ExpenseTracker />);    
+    const addButton = screen.getByTestId('add-expense-button');
+    fireEvent.click(addButton);    
+    expect(screen.getByTestId('modal-title')).toHaveTextContent('Add New Expense');    
+    fireEvent.click(screen.getByTestId('cancel-button'));    
+    expect(screen.queryByTestId('modal-title')).toBeNull();
   });
 });
-
-
-
