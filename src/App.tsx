@@ -27,12 +27,13 @@ const ExpenseTracker: React.FC = () => {
   }, []);
 
   const [formData, setFormData] = useState<FormData>({
+    id:0,
     description: "",
     amount: 0,
     category: "",
     date: new Date().toISOString().split("T")[0],
   });
-  console.log(formData);
+  // console.log(formData);
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -43,6 +44,7 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(false);
     setEditingId(null);
     setFormData({
+      id:0,
       description: "",
       amount: 0,
       category: "",
@@ -52,13 +54,15 @@ const ExpenseTracker: React.FC = () => {
 
   const handleEdit = (expense: Expense): void => {
     setFormData({
+      id:expense.id,
       description: expense.description,
       amount: expense.amount,
       category: expense.category,
       date: expense.date,
     });
-    setEditingId(Number(expense.id));
+    setEditingId(expense.id);
     setIsModalOpen(true);
+    console.log(editingId)
   };
 
   const totalExpense: number = expenses.reduce(
@@ -68,6 +72,7 @@ const ExpenseTracker: React.FC = () => {
 
   const handleAdd = () => {
     setFormData({
+      id:0,
       description: "",
       amount: 0,
       category: "",
@@ -80,9 +85,9 @@ const ExpenseTracker: React.FC = () => {
   const handleRemove = async (expenseId: number) => {
     alert("Are you delete the expense");
     setExpenses((removeExpense: Expense[]) =>
-      removeExpense.filter((card) => card.id !== expenseId.toString()),
+      removeExpense.filter((card) => card.id !== expenseId),
     );
-    console.log("removed expense");
+    // console.log("removed expense");
   };
 
   return (
