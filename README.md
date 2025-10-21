@@ -18,6 +18,7 @@ It is an expense tracor application which has a functionalities of adding an exp
 
 - **Edit functionality** : User is able to perform edit on their existing expense in the expenses list .
 
+- **Integrating frontend with backend** : Integrated frontend with backend using firebase for database and axios for API calls.
 ## How to run 
 ### Installation
 
@@ -35,6 +36,11 @@ npm install
 ### Run application
 ```bash
 npm start
+```
+
+### To test the application
+```bash
+npm test
 ```
 ## Contribution
 
