@@ -211,9 +211,20 @@ const ExpenseTracker: React.FC = () => {
   closeModal();
 };
 
-const handleDeleteExpense = (id: number): void => {
-  const updatedExpenses = expenses.filter(expense => expense.id !== id);
-  setExpenses(updatedExpenses);
+const handleDeleteExpense =async (id: number):  Promise<void> => {
+  try {
+    const deleteExpense = await fetch(`http://localhost:3001/expenses/${id}`, {
+      method: 'DELETE',
+    });
+
+       if (deleteExpense) { 
+        setExpenses(expenses.filter((expense) => expense.id !== id));
+       } else { 
+        console.error('Failed to delete expense'); 
+      }
+     } catch (error) { 
+      console.error('Not deleted the expense:', error); 
+    }
 };
 
 
