@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState, CSSProperties,useEffect } from 'react';
 import { Expense, FormData, HoveredButton, HoveredExpense } from '../types/expenseData';
 import Modal from './Modal'; 
 import { Trash2, Edit2, Plus, DollarSign, Calendar,X, Tag } from 'lucide-react';  
@@ -154,10 +154,7 @@ secondaryButton: {
 
 
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   
   const [formData, setFormData] = useState<FormData>({
     description: '',
@@ -166,40 +163,121 @@ const ExpenseTracker: React.FC = () => {
     date: new Date().toISOString().split('T')[0]
   });
 
- const handleAddExpense = (): void => {
+ const handleAddExpense = async (): Promise<void> => {
+ 
   if (!formData.description || !formData.amount || !formData.category) {
     alert('Missed it, so fill in all fields');
     return;
   }
-    if (editingId) {
-    const modifyexpense = expenses.map((expense) =>
-    expense.id === editingId
-        ? { ...expense, description: formData.description, amount: parseFloat(formData.amount), category: formData.category, date: formData.date }
-        : expense
-    );
-    setExpenses(modifyexpense);
-  }else{
-const newExpense: Expense = {
-    id: expenses.length + 1,
+
+  const parsedDate = new Date(formData.date);
+  if (isNaN(parsedDate.getTime())) { 
+    alert('Invalid date');
+    return;
+  }
+
+  const formattedDate = parsedDate.toISOString(); 
+   const expenseData = {
     description: formData.description,
-    amount:parseInt(formData.amount),
+    amount: parseFloat(formData.amount),
+    category: formData.category,
+    date: formattedDate 
+  };
+
+  try {
+   
+    const response = await fetch('http://localhost:3001/expenses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(expenseData)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add expense: ' + response.statusText);
+    }
+
+   const newExpense = await response.json();
+   console.log(newExpense);
+    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+
+  } catch (error) {
+    console.error('Error adding expense:', error);
+  }
+
+  closeModal();
+};
+
+const handleDeleteExpense =async (id: number):  Promise<void> => {
+  try {
+    const deleteExpense = await fetch(`http://localhost:3001/expenses/${id}`, {
+      method: 'DELETE',
+    });
+
+       if (deleteExpense) { 
+        setExpenses(expenses.filter((expense) => expense.id !== id));
+       } else { 
+        console.error('Failed to delete expense'); 
+      }
+     } catch (error) { 
+      console.error('Not deleted the expense:', error); 
+    }
+};
+
+const handleUpdateExpense = async (): Promise<void> => {
+  if (!formData.description || !formData.amount || !formData.category) {
+    alert('Missed it, so fill in all fields');
+    return;
+  }
+  const updatedExpense = {
+    description: formData.description,
+    amount: parseFloat(formData.amount),
     category: formData.category,
     date: formData.date
   };
-   setExpenses([...expenses, newExpense]);
-}
-   closeModal();
 
-}
-
-const handleDeleteExpense = (id: number): void => {
-  const updatedExpenses = expenses.filter(expense => expense.id !== id);
-  setExpenses(updatedExpenses);
-};
-
-
+  try {
    
-  
+      const response = await fetch(`http://localhost:3001/expenses/${editingId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedExpense)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update the expense item');
+      }
+
+      const updatedData = await response.json();
+        setExpenses((prevExpenses) =>
+         prevExpenses.map((expense) =>
+          expense.id === editingId ? updatedData : expense
+        )
+      );
+    
+  } catch (error) {
+     console.error('Error updating expense:', error);
+  }
+  closeModal();
+};
+useEffect(() => {
+  const dbExpenses = async () => {
+    try {
+
+      const expenseResponse = await fetch('http://localhost:3001/expenses');
+      const data = await  expenseResponse.json();
+      setExpenses(data);
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+    }
+  };
+  dbExpenses();
+}, []);
+
+
   const [editingId, setEditingId] = useState<number|null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton|null>(null);
@@ -305,7 +383,8 @@ const handleDeleteExpense = (id: number): void => {
 
                   <div className='expenseRight'>
                     <span className='expenseAmount'>
-                      ${expense.amount.toFixed(2)}
+                      {/* ${expense.amount.toFixed(2)} */}
+                      ${expense.amount != null && !isNaN(expense.amount) ? expense.amount.toFixed(2) : '0.00'}
                     </span>
                     <div style={styles.actionButtons}>
                       <button
@@ -415,7 +494,7 @@ const handleDeleteExpense = (id: number): void => {
               ...styles.primaryButton,
               ...(hoveredButton === 'submit' ? styles.primaryButtonHover : {})
             }}
-            onClick={handleAddExpense}
+            onClick={editingId ? handleUpdateExpense : handleAddExpense}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
            
@@ -442,4 +521,3 @@ const handleDeleteExpense = (id: number): void => {
 
 export default ExpenseTracker;
  
-
