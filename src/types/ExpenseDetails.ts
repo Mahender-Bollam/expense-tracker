@@ -8,7 +8,7 @@ export interface Expense {
 }
 
 export interface FormData {
-  id: number | string;
+  id: number;
   description: string;
   amount: string |number;
   category: string;
