@@ -3,7 +3,7 @@ import { styles } from '../styles/Styles';
 import Modal from './ModalComponent';
 import { X } from 'lucide-react';
 import { modalCardProp } from '../types/propTypes';
-import { addExpense } from '../api/expenses';
+import { addExpense, editExpense} from '../api/expenses';
 
 const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
@@ -17,7 +17,7 @@ const ModalCard = ({ isModalOpen, editingId, hoveredButton, setHoveredButton, fo
       amount: '',
       category: '',
       date: new Date().toISOString().split('T')[0],
-      id: expenses.length + 1
+      id: expenses.length
     });
   };
   const handleSubmit = async () => {
@@ -26,7 +26,7 @@ const ModalCard = ({ isModalOpen, editingId, hoveredButton, setHoveredButton, fo
       amount: formData.amount,
       category: formData.category,
       date: formData.date,
-      id: expenses.length + 1
+      id: expenses.length 
     })
     try {
       await addExpense({ ...formData, amount: Number(formData.amount) })
@@ -54,12 +54,19 @@ const ModalCard = ({ isModalOpen, editingId, hoveredButton, setHoveredButton, fo
       category: formData.category,
       date: formData.date
     }
-    setExpenses(prevExpenses => {
-      return prevExpenses.map((item) => item.id === editingId ? updatedExpenses : item)
+
+    
+    try{
+       await editExpense({...formData,amount:Number(formData.amount),id:Number(formData.id)})
+      setExpenses(prevExpenses => {
+      return prevExpenses.map((item) => item.id === editingId ? updatedExpenses: item)
+      
     })
-    console.log(formData)
-    console.log(expenses)
     setIsModalOpen(false)
+
+    }catch(error){
+      console.error("Fetch failed:", console.error());
+    }
   }
 
 
