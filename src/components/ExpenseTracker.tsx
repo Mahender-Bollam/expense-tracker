@@ -1,29 +1,50 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import { DollarSign, Plus, X } from 'lucide-react';
 import { styles } from '../ExpenseTracker.styles';
 import { Expense } from '../models/expense';
 import { FormData } from '../models/formData';
 import Modal from './Modal';
 import ExpenseList from './ExpenseList';
+import {
+  getExpenses,
+  addExpense,
+  updateExpense,
+  deleteExpense
+} from '../services/expenseApi';
 
 const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
 export const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.5, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.0, category: 'Transport', date: '2025-10-06' },
-  ]);
-
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0],
   });
-
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [hoveredExpense, setHoveredExpense] = useState<number | null>(null);
+  const [hoveredExpense, setHoveredExpense] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchExpenses = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const fetched = await getExpenses();
+      setExpenses(fetched);
+    } catch (err) {
+      console.error('Error fetching expenses:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
 
   const closeModal = (): void => {
     setIsModalOpen(false);
@@ -34,6 +55,7 @@ export const ExpenseTracker: React.FC = () => {
       category: '',
       date: new Date().toISOString().split('T')[0],
     });
+    setError(null);
   };
 
   const handleEdit = (expense: Expense): void => {
@@ -45,15 +67,20 @@ export const ExpenseTracker: React.FC = () => {
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
-  };  
-  const handleDelete = (id: number): void => {
-    const confirmDelete = window.confirm('Are you sure want to delete this expense?');
-    if (confirmDelete) {
-      setExpenses((prevExpenses) => prevExpenses.filter((exp) => exp.id !== id));
+  };
+  const handleDelete = async (id: string): Promise<void> => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this expense?');
+    if (!confirmDelete) return;
+    setError(null);
+    try {
+      await deleteExpense(id);
+      setExpenses((prev) => prev.filter((exp) => exp.id !== id));
       alert('Expense deleted successfully!');
+    } catch (err) {
+      console.error('Error deleting expense:', err);
+      setError('Failed to delete expense. Please try again.');
     }
   };
-
   const handleAddClick = (): void => {
     setFormData({
       description: '',
@@ -63,39 +90,46 @@ export const ExpenseTracker: React.FC = () => {
     });
     setEditingId(null);
     setIsModalOpen(true);
+    setError(null);
   };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent): void => {
+  const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
+    setSubmitting(true);
+    setError(null);
     const amountValue = parseFloat(formData.amount);
-
     if (!formData.description || isNaN(amountValue) || amountValue <= 0 || !formData.category || !formData.date) {
       alert('Please fill in all fields correctly.');
+      setSubmitting(false);
       return;
     }
-
-    const newExpense = {
+    const expenseData = {
       description: formData.description,
       amount: amountValue,
       category: formData.category,
       date: formData.date,
     };
-
-    if (editingId) {
-      setExpenses((prevExpenses) =>
-        prevExpenses.map((exp) => (exp.id === editingId ? { ...newExpense, id: editingId } : exp))
-      );
-      alert('Expense updated successfully!');
-    } else {
-      setExpenses((prevExpenses) => [...prevExpenses, { ...newExpense, id: Date.now() }]);
-      alert('Expense added successfully!');
+    try {
+      if (editingId) {
+        const updatedExpenseData = { ...expenseData, id: editingId };
+        await updateExpense(editingId, updatedExpenseData);
+        alert('Expense updated successfully!');
+      } else {
+        await addExpense(expenseData);
+        alert('Expense added successfully!');
+      }
+      closeModal();
+      await fetchExpenses();
+    } catch (err) {
+      console.error('Error submitting expense:', err);
+      setError('Failed to save expense. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
-    closeModal();
   };
 
   const totalExpense = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -130,6 +164,9 @@ export const ExpenseTracker: React.FC = () => {
           </div>
         </div>
 
+        {loading && <p>Loading expenses...</p>}
+        {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+
         <ExpenseList
           expenses={expenses}
           onEdit={handleEdit}
@@ -138,7 +175,7 @@ export const ExpenseTracker: React.FC = () => {
           setHoveredExpense={setHoveredExpense}
           data-testid="expense-list"
         />
-        
+
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <div style={styles.modalHeader}>
             <h3 style={styles.modalTitle} data-testid="modal-title">
@@ -211,10 +248,26 @@ export const ExpenseTracker: React.FC = () => {
               />
             </div>
             <div style={styles.buttonGroup}>
-              <button type="submit" style={styles.primaryButton} data-testid="submit-button">
-                {editingId ? 'Save Changes' : 'Add Expense'}
+              <button
+                type="submit"
+                disabled={submitting}
+                style={{ ...styles.submitButton, opacity: submitting ? 0.6 : 1 }}
+                data-testid="submit-button"
+              >
+                {submitting
+                  ? editingId
+                    ? 'Updating...'
+                    : 'Adding...'
+                  : editingId
+                    ? 'Update Expense'
+                    : 'Add Expense'}
               </button>
-              <button type="button" onClick={closeModal} style={styles.secondaryButton} data-testid="cancel-button">
+              <button
+                type="button"
+                onClick={closeModal}
+                style={styles.secondaryButton}
+                data-testid="cancel-button"
+              >
                 Cancel
               </button>
             </div>
