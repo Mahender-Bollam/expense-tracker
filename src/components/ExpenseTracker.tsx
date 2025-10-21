@@ -47,6 +47,28 @@ const postData = async () => {
 
 
 
+
+//Update Expense
+
+const updateData = async () => {
+  try {
+    await axios.patch(`http://localhost:3000/expenses/${editingId}`, {
+      
+      "description": formData.description,
+      "amount": formData.amount,
+      "category": formData.category,
+      "date": formData.date
+    });
+    console.log(editingId)
+
+    closeModal();
+  } catch (error) {
+    
+    console.error("There was an error posting the data:", error);
+  }
+};
+
+
   
  
 useEffect(() => {
