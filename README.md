@@ -25,18 +25,20 @@ Expense Tacker is an application where the user can add expenses, update and del
 
 * **Display Expenses :** Displays all the expenses of the user.
 
-* **Add Expense :** User can be able to add the expenses
+* **Add Expense :** User can be able to add the expenses to the database.
 
 * **Edit Expense :** User can edit their expenses.
 
-* **Delete Expense :** User can delete expense.
+* **Delete Expense :** User can delete expense from the expense database.
 
+* It enables a clear and seamless integration with backend.
     
 ## Tech Stack
 
 1. Node JS (Version :22.16.0)
 
 2. React with typescript
+
 
 ## Installation
 
