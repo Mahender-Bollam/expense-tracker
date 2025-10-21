@@ -4,7 +4,7 @@ import { Expense } from '../../types/expense';
 
 describe('ExpenseItem component', () => {
   const mockExpense: Expense = {
-    id: 1,
+    id: "1",
     description: 'Groceries',
     amount: 85.50,
     category: 'Food',
