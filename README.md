@@ -3,10 +3,11 @@
 This Expense Tracker application help to track your daily life expensives and delete from existed expensives and If we want to modify data in any expensive we can do it.
 
 ### Features 
-- Add expensive button 
-- It dispalys total expensives amount 
-- Remove expensives from list
-- Exit expensive properties.
+- Gell All Expenses from the database
+- Add expensive  : Stores the expense to Database 
+- Edit Expense : Modify the expense with new values 
+- Delete expensives from database
+
 
 ## Technologies Used
 - **TypeScript**
