@@ -93,6 +93,21 @@ const getAllExpenses = async () => {
   } , [])
 
 
+  const deleteExpense = async (id : number)=>{
+    try{
+      await fetch(`http://localhost:3002/items/${id}`, {
+      method: "DELETE",
+    });
+    getAllExpenses();
+
+    }
+    catch(error){
+      console.error("Expense is not deleted")
+    }
+
+  }
+
+
   const [formData, setFormData] = useState<FormData>({
     description: "",
     amount: "",
@@ -236,9 +251,7 @@ const getAllExpenses = async () => {
 
                       <button
                         onClick={() => {
-                          setExpenses((expenses) =>
-                            expenses.filter((task) => task.id !== expense.id)
-                          );
+                          deleteExpense(expense.id);
                           alert(
                             "Are you sure you want to delete this expensive"
                           );
