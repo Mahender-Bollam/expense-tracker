@@ -41,6 +41,13 @@
 **Testing:**
 - Implemented testing to the react application.
 
+**Integration**
+- Integrated frontend and backend using axios
+- Get expense
+- Add expense
+- Update expense
+- Delete expense
+
 --- 
 
 ## Technologies Used
