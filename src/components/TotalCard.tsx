@@ -8,7 +8,7 @@ interface TotalCardProps {
 const TotalCard: React.FC<TotalCardProps> = ({ total }) => (
   <div className={styles.totalCard}>
     <p className={styles.totalLabel}>Total Expenses</p>
-    <p className={styles.totalAmount}>${total.toFixed(2)}</p>
+    <p className={styles.totalAmount}>${total}</p>
   </div>
 );
 
