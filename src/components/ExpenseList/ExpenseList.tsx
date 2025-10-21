@@ -6,7 +6,7 @@ import { ExpenseItem } from '../ExpenseItem/ExpenseItem';
 interface ExpenseListProps {
   expenses: Expense[];
   onEdit: (expense: Expense) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 }
 
 export const ExpenseList: React.FC<ExpenseListProps> = ({
