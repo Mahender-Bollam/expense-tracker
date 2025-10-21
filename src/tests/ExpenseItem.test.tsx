@@ -4,7 +4,7 @@ import ExpenseItem from '../components/ExpenseItem';
 import { Expense } from '../models/expense';
 
 const expense: Expense = {
-    id: 1,
+    id: "1",
     description: 'Dinner',
     amount: 20,
     category: 'Food',
@@ -12,17 +12,19 @@ const expense: Expense = {
 };
 
 describe('ExpenseItem Component', () => {
-    test('renders details correctly', () => {
+    it('renders details correctly', () => {
+        const onEdit = jest.fn();
+        const onDelete = jest.fn().mockResolvedValue(undefined); 
+        const setHoveredExpense = jest.fn();
         render(
             <ExpenseItem
                 expense={expense}
                 hoveredExpense={null}
-                setHoveredExpense={() => { }}
-                onEdit={() => { }}
-                onDelete={() => { }}
+                setHoveredExpense={setHoveredExpense}
+                onEdit={onEdit}
+                onDelete={onDelete}
             />
         );
-
         expect(screen.getByText(/Dinner/i)).toBeInTheDocument();
         expect(screen.getByText(/₹20.00/)).toBeInTheDocument();
         expect(screen.getByText(/Food/i)).toBeInTheDocument();
@@ -31,20 +33,20 @@ describe('ExpenseItem Component', () => {
 
     it('handles hover events', () => {
         const setHoveredExpense = jest.fn();
+        const onEdit = jest.fn();
+        const onDelete = jest.fn().mockResolvedValue(undefined); 
         render(
             <ExpenseItem
                 expense={expense}
                 hoveredExpense={null}
                 setHoveredExpense={setHoveredExpense}
-                onEdit={() => { }}
-                onDelete={() => { }}
+                onEdit={onEdit}
+                onDelete={onDelete}
             />
         );
-
         const itemDiv = screen.getByTestId('expense-item-Dinner');
         fireEvent.mouseEnter(itemDiv);
         expect(setHoveredExpense).toHaveBeenCalledWith(expense.id);
-
         fireEvent.mouseLeave(itemDiv);
         expect(setHoveredExpense).toHaveBeenCalledWith(null);
     });
@@ -52,7 +54,6 @@ describe('ExpenseItem Component', () => {
     it('calls onEdit and onDelete on button clicks', () => {
         const onEdit = jest.fn();
         const onDelete = jest.fn();
-
         render(
             <ExpenseItem
                 expense={expense}
@@ -62,10 +63,8 @@ describe('ExpenseItem Component', () => {
                 onDelete={onDelete}
             />
         );
-
         fireEvent.click(screen.getByTitle('Edit'));
         expect(onEdit).toHaveBeenCalledWith(expense);
-
         fireEvent.click(screen.getByTitle('Delete'));
         expect(onDelete).toHaveBeenCalledWith(expense.id);
     });
