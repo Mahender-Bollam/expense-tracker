@@ -10,7 +10,7 @@ interface ExpenseListProps {
   hoveredButton: HoveredButton;
   setHoveredButton: React.Dispatch<React.SetStateAction<HoveredButton>>;
   onDelete: (id: number) => void;
-  onEdit: (expense: Expense) => void; // ← added
+  onEdit: (expense: Expense) => void; 
 }
 
 const ExpenseList: React.FC<ExpenseListProps> = ({
