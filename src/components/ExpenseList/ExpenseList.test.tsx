@@ -5,14 +5,14 @@ import { Expense } from '../../types/expense';
 describe('ExpenseList component', () => {
   const mockExpenses: Expense[] = [
     {
-      id: 1,
+      id: "1",
       description: 'Groceries',
       amount: 85.50,
       category: 'Food',
       date: '2025-10-05'
     },
     {
-      id: 2,
+      id: "2",
       description: 'Gas',
       amount: 45.00,
       category: 'Transport',
