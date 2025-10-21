@@ -68,7 +68,11 @@ const updateData = async () => {
   }
 };
 
-
+//Delete Expense
+const onDelete = (id:number) => {
+  axios.delete(`http://localhost:3000/expenses/${id}`)
+  
+}
   
  
 useEffect(() => {
