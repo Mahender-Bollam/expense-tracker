@@ -47,7 +47,7 @@ const ExpenseItem: React.FC<ExpenseItemProps> = ({
       </div>
 
       <div className={styles.expenseRight}>
-        <span className={styles.expenseAmount}>${expense.amount.toFixed(2)}</span>
+        <span className={styles.expenseAmount}>${expense.amount}</span>
         <div className={styles.actionButtons}>
           
           <button
