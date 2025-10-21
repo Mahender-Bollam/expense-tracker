@@ -28,40 +28,40 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 };
 
 const ExpenseTracker: React.FC = () => {
-  const handleModalData = () => {
+  const handleModalData = async () => {
     if (editingId !== null) {
-      setExpenses((preExpenses) =>
-        preExpenses.map((task) =>
-          task.id === editingId
-            ? {
-                ...task,
-                ...(formData.description !== task.description && {
-                  description: formData.description,
-                }),
-                ...(parseFloat(formData.amount) !== task.amount && {
-                  amount: parseFloat(formData.amount),
-                }),
-                ...(formData.category !== task.category && {
-                  category: formData.category,
-                }),
-                ...(formData.date !== task.date && { date: formData.date }),
-              }
-            : task
-        )
-      );
-      closeModal();
-    } else {
-      const newdata = {
-        id: Date.now(),
-        description: formData.description,
-        amount: parseFloat(formData.amount),
-        category: formData.category,
-        date: formData.date,
-      };
-      setExpenses([...expenses, newdata]);
-      alert("Expense Added");
-      closeModal();
-    }
+
+    await fetch(`http://localhost:3002/items/${editingId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        
+        name: formData.description,
+        cost: parseFloat(formData.amount),
+        description: formData.category,
+        date:formData.date
+      }),
+    });
+
+    await getAllExpenses();
+    closeModal();
+  } 
+  else{
+     await fetch("http://localhost:3002/items", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+       
+        name: formData.description,
+        cost: parseFloat(formData.amount),
+        description: formData.category,
+        date: new Date(formData.date).toISOString(),
+      }),
+    });
+
+    await getAllExpenses(); 
+    closeModal();
+  }
   };
 
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -77,7 +77,7 @@ const getAllExpenses = async () => {
       description: expense.name,
       amount: Number(expense.cost), 
       category: expense.description,
-      date: new Date()
+      date: expense.date
 
     }));
 
