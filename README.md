@@ -5,15 +5,28 @@
 ## Table of content
 
 -  [Feature](#feature)
-
+-  [ Backend integration](#backend-integration)
+-  [Tech-Stacks](#teck-stacks)
+-  [Installation steps](#installation-steps)
 
 
 ## Features
 - Add new expense 
    - It add new expense to the tracker with `description`,`amount` ,`category` and `date`. 
+- Update expense
+   - It updates the expense fileds like if you want to modify the amount , you can do with this method.
+- Delete expense
+  - This future helps to delete the expense which is not required and it can be performed with the help of the expense id.   
 
-
-
+## Backend integration
+  - getExpense 
+    - It renders all the expenses from the firestore database.
+  - postData
+    - It adds new expense to the database.
+  - deleteExpense
+    - It deletes the expenses from the firestore database.
+  - updateExpense
+    - It updates the expense fields using the expense id.     
 ## Teck-Stacks 
 - React 
 - Typescript
