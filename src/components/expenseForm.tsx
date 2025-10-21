@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import { Expense } from "../interface/expense";
 import { FormData } from "../interface/formData";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 interface ExpenseFormProps {
   formData: FormData;
@@ -58,22 +60,29 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
     return isValid;
   };
 
-  const handleSubmit = (): void => {
+  const handleSubmit = async (): Promise<void> => {
     if (!validateForm()) return;
-    const expense: Expense = {
-      id: editingId !== null ? editingId : Date.now(),
+    
+    const expenseData = {
       description: formData.description.trim(),
       amount: parseFloat(formData.amount),
       category: formData.category,
       date: formData.date,
+      id: editingId ?? uuidv4(),
     };
-    if (editingId !== null) {
-      setExpenses(expenses.map((exp) => (exp.id === editingId ? expense : exp)));
-    } else {
-      setExpenses([...expenses, expense]);
+    try {
+      if (editingId !== null) {
+        await axios.put(`http://localhost:3010/expenses/${editingId}`, expenseData);
+      } else {
+        await axios.post("http://localhost:3010/expenses", expenseData);
+      }
+      const res = await axios.get("http://localhost:3010/expenses");
+      setExpenses(res.data);
+      closeModal();
+    } catch (err) {
+      console.error("Error saving expense:", err);
     }
-    closeModal();
-  };
+};
 
   return (
     <>
