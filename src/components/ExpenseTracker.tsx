@@ -154,10 +154,7 @@ secondaryButton: {
 
 
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   
   const [formData, setFormData] = useState<FormData>({
     description: '',
@@ -166,31 +163,53 @@ const ExpenseTracker: React.FC = () => {
     date: new Date().toISOString().split('T')[0]
   });
 
- const handleAddExpense = (): void => {
+ const handleAddExpense = async (): Promise<void> => {
+ 
   if (!formData.description || !formData.amount || !formData.category) {
     alert('Missed it, so fill in all fields');
     return;
   }
-    if (editingId) {
-    const modifyexpense = expenses.map((expense) =>
-    expense.id === editingId
-        ? { ...expense, description: formData.description, amount: parseFloat(formData.amount), category: formData.category, date: formData.date }
-        : expense
-    );
-    setExpenses(modifyexpense);
-  }else{
-const newExpense: Expense = {
-    id: expenses.length + 1,
-    description: formData.description,
-    amount:parseInt(formData.amount),
-    category: formData.category,
-    date: formData.date
-  };
-   setExpenses([...expenses, newExpense]);
-}
-   closeModal();
 
-}
+  const parsedDate = new Date(formData.date);
+  if (isNaN(parsedDate.getTime())) { 
+    alert('Invalid date');
+    return;
+  }
+
+  const formattedDate = parsedDate.toISOString(); 
+
+  const expenseData = {
+    description: formData.description,
+    amount: parseFloat(formData.amount),
+    category: formData.category,
+    date: formattedDate 
+  };
+
+  try {
+   
+    const response = await fetch('http://localhost:3001/expenses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(expenseData)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add expense: ' + response.statusText);
+    }
+
+   
+    const newExpense = await response.json();
+    
+    
+    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+  } catch (error) {
+    console.error('Error adding expense:', error);
+  }
+
+  closeModal();
+};
 
 const handleDeleteExpense = (id: number): void => {
   const updatedExpenses = expenses.filter(expense => expense.id !== id);
@@ -305,7 +324,8 @@ const handleDeleteExpense = (id: number): void => {
 
                   <div className='expenseRight'>
                     <span className='expenseAmount'>
-                      ${expense.amount.toFixed(2)}
+                      {/* ${expense.amount.toFixed(2)} */}
+                      ${expense.amount != null && !isNaN(expense.amount) ? expense.amount.toFixed(2) : '0.00'}
                     </span>
                     <div style={styles.actionButtons}>
                       <button
@@ -442,4 +462,3 @@ const handleDeleteExpense = (id: number): void => {
 
 export default ExpenseTracker;
  
-
