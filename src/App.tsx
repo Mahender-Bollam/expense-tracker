@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styles } from './styles/styles';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 import { Expense, FormData , ModalProps,HoveredButton,HoveredExpense } from './types/types';
-
+import { getExpense } from './apiService';
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -36,6 +36,13 @@ const ExpenseTracker: React.FC = () => {
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
+  useEffect(() => {
+    getAllExpenses();
+  },[]);
+  const getAllExpenses = async () => {
+    const expense = await getExpense();
+    setExpenses(expense);
+  } 
   const closeModal = (): void => {
     setIsModalOpen(false);
     setEditingId(null);
