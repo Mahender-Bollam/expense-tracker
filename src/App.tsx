@@ -1,6 +1,5 @@
 import React, { useState, CSSProperties, useEffect } from 'react';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
-import { JSX } from 'react/jsx-runtime';
 import { Expense,FormData,ModalProps  } from './interfaces/expense';
 import { HoveredButton,HoveredExpense } from './types/expense';
 import { styles } from './styles/expense-tracker';
@@ -25,7 +24,7 @@ const getExpenses = async () => {
   };
 useEffect(() => {
    getExpenses();
-  }, []);
+  });
 
 
 
