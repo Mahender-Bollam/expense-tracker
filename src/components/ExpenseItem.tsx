@@ -9,7 +9,7 @@ export interface ExpenseItemProps {
   hoveredExpense: HoveredExpense;
   setHoveredExpense: (id: HoveredExpense) => void;
   onEdit: (expense: Expense) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => Promise<void>;
 }
 
 export const ExpenseItem: React.FC<ExpenseItemProps> = ({
