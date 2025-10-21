@@ -85,7 +85,7 @@ const ExpenseModal: React.FC<ExpenseModalProps> = ({
         <div className={styles.formGroup}>
           <label className={styles.label}>Date</label>
           <input
-            type="date"
+            type="datetime-local"
             value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             className={styles.input}
