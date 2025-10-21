@@ -26,7 +26,7 @@ export const postData = async (id: number, expense: {
     }
 }
 export const deleteExpense = async (id:number) =>{
-    const response = await axios.delete(`${API}/expens/${id}`);
+    const response = await axios.delete(`${API}/expense/${id}`);
     if(!response){
         console.log("Failed to delete");
     }
