@@ -21,7 +21,7 @@ const ExpenseTracker: React.FC = () => {
   }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
   useEffect(()=>{
     getResult()
-  })
+  },[])
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: 0,
