@@ -69,12 +69,18 @@ const ExpenseTracker: React.FC = () => {
     setEditingId(expense.id);
     setIsModalOpen(true);
   };
-  
-    const handleDelete = (id: number): void => {
-    const confirmed = window.confirm("You want to delete this expense?");
-    if (confirmed) setExpenses(expenses.filter((exp) => exp.id !== id));
-  };
 
+  const handleDelete = async (id: number): Promise<void> => {
+  const confirmed = window.confirm("You want to delete this expense?");
+  if (!confirmed) return;
+  try {
+    await axios.delete(`http://localhost:3010/expenses/${id}`);
+    const res = await axios.get("http://localhost:3010/expenses");
+    setExpenses(res.data);
+  } catch (err) {
+    console.error("Error deleting expense:", err);
+  }
+};
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   
