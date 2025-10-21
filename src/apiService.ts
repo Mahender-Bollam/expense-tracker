@@ -34,3 +34,20 @@ export const deleteExpense = async (id:number) =>{
         console.log("Expense deleted")
     }
 }
+export const updateExpense = async(id:number, expense:{
+    description: string,
+    category: string,
+    amount: number
+}) => {
+    const response = await axios.put(`${API}/expense/${id}`,expense,{
+         headers :{
+            'Content-Type': 'application/json'
+        }
+    })
+    if(!response){
+        console.log("Expense not updated")
+    }
+    else {
+        console.log("Expense updated");
+    }
+}
