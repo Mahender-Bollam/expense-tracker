@@ -45,11 +45,7 @@ const postData = async () => {
     });
 }, [expenses]); 
 
-
-
-
 //Update Expense
-
 const updateData = async () => {
   try {
     await axios.patch(`http://localhost:3000/expenses/${editingId}`, {
@@ -73,8 +69,6 @@ const onDelete = (id:number) => {
   axios.delete(`http://localhost:3000/expenses/${id}`)
   
 }
-  
- 
 useEffect(() => {
     
     console.log("Expenses state has been updated:", expenses);
@@ -85,8 +79,6 @@ useEffect(() => {
     category: '',
     date: new Date().toISOString().split('T')[0],
   });
-
-
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
