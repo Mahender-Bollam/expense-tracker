@@ -13,7 +13,7 @@ const ExpenseCard = ({ expenses, hoveredButton, setHoveredButton, hoveredExpense
       amount: Number(expense.amount.toString()),
       category: expense.category,
       date: expense.date,
-      id: expenses.length + 1
+      id: expenses.length
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
