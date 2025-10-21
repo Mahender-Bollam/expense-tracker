@@ -1,23 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Expense, FormData, HoveredButton, HoveredExpense } from '../types/types';
 import Header from './Header';
 import TotalCard from './TotalCard';
 import ExpenseList from './ExpenseList';
 import ExpenseModal from './ExpenseModal';
 import styles from '../styles/ExpenseTracker.module.css';
-
+import axios from "axios"
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.5, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.0, category: 'Transport', date: '2025-10-06' },
+    
   ]);
 
+  //Add Expense
+const postData = async () => {
+  try {
+    await axios.post(`http://localhost:3000/expenses`, {
+      
+      "description": formData.description,
+      "amount": formData.amount,
+      "category": formData.category,
+      "date": formData.date
+    });
+
+    closeModal();
+  } catch (error) {
+    
+    console.error("There was an error posting the data:", error);
+  }
+};
+
+  
+ 
+useEffect(() => {
+    
+    console.log("Expenses state has been updated:", expenses);
+  }, [expenses]);
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0],
   });
+
+
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -59,63 +84,17 @@ const ExpenseTracker: React.FC = () => {
     });
   };
 
-  const handleDelete = (id: number) => {
-    const filteredExpenses = expenses.filter((e) => e.id !== id);
-    setExpenses(filteredExpenses);
-    alert('Deleted Successfully');
-  };
-
-  const handleAddExpense = () => {
-    if (!formData.description || !formData.amount || !formData.category || !formData.date) {
-      alert('Please fill all fields');
-      return;
-    }
-    const newExpense: Expense = {
-      id: expenses.length ? Math.max(...expenses.map(e => e.id)) + 1 : 1,
-      description: formData.description,
-      amount: parseFloat(formData.amount),
-      category: formData.category,
-      date: formData.date,
-    };
-    setExpenses([...expenses, newExpense]);
-    closeModal();
-    alert('Added successfully');
-  };
-
- 
-  const handleUpdateExpense = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.description || !formData.amount || !formData.category || !formData.date) {
-      alert('Please fill all fields');
-      return;
-    }
-    setExpenses((prevExpenses) =>
-      prevExpenses.map((exp) =>
-        exp.id === editingId
-          ? {
-              ...exp,
-              description: formData.description,
-              amount: parseFloat(formData.amount),
-              category: formData.category,
-              date: formData.date,
-            }
-          : exp
-      )
-    );
-    alert('Updated Successfully');
-    closeModal();
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingId === null) {
-      handleAddExpense();
+      postData();
     } else {
-      handleUpdateExpense(e);
+       updateData();
     }
   };
 
-  const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
 
   return (
     <div className={styles.container}>
@@ -136,7 +115,7 @@ const ExpenseTracker: React.FC = () => {
             setHoveredExpense={setHoveredExpense}
             hoveredButton={hoveredButton}
             setHoveredButton={setHoveredButton}
-            onDelete={handleDelete}
+            onDelete={onDelete}
             onEdit={handleEdit} 
           />
         </div>
