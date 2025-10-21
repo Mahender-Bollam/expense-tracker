@@ -1,7 +1,9 @@
 import { Expense } from "../interface/Expense";
 import { ExpenseOperationsProps } from "../interface/ExpenseOperationsProps";
+import axios from "axios";
+
 const useExpenseOperations=(props:ExpenseOperationsProps)=>{
-let localId:number=props.expenses.length;
+
   const closeModal = (): void => {
     props.setIsModalOpen(false);
     props.setEditingId(null);
@@ -56,13 +58,16 @@ const addExpense=()=>{
   }
   else{
   const {description,amount,category,date}=props.formData
-  props.setExpenses(()=>{return [...props.expenses,
-    {id:localId+1,
+  const expense:Expense= {id:expenses.length+1,
     description,
     amount:parseInt(amount),
     category,
-    date}]})
-  console.log(props.expenses)
+    date}
+    axios({
+    method: 'post',
+    url: 'http://localhost:4000/expenses',
+    data: expense
+  });
     }
 }
 const updateExpense=()=>{
