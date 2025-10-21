@@ -263,6 +263,21 @@ const handleUpdateExpense = async (): Promise<void> => {
   }
   closeModal();
 };
+useEffect(() => {
+  const dbExpenses = async () => {
+    try {
+
+      const expenseResponse = await fetch('http://localhost:3001/expenses');
+      const data = await  expenseResponse.json();
+      setExpenses(data);
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+    }
+  };
+  dbExpenses();
+}, []);
+
+
   const [editingId, setEditingId] = useState<number|null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton|null>(null);
