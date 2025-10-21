@@ -1,4 +1,4 @@
- export interface Expense {
+export interface Expense {
   id: number;
   description: string;
   amount: number;
@@ -6,7 +6,7 @@
   date: string;
 }
 
- export interface FormData {
+export interface FormData {
   description: string;
   amount: string;
   category: string;
@@ -20,4 +20,4 @@ export interface ModalProps {
 }
 
 export type HoveredButton = string | null;
- export type HoveredExpense = number | null;
+export type HoveredExpense = number | null;
