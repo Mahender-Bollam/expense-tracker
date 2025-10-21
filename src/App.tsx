@@ -24,7 +24,7 @@ const getExpenses = async () => {
   };
 useEffect(() => {
    getExpenses();
-  });
+  },[]);
 
 
 
@@ -100,12 +100,8 @@ useEffect(() => {
  const handleAddEditExpense=async ():Promise<any>=> {
   if (editingId) {
      const updatedExpense = { ...formData, id: editingId };
-     const result = await editExpense(updatedExpense, editingId);
-     setExpenses((prevExpenses) =>
-      prevExpenses.map((expense) =>
-        expense.id === editingId ? result : expense
-      )
-    );
+     await editExpense(updatedExpense, editingId);
+     getExpenses();
   
     alert('Expense updated successfully');
     closeModal();
