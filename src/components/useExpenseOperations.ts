@@ -42,7 +42,10 @@ const useExpenseOperations=(props:ExpenseOperationsProps)=>{
 
 const handleDelete=(expense:Expense)=>{  
   alert("Are you sure to delete expense?")
-  props.setExpenses(()=>{return props.expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
+  axios({
+    method: 'delete',
+    url: `http://localhost:4000/expenses/${expense.id}`
+  });
 }
 
 const addExpense=()=>{
