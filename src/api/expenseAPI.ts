@@ -8,10 +8,6 @@ export const getExpenses = async () => {
   return response.data.data as Expense[];
 };
 
-export const getExpenseById = async (id: string) => {
-  const response = await axios.get(`${API_URL}/expenses/${id}`);
-  return response.data.data as Expense;
-};
 
 export const addExpense = async (expense: Expense) => {
   const response = await axios.post(`${API_URL}/expenses`, expense);
