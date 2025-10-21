@@ -1,0 +1,92 @@
+import { Expense } from "../interface/Expense";
+import { ExpenseOperationsProps } from "../interface/ExpenseOperationsProps";
+const useExpenseOperations=(props:ExpenseOperationsProps)=>{
+let localId:number=props.expenses.length;
+  const closeModal = (): void => {
+    props.setIsModalOpen(false);
+    props.setEditingId(null);
+    props.setFormData({
+      id:0,
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0]
+    });
+  };
+
+  const handleEdit = (expense: Expense): void => {
+    props.setFormData({
+      id:expense.id,
+      description: expense.description,
+      amount: expense.amount.toString(),
+      category: expense.category,
+      date: expense.date
+    });
+    props.setEditingId(expense.id);
+    props.setIsModalOpen(true);
+  };
+
+  const handleAdd = (): void => {
+     props.setFormData({
+      id:0,
+      description: '',
+      amount: '',
+      category: '',
+      date: new Date().toISOString().split('T')[0]
+    });
+    props.setIsModalOpen(true);
+    props.setEditingId(null)
+  };
+
+const handleDelete=(expense:Expense)=>{  
+  alert("Are you sure to delete expense?")
+  props.setExpenses(()=>{return props.expenses.filter(addedExpense=>addedExpense.id!==expense.id)})
+}
+
+const addExpense=()=>{
+  props.setIsModalOpen(false);
+  props.setEditingId(null);
+  if(props.formData.amount===""|| props.formData.category===""||props.formData.date===""||props.formData.description===""){
+    alert("Please fill all the fields.")
+    return props.setIsModalOpen(true)
+  }
+  else if(parseInt(props.formData.amount)<=0){
+    alert("Amount must be greater than zero.")
+    return props.setIsModalOpen(true)
+  }
+  else{
+  const {description,amount,category,date}=props.formData
+  props.setExpenses(()=>{return [...props.expenses,
+    {id:localId+1,
+    description,
+    amount:parseInt(amount),
+    category,
+    date}]})
+  console.log(props.expenses)
+    }
+}
+const updateExpense=()=>{
+  if(props.formData.amount===""|| props.formData.category===""||props.formData.date===""||props.formData.description===""){
+    alert("Please fill all the fields.")
+    return props.setIsModalOpen(true)
+  }
+  else if(parseInt(props.formData.amount)<=0){
+    alert("Amount must be greater than zero.")
+    return props.setIsModalOpen(true)
+  }
+  else{
+  props.setIsModalOpen(false)
+  const {description,amount,category,date}=props.formData
+  props.setExpenses((expenses:Expense[])=>{return expenses.map(expense=>expense.id===props.formData.id ? 
+  {...expense,
+  description,
+  amount:parseInt(amount),
+  category,
+  date} : expense)})
+}
+}
+const expenses=props.expenses
+return {closeModal,handleAdd,addExpense,updateExpense,handleDelete,handleEdit,expenses}
+}
+
+export default useExpenseOperations;
