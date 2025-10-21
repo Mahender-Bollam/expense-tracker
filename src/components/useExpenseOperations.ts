@@ -81,13 +81,13 @@ const updateExpense=()=>{
   }
   else{
   props.setIsModalOpen(false)
-  const {description,amount,category,date}=props.formData
-  props.setExpenses((expenses:Expense[])=>{return expenses.map(expense=>expense.id===props.formData.id ? 
-  {...expense,
-  description,
-  amount:parseInt(amount),
-  category,
-  date} : expense)})
+  const {id,description,amount,category,date}=props.formData
+  const expense:Expense= {id, description, amount:parseInt(amount), category, date}
+    axios({
+    method: 'put',
+    url: `http://localhost:4000/expenses/${expense.id}`,
+    data: expense
+  });
 }
 }
 const expenses=props.expenses
