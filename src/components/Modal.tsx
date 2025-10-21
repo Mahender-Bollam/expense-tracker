@@ -1,7 +1,7 @@
-import { HandleButtonProps, ModalProps } from "../types/ExpenseDetails";
+import { Expense, HandleButtonProps, ModalProps } from "../types/ExpenseDetails";
 import { styles } from "../styles";
 import { X } from "lucide-react";
-import { addTheExpense } from "../backendConnection/api";
+import { addTheExpense, updateTheExpense } from "../backendConnection/api";
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -28,6 +28,7 @@ const ModalCard = ({
 }: HandleButtonProps) => {
   const handleSubmit = async () => {
     const data = {
+      id: expenses.length+1,
       description: formData.description,
       amount: Number(formData.amount),
       category: formData.category,
@@ -53,15 +54,17 @@ const ModalCard = ({
     }
   };
 
-  const handleEditSubmit = async (expense: any, e: any) => {
+  const handleEditSubmit = async (expense: Expense) => {
+    console.log("Editing id",editingId)
     let { id, description, amount, category, date } = formData;
     amount = Number(amount);
+    id=Number(id)
     const data = { id, description, amount, category, date };
     try {
       const editExpense = await updateTheExpense(data);
       setExpenses((prevExpense: any[]) => {
         return prevExpense.map((item) =>
-          item.id === editingId ? editExpense : item,
+          item.id === expense.id ? editExpense : item,
         );
       });
       setIsModalOpen(false);
@@ -121,7 +124,7 @@ const ModalCard = ({
         <input
           type="number"
           step="0.01"
-          value={formData.amount}
+          value={formData.amount.toString()}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFormData({ ...formData, amount: Number(e.target.value) })
           }
@@ -163,9 +166,8 @@ const ModalCard = ({
       <div style={styles.buttonGroup}>
         <button
           data-testid="submit-button"
-          //   onClick={handleSubmit}
           onClick={
-            editingId ? (e: any) => handleEditSubmit(formData, e) : handleSubmit
+            editingId ? ()=>handleEditSubmit({...formData,id:Number(formData.id),amount:Number(formData.amount)}) : handleSubmit
           }
           style={{
             ...styles.primaryButton,
