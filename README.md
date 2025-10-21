@@ -46,6 +46,25 @@
 - Seperate files based on components and types.
 - Clean the code and refactor the code for readability.
 
+## Frontend Update: Backend Integration and Component Modifications
+
+### Overview:
+This update integrates the frontend with the backend API, including handling CORS issues and ensuring smooth communication between the frontend and backend.
+
+### Key Changes:
+- **API Integration**: The frontend now communicates with the backend API to fetch, add, update and delete expenses.
+- **CORS Handling**: CORS headers have been configured and tested to ensure seamless communication between the frontend and backend during development.
+- **Components Update**: Multiple components have been updated to handle new API responses and user interactions.
+    - **ExpenseTracker**: Modified to fetch expenses from the backend API.
+    - **ExpenseItem**: Updated to display expenses fetched from the backend and added editing and deletion capabilities.
+    - **ExpenseList**: Adjusted to display a list of expenses fetched from the API and handle user interactions for editing and deleting items.
+- **Testing**: Added tests for the modified components to ensure that the changes work as expected, including mock API calls for fetching, adding, updating and deleting expenses.
+
+### Feature:
+- **Test the API Integration**: Ensure that the frontend communicates successfully with the backend.
+-  **Verify CORS**: Confirm that CORS headers are correctly set up on the backend to allow the frontend to communicate with it.
+-  **Run Tests**: Execute all frontend tests to verify that components and API integrations work correctly.
+
 ## Setup & Run 🛠
 
 1. **Create react app**:
