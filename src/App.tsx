@@ -186,7 +186,7 @@ const ExpenseTracker: React.FC = () => {
 
     if (!editingId) {
       try {
-        const data = await createExpense({ ...formData, amount: Number(formData.amount) })
+        const data = await createExpense(formData)
         setExpenses([...expenses, data])
       } catch {
         alert('unable to create expense');
@@ -199,13 +199,12 @@ const ExpenseTracker: React.FC = () => {
         return {
           ...item,
           ...formData,
-          amount: Number(formData.amount)
         }
       }
       return item
     })
     try {
-      await updateExpense(editingId, { ...formData, amount: Number(formData.amount) })
+      await updateExpense(editingId, formData)
       setExpenses(updateExpences);
       closeModal();
     } catch {
@@ -230,7 +229,7 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   }
 
-  const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const totalExpense: number = expenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
 
   return (
     <div style={styles.container}>
