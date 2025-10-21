@@ -16,6 +16,7 @@ export const addTheExpense = async(expenses:Expense) => {
 
 export const updateTheExpense = async(expenses:Expense) => {
     const response = await axios.put(`${API_URL}/expense/${expenses.id}`,expenses)
+    console.log("Api editing Id",expenses.id)
     return response.data
 }
 
