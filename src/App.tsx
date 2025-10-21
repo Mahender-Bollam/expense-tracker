@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { styles } from './styles/styles';
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag, X } from 'lucide-react';
 import { Expense, FormData , ModalProps,HoveredButton,HoveredExpense } from './types/types';
-import { getExpense } from './apiService';
+import { getExpense,postData } from './apiService';
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -63,37 +63,18 @@ const ExpenseTracker: React.FC = () => {
     });
     setIsModalOpen(true);
   }
-  const handleExpense = () : void => {
+  const handleExpense = async () => {
     
     const expense: Expense ={
-      id :expenses.length+1,
+      id :Date.now(),
       description : formData.description,
       amount : Number(formData.amount),
       category : formData.category,
       date : formData.date
     }
-     if(!expense.description  || !expense.amount || !expense.category || !expense.date){
-      alert("Fill all details");
-      return ;
-    }
-    else if(expense.amount <= 0){
-      alert("Amount must greater than 0");
-      return ;
-    }
-    if(editingId!==null){
-      setExpenses((preExpense) => preExpense.map((expense) => expense.id === editingId ? {
-        ...expense,
-        description : formData.description,
-        amount : Number(formData.amount),
-        date : formData.date,
-        category : formData.category,
-      }:expense
-    ))
-    }  
-    else{
-      setExpenses([...expenses , expense]);
-    }
+   await postData(expense.id,expense)
    setIsModalOpen(false);
+   getAllExpenses();
    
   } 
   
