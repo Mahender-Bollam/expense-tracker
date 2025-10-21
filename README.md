@@ -1,46 +1,85 @@
-# Getting Started with Create React App
+# Expense Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A simple and efficient expense tracking application implemented with React and TypeScript to manage daily expenses with a Node.js backend.
 
-## Available Scripts
+## Tech Stack
 
-In the project directory, you can run:
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Lucide React](https://lucide.dev/) (Icons)
+- [Jest](https://jestjs.io/) & [React Testing Library](https://testing-library.com/react)
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Add new expenses with description, amount, category, and date
+- Edit existing expenses
+- Delete expenses
+- View total expenses summary
+- Categorize expenses - Food, Transport, Entertainment, Bills, Shopping, Health, Other
+- Form validation for all expense fields
+- Real-time data synchronization with backend API
+- Persistent storage using Firebase Firestore
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Setup Instructions
 
-### `npm test`
+### Clone the repository
+```bash
+git clone https://github.com/Mahender-Bollam/expense-tracker.git
+cd expense-tracker
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Install dependencies
+```bash
+npm install
+```
 
-### `npm run build`
+### Environment Configuration
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Create a `.env` file in the root directory:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```env
+REACT_APP_EXPENSE_SERVICE_API=http://localhost:4000/api/expenses
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Run in Development Mode
+```bash
+npm start
+```
 
-### `npm run eject`
+App runs at: `http://localhost:3000`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**Note:** Ensure the backend server is running before starting the frontend.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Run Tests
+```bash
+npm test
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Run tests with coverage:
+```bash
+npm test -- --coverage
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Backend Integration
 
-## Learn More
+This frontend application connects to a Express backend API. Make sure to:
+1. Clone and set up the [backend repository](https://github.com/mdivyaswarupa2004/backend-application)
+2. Configure CORS settings in the backend
+3. Start the backend server before running the frontend
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Testing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Tests are written using Jest and React Testing Library.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Author
+
+Mahender Bollam  
+GitHub: [Mahender-Bollam](https://github.com/Mahender-Bollam)
+
+## Contributors
+
+Backend by M. Divyaswarupa - [mdivyaswarupa2004](https://github.com/mdivyaswarupa2004)
