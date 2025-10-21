@@ -9,7 +9,7 @@ export const getExpenses = async () => {
 };
 
 
-export const addExpense = async (expense: Expense) => {
+export const addExpense = async (expense: Omit< Expense,"id">) => {
   const response = await axios.post(`${API_URL}/expenses`, expense);
   return response.data;
 };
