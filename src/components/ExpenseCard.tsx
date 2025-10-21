@@ -3,6 +3,7 @@ import { Expense } from '../types/expenseType'
 import { styles } from '../styles/Styles'
 import { Calendar, Edit2, Tag, Trash2 } from 'lucide-react'
 import { expenseCardProp } from '../types/propTypes'
+import { deleteExpense } from '../api/expenses'
 
 
 const ExpenseCard = ({ expenses, hoveredButton, setHoveredButton, hoveredExpense, setHoveredExpense, setFormData, setEditingId, setIsModalOpen, setExpenses }: expenseCardProp) => {
@@ -19,7 +20,8 @@ const ExpenseCard = ({ expenses, hoveredButton, setHoveredButton, hoveredExpense
     setIsModalOpen(true);
   };
 
-  const handleDelete = (expenseId: number) => {
+  const handleDelete = async(expenseId: number) => {
+    await deleteExpense(expenseId)
     alert('Are you sure to delete the Expense!')
     setExpenses(updateExpense => updateExpense.filter(expense => expense.id !== expenseId))
   }
