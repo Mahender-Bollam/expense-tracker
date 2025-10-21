@@ -38,7 +38,7 @@ export const useExpenseTracker = () => {
 
     useEffect(() => {
         fetchExpenses();
-    }, []);
+    }, [expenses]);
 
     const fetchExpenses = async () => {
         try {
@@ -63,7 +63,7 @@ export const useExpenseTracker = () => {
     };
 
     const updateExpense = async () => {
-        const { id, description, amount, category, date } = formData;
+        const {  description, amount, category, date } = formData;
 
         if (amount <= 0) {
             alert("Amount should be greater than 0");
@@ -77,9 +77,6 @@ export const useExpenseTracker = () => {
 
         try {
             await updateExpenseAPI(formData);
-            setExpenses(prev =>
-                prev.map(exp => (exp.id === id ? formData : exp))
-            );
             alert("Expense updated successfully.");
             setIsModalOpen(false);
             setEditingId(null);
@@ -90,10 +87,10 @@ export const useExpenseTracker = () => {
     };
 
     const addexpense = async () => {
-        const { description, amount, category, date } = formData;
+        let { description, amount, category, date } = formData;
 
-        const numericAmount = Number(amount);
-        if (isNaN(numericAmount) || numericAmount <= 0) {
+        amount = Number(amount);
+        if (isNaN(amount) || amount <= 0) {
             alert("Amount should be a positive number");
             return;
         }
@@ -102,13 +99,9 @@ export const useExpenseTracker = () => {
             alert("Please fill all fields");
             return;
         }
-
+        const data = {description,amount,category,date}
         try {
-            const newExpense = await addExpenseAPI({
-                ...formData,
-                amount: numericAmount
-            });
-            setExpenses(prev => [...prev, newExpense.saved]);
+            await addExpenseAPI(data);
             alert("Expense added successfully");
             setIsModalOpen(false);
         } catch (error) {
@@ -118,13 +111,12 @@ export const useExpenseTracker = () => {
     };
 
     const removeExpense = async (id: number) => {
-        // eslint-disable-next-line no-restricted-globals
-        const confirmOption = confirm("Are you sure you want to remove this expense?");
+ 
+        const confirmOption = window.confirm("Are you sure you want to remove this expense?");
         if (!confirmOption) return;
 
         try {
             await deleteExpenseAPI(id.toString());
-            setExpenses(prevExpenses => prevExpenses.filter(item => item.id !== id));
             alert("Expense removed successfully");
         } catch (error) {
             alert("Failed to remove expense");
