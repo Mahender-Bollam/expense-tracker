@@ -7,3 +7,7 @@ export const addExpense = async (expense: Expense) => {
     const response = await axios.post(`${API_URL}/expenses`, expense);
     return response.data;
 };
+export const editExpense = async (expense:Expense)=>{
+    const response = await axios.put(`${API_URL}/expenses/${expense.id}`,expense)
+    return response.data
+}
