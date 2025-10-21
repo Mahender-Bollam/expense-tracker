@@ -3,16 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Trash2, Edit2, Plus, DollarSign, Calendar, Tag } from "lucide-react";
 import { Expense, FormData } from "./types/ExpenseDetails";
 import ModalCard from "./components/Modal";
-import { getExpenses } from "./backendConnection/api";
+import { deleteTheExpense, getExpenses } from "./backendConnection/api";
 
 export type HoveredButton = string | null;
 type HoveredExpense = number | null;
 
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    // { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    // { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
 
   const fetchExpenses = async () => {
     try {
@@ -33,7 +30,7 @@ const ExpenseTracker: React.FC = () => {
     category: "",
     date: new Date().toISOString().split("T")[0],
   });
-  // console.log(formData);
+ 
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -84,10 +81,15 @@ const ExpenseTracker: React.FC = () => {
 
   const handleRemove = async (expenseId: number) => {
     alert("Are you delete the expense");
+    try{
+    await deleteTheExpense(expenseId)
     setExpenses((removeExpense: Expense[]) =>
       removeExpense.filter((card) => card.id !== expenseId),
     );
-    // console.log("removed expense");
+  }catch(error){
+    console.log("failed the delete")
+  }
+    
   };
 
   return (
