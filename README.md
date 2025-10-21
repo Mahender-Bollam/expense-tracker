@@ -1,7 +1,8 @@
 # Expense Tracker
 ##  Description
 
-Expense Tracker is a UI based application which manages to track expenses by adding new expense, editing existing expense and deleting the expense and giving summary of the total cost.
+- Expense Tracker is a UI based application which manages to track expenses by adding new expense, editing existing expense and deleting the expense and giving summary of the total cost.
+- The app intergrated with backend, API and firebase to store expense data.
 
 ##  Table of Contents
 
@@ -19,6 +20,7 @@ Expense Tracker is a UI based application which manages to track expenses by add
 - The app ensures to add expense with details from user in a form and append new expense in the displayed list.
 - It allows to update the expense detailes like description, amount, category and date on click on expense.
 - It allows to delete to unwanted expense on clicking trash icon.
+- Integrated with backend and firebase and stored user added expenses in firebase.
 
 ##  Tech Stack
 
