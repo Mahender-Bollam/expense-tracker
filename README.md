@@ -41,7 +41,7 @@ You’ll need [Node.js](https://nodejs.org/) installed to run the app.
    npm test -- --coverage --WatchAll
    ```      
 
-You’ll see results for addition and subtraction printed in the terminal.
+
 
 ##  Features:
 - Implemented Add Expense feature.
@@ -51,6 +51,15 @@ You’ll see results for addition and subtraction printed in the terminal.
 - Add validations while adding new expense.
 
 - Fix  edit expense feature.
+
+- Implemented Add Expense feature with APIdata instead of using static data.
+
+- Implemented updateExpense feature with APIdata instead of using static data.
+
+- Implemented  addExpense feature with APIdata instead of using static data.
+
+- Implemented delete Expense feature with APIdata instead of using static data.
+
 
 
 ##  Tech Stack:
