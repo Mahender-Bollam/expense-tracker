@@ -75,7 +75,7 @@ const getAllExpenses = async () => {
 
       id: expense.id,
       description: expense.name,
-      amount: expense.cost, 
+      amount: Number(expense.cost), 
       category: expense.description,
       date: new Date()
 
