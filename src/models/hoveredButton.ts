@@ -1,3 +1,3 @@
 
 export type HoveredButton = string | null;
-export type HoveredExpense = number | null;
+export type HoveredExpense = string | null;
