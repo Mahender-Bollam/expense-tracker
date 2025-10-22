@@ -1,0 +1,73 @@
+import { render, screen, fireEvent } from "@testing-library/react"
+import ModalCard from "../../components/ModalCard"
+import userEvent from "@testing-library/user-event"
+
+const mockExpenses = [{ id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' }]
+
+const mockFormData = {
+     id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' 
+}
+
+const mockSetExpenses = jest.fn()
+const mockHoveredButton = ''
+const mockSetHoveredButton = jest.fn()
+const mockSetFormData = jest.fn()
+const mockSetIsModalOpen = jest.fn()
+const mockSetEditingId=jest.fn()
+window.alert = jest.fn()
+
+
+
+const renderComponent = (props={}) => {
+    render(
+        <ModalCard expenses={mockExpenses} setExpenses={mockSetExpenses}
+            hoveredButton={mockHoveredButton} setHoveredButton={mockSetHoveredButton}
+            setFormData={mockSetFormData}
+            setIsModalOpen={mockSetIsModalOpen} isModalOpen={false}
+             editingId={null} formData={mockFormData} setEditingId={mockSetEditingId} {...props}/>
+    )
+}
+
+
+describe('Modal Card component', () => {
+
+    test('Should add the expense will all details', () => {
+        renderComponent({isModalOpen:true})
+        fireEvent.change(screen.getByPlaceholderText(/Enter description/i), { target: { value: 'Self' } });
+        fireEvent.change(screen.getByPlaceholderText(/0.00/i), { target: { value: '260' } });
+         const category = screen.getByTestId('dropdown-select') 
+        userEvent.selectOptions(category,'Food')  
+        fireEvent.change(screen.getByTestId('date-testid'),{target:{value:'2025-10-13'}})
+        fireEvent.click(screen.getByRole('button',{name: /Add Expense/i}))
+    })
+    test('Should able to edit the expense',()=>{
+        renderComponent({editingId:mockExpenses[0].id,isModalOpen:true })
+        fireEvent.change(screen.getByPlaceholderText(/Enter description/i),{ target: { value: 'MySelf' } })
+        fireEvent.click(screen.getByRole('button',{name: /Update Expense/i}))
+        expect(mockSetFormData).toHaveBeenCalledWith({
+            ...mockFormData, description: 'MySelf'
+        })
+    })
+    test('Should handle the mouse event',()=>{
+        renderComponent({isModalOpen:true })
+        expect(fireEvent.mouseEnter(screen.getByTestId(/cancel-icon/i))).toBeTruthy()
+        expect(fireEvent.mouseLeave(screen.getByTestId(/cancel-icon/i))).toBeTruthy()
+    })
+    test('Should close the modal on clicked X',()=>{
+        renderComponent({isModalOpen:true})
+        fireEvent.click(screen.getByTestId(/cancel-icon/i))
+    })
+   
+    test('Should handle hovering of the modal submit button',()=>{
+        renderComponent({isModalOpen:true});
+        fireEvent.mouseEnter(screen.getByTestId(/expense-hover/i))
+        fireEvent.mouseLeave(screen.getByTestId(/expense-hover/i))
+    })
+    test('Should handle hovering of the modal cancel button',()=>{
+        renderComponent({isModalOpen:true});
+        fireEvent.mouseEnter(screen.getByTestId(/cancel-hover/i))
+        fireEvent.mouseLeave(screen.getByTestId(/cancel-hover/i))
+    })
+})
+
+

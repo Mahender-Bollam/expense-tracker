@@ -1,46 +1,88 @@
-# Getting Started with Create React App
+# Expense Tracker
+## Description
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Expense Tacker is an application where the user can add expenses, update and delete them
 
-## Available Scripts
+### Table of Contents
 
-In the project directory, you can run:
+* [Features](#features)
 
-### `npm start`
+* [Tech Stack](#tech-stack)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* [Installation](#installation)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+* [Testing](#testing)
 
-### `npm test`
+* [Usage](#usage)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* [Contribution](#contribution)
 
-### `npm run build`
+* [Contact](#contact)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Features
 
-### `npm run eject`
+* **Display Expenses :** Displays all the expenses of the user.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+* **Add Expense :** User can be able to add the expenses to the database.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* **Edit Expense :** User can edit their expenses.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+* **Delete Expense :** User can delete expense from the expense database.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+* It enables a clear and seamless integration with backend.
+    
+## Tech Stack
 
-## Learn More
+1. Node JS (Version :22.16.0)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+2. React with typescript
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Installation
+
+1. Clone the repository by forking it.
+
+        git clonehttps://github.com/Mahender-Bollam/expense-tracker.git
+
+2. Navigate to the project directory
+
+        cd expense-tracker
+
+3. Install the dependencies
+        Make sure Node.js is installed if not 
+    * To install node for Javascript: [Click Here](https://nodejs.org/en)
+
+4. To install the required packages: 
+
+        npm install
+
+5. To run tests 
+
+        npm test
+
+
+## Usage
+
+1. Run the application using:
+
+        npm start
+
+
+## Contribution
+
+1. Fork the repository.
+
+2. Create a new branch (git checkout -b feature-branch).
+
+3. Make your changes and commit them (git commit -m "Add new feature").
+
+4. push to the branch (git push origin feature-branch).
+
+5. Create a pull request.
+
+## Contact
+
+For any issues or inquires, contact [NivedithaGunapati-Everest.](https://github.com/NivedithaGunapati-Everest)
+    
