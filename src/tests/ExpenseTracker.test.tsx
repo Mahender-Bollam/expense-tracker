@@ -83,28 +83,7 @@ describe('ExpenseTracker Integration', () => {
     fireEvent.click(addButton);
     expect(screen.getByText(/Add New Expense/i)).toBeInTheDocument();
   });
-
-  /*it('adds a new expense when form is filled and submitted', () => {
-    render(<ExpenseTracker />);
-    const addButton = screen.getByRole('button', { name: /Add Expense/i });
-    fireEvent.click(addButton);
-
-    fireEvent.change(screen.getByPlaceholderText(/Enter description/i), { target: { value: 'Test Expense' } });
-    fireEvent.change(screen.getByPlaceholderText('0.00'), { target: { value: '100' } });
-    
-    const categorySelect = screen.getByRole('combobox');
-    fireEvent.change(categorySelect, { target: { value: 'Food' } });
-    
-    const dateInput = screen.getByDisplayValue('2025-10-12');
-    fireEvent.change(dateInput, { target: { value: '2025-10-10' } });
-
-    const buttons = screen.getAllByRole('button', { name: /Add Expense/i });
-    const submitButton = buttons[buttons.length - 1];
-    fireEvent.click(submitButton);
-    expect(screen.queryByText(/Add New Expense/i)).not.toBeInTheDocument();
-  });*/
-
-  it('alerts if form fields are empty on submit', () => {
+it('alerts if form fields are empty on submit', () => {
     window.alert = jest.fn();
     render(<ExpenseTracker />);
     
@@ -117,8 +96,7 @@ describe('ExpenseTracker Integration', () => {
     
     expect(window.alert).toHaveBeenCalledWith('Please fill all fields');
   });
-
-  it('edits an expense', () => {
+it('edits an expense', () => {
     render(<ExpenseTracker />);
     const editButtons = screen.getAllByRole('button', { name: /edit/i });
     fireEvent.click(editButtons[0]);
