@@ -3,7 +3,7 @@ import { styles } from '../styles/Styles';
 import Modal from './ModalComponent';
 import { X } from 'lucide-react';
 import { modalCardProp } from '../types/propTypes';
-import { addExpense, editExpense} from '../api/expenses';
+import { addExpense, editExpense } from '../api/expenses';
 
 const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
 
@@ -26,8 +26,17 @@ const ModalCard = ({ isModalOpen, editingId, hoveredButton, setHoveredButton, fo
       amount: formData.amount,
       category: formData.category,
       date: formData.date,
-      id: expenses.length 
+      id: expenses.length
     })
+    const { description, amount, category, date } = formData
+    const NumericAmount = Number(amount)
+    if (!description || !amount || !category || !date) {
+      alert("Please fill all details")
+    }
+    if (NumericAmount < 0) {
+      alert("Amount should be positive")
+    }
+
     try {
       await addExpense({ ...formData, amount: Number(formData.amount) })
       setExpenses([...expenses, { ...formData, amount: Number(formData.amount) }])
@@ -54,17 +63,24 @@ const ModalCard = ({ isModalOpen, editingId, hoveredButton, setHoveredButton, fo
       category: formData.category,
       date: formData.date
     }
+    const { description, amount, category, date } = formData
+    const NumericAmount = Number(amount)
+    if (!description || !amount || !category || !date) {
+      alert("Please fill all details")
+    }
+    if (NumericAmount < 0) {
+      alert("Amount should be positive")
+    }
 
-    
-    try{
-       await editExpense({...formData,amount:Number(formData.amount),id:Number(formData.id)})
+    try {
+      await editExpense({ ...formData, amount: Number(formData.amount), id: Number(formData.id) })
       setExpenses(prevExpenses => {
-      return prevExpenses.map((item) => item.id === editingId ? updatedExpenses: item)
-      
-    })
-    setIsModalOpen(false)
+        return prevExpenses.map((item) => item.id === editingId ? updatedExpenses : item)
 
-    }catch(error){
+      })
+      setIsModalOpen(false)
+
+    } catch (error) {
       console.error("Fetch failed:", console.error());
     }
   }
