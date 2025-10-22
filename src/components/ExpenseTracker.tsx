@@ -1,28 +1,37 @@
-import React, { useState } from 'react';
-import { DollarSign, Plus, Trash2, Edit2, Calendar, Tag, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { DollarSign, Plus, Trash2, Edit2, Calendar, Tag } from 'lucide-react';
 import ExpenseForm from './ExpenseForm';
 import { Expense, FormData, HoveredButton, HoveredExpense } from '../types/interface';
 import '../styles/Styles.css';
+import { fetchAllExpenses, createExpense, modifyExpense, removeExpense } from './api';
 
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: 1, description: 'Groceries', amount: 85.50, category: 'Food', date: '2025-10-05' },
-    { id: 2, description: 'Gas', amount: 45.00, category: 'Transport', date: '2025-10-06' },
-  ]);
-
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
-
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
+
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const data = await fetchAllExpenses();
+        setExpenses(data);
+      } catch (err) {
+        console.error(err);
+        alert("Failed to fetch expenses");
+      }
+    };
+    fetchExpenses();
+  }, []);
 
   const closeModal = (): void => {
     setIsModalOpen(false);
@@ -51,47 +60,50 @@ const ExpenseTracker: React.FC = () => {
       description: '',
       amount: '',
       category: '',
-      date: ''
+      date: new Date().toISOString().split('T')[0]
     });
     setEditingId(null);
     setIsModalOpen(true);
   };
 
-  const addExpense = () => {
-    const newExpense: Expense = {
-      id: Date.now(),
-      description: formData.description,
-      amount: parseFloat(formData.amount),
-      category: formData.category,
-      date: formData.date,
-    };
-    setExpenses(prev => [...prev, newExpense]);
-    alert("Expense added successfully!");
-    closeModal();
-  };
-
-  const updateExpense = () => {
-    setExpenses(prev =>
-      prev.map(exp =>
-        exp.id === editingId
-          ? { ...exp, ...formData, amount: parseFloat(formData.amount) }
-          : exp
-      )
-    );
-    alert("Expense updated successfully!");
-    closeModal();
-    setEditingId(null);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (editingId) updateExpense();
-    else addExpense();
+    try {
+      if (editingId) {
+        const updated = await modifyExpense(editingId, {
+          description: formData.description,
+          amount: parseFloat(formData.amount),
+          category: formData.category,
+          date: formData.date
+        });
+        setExpenses(prev => prev.map(exp => exp.id === editingId ? updated : exp));
+        alert("Expense updated successfully!");
+      } else {
+        const newExp = await createExpense({
+          description: formData.description,
+          amount: parseFloat(formData.amount),
+          category: formData.category,
+          date: formData.date
+        });
+        setExpenses(prev => [...prev, newExp]);
+        alert("Expense added successfully!");
+      }
+      closeModal();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save expense");
+    }
   };
 
-  const removeExpense = (expenseRemove: Expense) => {
-    setExpenses(prev => prev.filter(exp => exp.id !== expenseRemove.id));
-    alert("Expense deleted successfully!");
+  const handleRemoveExpense = async (expenseRemove: Expense) => {
+    try {
+      await removeExpense(expenseRemove.id);
+      setExpenses(prev => prev.filter(exp => exp.id !== expenseRemove.id));
+      alert("Expense deleted successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete expense");
+    }
   };
 
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -109,6 +121,7 @@ const ExpenseTracker: React.FC = () => {
               <p className="subtitle">Manage your daily expenses efficiently</p>
             </div>
             <button
+              data-testid="open-modal"
               onClick={handleAddExpense}
               className={`addButton ${hoveredButton === 'add' ? 'addButtonHover' : ''}`}
               onMouseEnter={() => setHoveredButton('add')}
@@ -155,6 +168,7 @@ const ExpenseTracker: React.FC = () => {
                     <span className="expenseAmount">${expense.amount.toFixed(2)}</span>
                     <div className="actionButtons">
                       <button
+                      data-testid={`edit-expense-${expense.id}`}
                         onClick={() => handleEdit(expense)}
                         className={`editButton ${hoveredButton === `edit-${expense.id}` ? 'editButtonHover' : ''}`}
                         onMouseEnter={() => setHoveredButton(`edit-${expense.id}`)}
@@ -164,7 +178,8 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
-                        onClick={() => removeExpense(expense)}
+                      data-testid={`delete-expense-${expense.id}`}
+                        onClick={() => handleRemoveExpense(expense)}
                         className={`deleteButton ${hoveredButton === `delete-${expense.id}` ? 'deleteButtonHover' : ''}`}
                         onMouseEnter={() => setHoveredButton(`delete-${expense.id}`)}
                         onMouseLeave={() => setHoveredButton(null)}
