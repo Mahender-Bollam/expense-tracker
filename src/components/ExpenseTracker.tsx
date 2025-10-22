@@ -129,7 +129,9 @@ const handleSubmit = (e: React.FormEvent) => {
     }
   };
 
-const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+const totalExpense: number = expenses.length > 0 
+  ? expenses.reduce((sum, exp) => sum + Number(exp.amount) || 0, 0)
+  : 0;
 
 
   return (
