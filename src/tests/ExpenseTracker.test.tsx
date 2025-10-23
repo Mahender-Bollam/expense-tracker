@@ -21,6 +21,8 @@ describe('ExpenseTracker Component', () => {
     expect(screen.getByTestId('total-amount')).toHaveTextContent('₹0.00');
     await waitFor(() => {
       expect(screen.getByText('Groceries')).toBeInTheDocument();
+    });
+    await waitFor(() => {
       expect(screen.getByText('Gas')).toBeInTheDocument();
     });
     expect(screen.getByTestId('total-amount')).toHaveTextContent('₹130.50');
@@ -69,7 +71,11 @@ describe('ExpenseTracker Component', () => {
     fireEvent.click(screen.getByTestId('submit-button'));    
     await waitFor(() => {
       expect(alertSpy).toHaveBeenCalledWith('Expense updated successfully!');
+    });
+    await waitFor(() => {
       expect(screen.getByText('Groceries vegetables')).toBeInTheDocument();
+    });
+    await waitFor(() => {
       expect(screen.getByTestId('total-amount')).toHaveTextContent('₹145.00');
     });
     alertSpy.mockRestore();
@@ -87,7 +93,9 @@ describe('ExpenseTracker Component', () => {
     fireEvent.click(screen.getAllByTitle(/Delete/i)[0]);
     await waitFor(() => {
       expect(alertSpy).toHaveBeenCalledWith('Expense deleted successfully!');
-      expect(screen.queryByText('Groceries')).not.toBeInTheDocument();
+    });
+    await waitFor(() => {
+       expect(screen.queryByText('Groceries')).not.toBeInTheDocument();
     });
     alertSpy.mockRestore();
   });
