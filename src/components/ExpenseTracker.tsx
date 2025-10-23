@@ -1,91 +1,105 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Expense, FormData, HoveredButton, HoveredExpense } from '../types/types';
 import Header from './Header';
 import TotalCard from './TotalCard';
 import ExpenseList from './ExpenseList';
 import ExpenseModal from './ExpenseModal';
 import styles from '../styles/ExpenseTracker.module.css';
-import axios from "axios"
+import axios from "axios";
+
 const ExpenseTracker: React.FC = () => {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    
-  ]);
-
-  //Add Expense
-const postData = async () => {
-  try {
-    await axios.post(`http://localhost:3000/expenses`, {
-      
-      "description": formData.description,
-      "amount": formData.amount,
-      "category": formData.category,
-      "date": formData.date
-    });
-
-    closeModal();
-  } catch (error) {
-    
-    console.error("There was an error posting the data:", error);
-  }
-};
-//get All Expenses 
-  useEffect(() => {
-  axios.get('http://localhost:3000/expenses', {headers: {'Content-Type':'application/json','Access-Control-Allow-Origin': '*'}})
-    .then((response) => {
-      console.log('Full API Response:', response); 
-      console.log('Response data:', response.data); 
-      const expensesArray = response.data;
-      console.log('Expenses array:', expensesArray); 
-      setExpenses(response.data)
-      console.log(expenses)
-    })
-    .catch((error) => {
-      console.error('Error fetching expenses:', error);
-      setExpenses([]);
-    });
-}, [expenses]); 
-
-//Update Expense
-const updateData = async () => {
-  try {
-    await axios.patch(`http://localhost:3000/expenses/${editingId}`, {
-      
-      "description": formData.description,
-      "amount": formData.amount,
-      "category": formData.category,
-      "date": formData.date
-    });
-    console.log(editingId)
-
-    closeModal();
-  } catch (error) {
-    
-    console.error("There was an error posting the data:", error);
-  }
-};
-
-//Delete Expense
-const onDelete = (id:number) => {
-  axios.delete(`http://localhost:3000/expenses/${id}`)
-  
-}
-useEffect(() => {
-    
-    console.log("Expenses state has been updated:", expenses);
-  }, [expenses]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [formData, setFormData] = useState<FormData>({
     description: '',
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0],
   });
-
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
 
   const categories: string[] = ['Food', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Health', 'Other'];
+
+  useEffect(() => {
+    const getAllExpenses = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/expenses', {
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const normalized = response.data.map((exp: Expense) => ({
+          ...exp,
+          date: new Date(exp.date).toISOString().split('T')[0],
+        }));
+        setExpenses(normalized);
+      } catch {
+        setExpenses([]);
+      }
+    };
+    getAllExpenses();
+  }, []);
+
+ const postData = async () => {
+  try {
+    if (
+      !formData.description.trim() ||
+      !formData.amount ||
+      !formData.category.trim() ||
+      !formData.date
+    ) {
+      alert('All fields are required');
+      return;
+    }
+
+    const newExpense: Expense = {
+      id: Date.now(),
+      description: formData.description.trim(),
+      amount: Number(formData.amount),
+      category: formData.category.trim(),
+      date: formData.date,
+    };
+
+    await axios.post('http://localhost:3000/expenses', newExpense);
+
+    setExpenses(prev => [...prev, newExpense]);
+    closeModal();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+  const updateData = async () => {
+    if (editingId === null) return;
+    try {
+      const updatedExpense: Expense = {
+        id: editingId,
+        description: formData.description,
+        amount: Number(formData.amount),
+        category: formData.category,
+        date: formData.date,
+      };
+
+      await axios.patch(`http://localhost:3000/expenses/${editingId}`, updatedExpense);
+
+      setExpenses(prev =>
+        prev.map(exp => (exp.id === editingId ? updatedExpense : exp))
+      );
+      closeModal();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onDelete = async (id: number | string) => {
+    try {
+      await axios.delete(`http://localhost:3000/expenses/${id}`);
+      setExpenses(prev => prev.filter(exp => exp.id.toString() !== id.toString()));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleAdd = () => {
     setFormData({
@@ -101,9 +115,9 @@ useEffect(() => {
   const handleEdit = (expense: Expense) => {
     setFormData({
       description: expense.description,
-      amount: expense.amount.toString(),
+      amount: expense.amount?.toString() || '',
       category: expense.category,
-      date: expense.date,
+      date: new Date(expense.date).toISOString().split('T')[0],
     });
     setEditingId(expense.id);
     setIsModalOpen(true);
@@ -120,19 +134,18 @@ useEffect(() => {
     });
   };
 
-const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingId === null) {
       postData();
     } else {
-       updateData();
+      updateData();
     }
   };
 
-const totalExpense: number = expenses.length > 0 
-  ? expenses.reduce((sum, exp) => sum + Number(exp.amount) || 0, 0)
-  : 0;
-
+  const totalExpense: number = expenses.length > 0
+    ? expenses.reduce((sum, exp) => sum + Number(exp.amount) || 0, 0)
+    : 0;
 
   return (
     <div className={styles.container}>
@@ -154,7 +167,7 @@ const totalExpense: number = expenses.length > 0
             hoveredButton={hoveredButton}
             setHoveredButton={setHoveredButton}
             onDelete={onDelete}
-            onEdit={handleEdit} 
+            onEdit={handleEdit}
           />
         </div>
       </div>
