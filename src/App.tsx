@@ -181,7 +181,7 @@ const styles: Record<string, CSSProperties> = {
   editButtonHover: {
     backgroundColor: '#dbeafe'
   },
-  deleteButton: {
+  Button: {
     padding: '8px',
     color: '#dc2626',
     backgroundColor: 'transparent',
@@ -321,6 +321,7 @@ const ExpenseTracker: React.FC = () => {
   });
   
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [addId, setAddId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [hoveredButton, setHoveredButton] = useState<HoveredButton>(null);
   const [hoveredExpense, setHoveredExpense] = useState<HoveredExpense>(null);
@@ -330,6 +331,7 @@ const ExpenseTracker: React.FC = () => {
   const closeModal = (): void => {
     setIsModalOpen(false);
     setEditingId(null);
+    setAddId(null);
     setFormData({
       description: '',
       amount: '',
@@ -337,8 +339,6 @@ const ExpenseTracker: React.FC = () => {
       date: new Date().toISOString().split('T')[0]
     });
   };
-
-
 
   const handleEdit = (expense: Expense): void => {
     setFormData({
@@ -351,7 +351,33 @@ const ExpenseTracker: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const handleAdd = (expense: Expense): void => {
+    setFormData({
+      description: expense.description,
+      amount: expense.amount.toString(),
+      category: expense.category,
+      date: expense.date
+    });
+    setAddId(expense.id);
+    setIsModalOpen(true);
+  };
+  
 
+  const handleDelete = (id: number): void => {
+    const confirmed = window.confirm("You want to delete this expense?");
+  if (confirmed) {
+    setExpenses(expenses.filter(expense => expense.id !== id));
+  };
+};
+  
+  const expense: Expense = {
+        id: addId !== null ? addId : Date.now(),
+        description: formData.description,
+        amount: parseFloat(formData.amount),
+        category: formData.category,
+        date: formData.date
+  };
+  
   const totalExpense: number = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
   return (
@@ -366,7 +392,10 @@ const ExpenseTracker: React.FC = () => {
               </h1>
               <p style={styles.subtitle}>Manage your daily expenses efficiently</p>
             </div>
+                    
+            <div style={styles.actionButtons}>
             <button
+              onClick={() => handleAdd(expense)}
               style={{
                 ...styles.addButton,
                 ...(hoveredButton === 'add' ? styles.addButtonHover : {})
@@ -377,6 +406,9 @@ const ExpenseTracker: React.FC = () => {
               <Plus size={20} />
               Add Expense
             </button>
+            </div>
+
+
           </div>
 
           <div style={styles.totalCard}>
@@ -438,6 +470,8 @@ const ExpenseTracker: React.FC = () => {
                         <Edit2 size={18} />
                       </button>
                       <button
+                          onClick={() => handleDelete(expense.id)}
+
                         style={{
                           ...styles.deleteButton,
                           ...(hoveredButton === `delete-${expense.id}` ? styles.deleteButtonHover : {})
@@ -446,6 +480,7 @@ const ExpenseTracker: React.FC = () => {
                         onMouseLeave={() => setHoveredButton(null)}
                         title="Delete"
                       >
+
                         <Trash2 size={18} />
                       </button>
                     </div>
@@ -530,6 +565,20 @@ const ExpenseTracker: React.FC = () => {
             }}
             onMouseEnter={() => setHoveredButton('submit')}
             onMouseLeave={() => setHoveredButton(null)}
+
+            onClick={() => {
+              if (!formData.description || !formData.amount || !formData.category) return;
+              const expense: Expense = {
+                id: addId !== null ? addId : Date.now(),
+                description: formData.description,
+                amount: parseFloat(formData.amount),
+                category: formData.category,
+                date: formData.date
+              };
+                  setExpenses([...expenses, expense]);
+                closeModal();
+              }}
+            
           >
             {editingId ? 'Update Expense' : 'Add Expense'}
           </button>
@@ -551,3 +600,9 @@ const ExpenseTracker: React.FC = () => {
 };
 
 export default ExpenseTracker;
+
+
+
+
+
+
